@@ -1,6 +1,6 @@
-import React from 'react';
+import 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
-import FirstRun from './src/screens/FirstRun';
+import { RootNavigator } from './src/navigation/RootNavigator';
 
 
 
@@ -9,7 +9,7 @@ function App(): JSX.Element {
 
   return (
     <NavigationContainer>
-      <FirstRun />
+      <RootNavigator />
     </NavigationContainer>
   );
 }
