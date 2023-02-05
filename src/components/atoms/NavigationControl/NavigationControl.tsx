@@ -1,15 +1,19 @@
-import React from 'react';
+import { black, colors, white } from '@constants/colors/colors';
+import { GlobalStyles } from '@constants/styles/global.styles';
+import React, { useState } from 'react';
 import {Pressable, StyleSheet, Text, View} from 'react-native';
 import {NavigationControlProps} from './types';
 
 export const NavigationControl = ({
   firstActionPress,
   secondActionPress,
+  firstActive
 }: NavigationControlProps) => {
+  
   return (
     <View
       style={[
-        styles.alignItemsCenter,
+        GlobalStyles.alignItemsCenter,
         {
           flexDirection: 'row',
           height: '10%',
@@ -20,20 +24,22 @@ export const NavigationControl = ({
         //   onPress={() => navigation.navigate('Dashboard')}
         onPress={firstActionPress}
         style={[
-          styles.justifyContentCenter,
-          styles.alignItemsCenter,
+          GlobalStyles.justifyContentCenter,
+          GlobalStyles.alignItemsCenter,
           {
-            backgroundColor: 'blue',
+            backgroundColor: firstActive ? colors[black] : colors[white],
             width: '30%',
             height: '70%',
             borderTopLeftRadius: 10,
             borderBottomLeftRadius: 10,
+            borderWidth: firstActive ? 0 : 3,
           },
         ]}>
         <Text
           style={{
-            backgroundColor: 'green',
-            color: 'white',
+            // backgroundColor: 'green',
+            color: firstActive ? colors[white] : colors[black],
+            fontWeight: 'bold'
           }}>
           Dashboard
         </Text>
@@ -42,20 +48,23 @@ export const NavigationControl = ({
         //   onPress={() => navigation.navigate('Form')}
         onPress={secondActionPress}
         style={[
-          styles.justifyContentCenter,
-          styles.alignItemsCenter,
+          GlobalStyles.justifyContentCenter,
+          GlobalStyles.alignItemsCenter,
           {
             width: '30%',
             height: '70%',
-            backgroundColor: 'green',
+            backgroundColor: !firstActive ? colors[black] : colors[white],
             borderTopRightRadius: 10,
             borderBottomRightRadius: 10,
+            borderWidth: !firstActive ? 0 : 3,
+
           },
         ]}>
         <Text
           style={{
-            backgroundColor: 'blue',
-            color: 'white',
+            // backgroundColor: 'blue',
+            color: !firstActive ? colors[white] : colors[black],
+            fontWeight: 'bold'
           }}>
           Registros
         </Text>
@@ -63,15 +72,3 @@ export const NavigationControl = ({
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  row: {
-    flexDirection: 'row',
-  },
-  justifyContentCenter: {
-    justifyContent: 'center',
-  },
-  alignItemsCenter: {
-    alignItems: 'center',
-  },
-});

@@ -1,33 +1,51 @@
 import { NavigationControl } from '@components/atoms/NavigationControl'
-import React from 'react'
-import {Pressable, StyleSheet, Text, View} from 'react-native'
+import { black, colors, white } from '@constants/colors/colors';
+import { StackNavParams } from '@navigation/NativeStack/types';
+import { StackScreenProps } from '@react-navigation/stack';
+import React, { useState } from 'react'
+import {Pressable, StyleSheet, Text, View, TextInput, Keyboard} from 'react-native';
+import { ScreenContainer } from '@components/atoms/containers/ScreenContainer';
+import { KeyboardContainer } from '@components/atoms/containers/KeyboardContainer';
+import { useFormScreen } from '@hooks/useFormScreen';
 
-export const FormScreen = ({navigation}) => {
+interface FormScreenProps extends StackScreenProps<StackNavParams, 'Form'> {}
+
+export const FormScreen = ({navigation}: FormScreenProps) => {
+
+  const { inputText, onChangeInputText,  } = useFormScreen();
+
+
   return (
-    <View style={{
-      width: '100%',
-      height: '100%',
-      // backgroundColor: 'red',
-      justifyContent: 'flex-start',
-      alignItems: 'center'
-    }}>
-      <NavigationControl 
-        firstActionPress={() => navigation.navigate('Dashboard')} 
-        secondActionPress={() => navigation.navigate('Form')} />
+    <KeyboardContainer>
+      <ScreenContainer>
+        <NavigationControl 
+          firstActionPress={() => navigation.navigate('Dashboard')} 
+          secondActionPress={() => navigation.navigate('Form')} />
+
+        <TextInput
+          value={inputText}
+          style={inputStyles.textInput}
+          onChangeText={onChangeInputText}
+          placeholder='$0.00'
+          keyboardType='decimal-pad'
+          />
+      </ScreenContainer>
       
       <Text>Form Screen</Text>
-    </View>
+    </KeyboardContainer>
   )
 }
 
-const styles = StyleSheet.create({
-  row: {
-    flexDirection: 'row',
-  },
-  justifyContentCenter: {
-    justifyContent: 'center'
-  },
-  alignItemsCenter: {
-    alignItems: 'center'
+const inputStyles = StyleSheet.create({
+  textInput: {
+    height: 40,
+    width: '60%',
+    textAlign: 'center',
+    backgroundColor: colors[white],
+    borderColor: colors[black],
+    borderRadius: 10,
+    borderWidth: 1
   }
 })
+
+

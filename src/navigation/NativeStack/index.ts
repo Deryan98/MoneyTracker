@@ -1,1 +1,1 @@
-export {NativeStack} from './NativeStack'
+export {StackNav} from './StackNav'

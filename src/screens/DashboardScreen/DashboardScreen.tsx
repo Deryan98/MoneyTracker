@@ -1,33 +1,21 @@
 import { NavigationControl } from '@components/atoms/NavigationControl'
+import { ScreenContainer } from '@components/atoms/containers/ScreenContainer';
+import { StackNavParams } from '@navigation/NativeStack/types';
+import { StackScreenProps } from '@react-navigation/stack';
 import React from 'react'
-import {Pressable, StyleSheet, Text, View} from 'react-native'
+import {Pressable, StyleSheet, Text, View} from 'react-native';
 
-export const DashboardScreen = ({navigation}) => {
+interface DashboardScreenProps extends StackScreenProps<StackNavParams, 'Dashboard'> {}
+
+export const DashboardScreen = ({navigation}: DashboardScreenProps) => {
   return (
-    <View style={{
-      width: '100%',
-      height: '100%',
-      // backgroundColor: 'red',
-      justifyContent: 'flex-start',
-      alignItems: 'center'
-    }}>
+    <ScreenContainer>
       <NavigationControl 
         firstActionPress={() => navigation.navigate('Dashboard')} 
-        secondActionPress={() => navigation.navigate('Form')} />
-      
+        secondActionPress={() => navigation.navigate('Form')} 
+        firstActive
+        />
       <Text>Dashboard Screen</Text>
-    </View>
+   </ScreenContainer>
   )
 }
-
-const styles = StyleSheet.create({
-  row: {
-    flexDirection: 'row',
-  },
-  justifyContentCenter: {
-    justifyContent: 'center'
-  },
-  alignItemsCenter: {
-    alignItems: 'center'
-  }
-})

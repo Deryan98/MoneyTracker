@@ -2,10 +2,11 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import { DashboardScreen } from '@screens/DashboardScreen';
 import { FormScreen } from '@screens/FormScreen';
+import { StackNavParams } from './types';
 
-const Stack = createStackNavigator();
+const Stack = createStackNavigator<StackNavParams>();
 
-export const NativeStack = () => {
+export const StackNav = () => {
 
 
   return (
