@@ -15,6 +15,7 @@ export const NavigationControl = ({
       style={[
         GlobalStyles.alignItemsCenter,
         {
+          marginTop: 20,
           flexDirection: 'row',
           height: '10%',
           // backgroundColor: 'black',

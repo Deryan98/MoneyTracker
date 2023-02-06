@@ -23,6 +23,7 @@
       "@utils/*": ["utils/*"],
       "@icons/*": ["assets/icons/*"],
       "@navigation/*": ["navigation/*"],
+      "@data/*": ["data/*"],
     },
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
