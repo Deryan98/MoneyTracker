@@ -16,13 +16,16 @@ import {ScreenContainer} from '@components/atoms/containers/ScreenContainer';
 import {KeyboardContainer} from '@components/atoms/containers/KeyboardContainer';
 import {useFormScreen} from '@hooks/useFormScreen';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {categories, categoryType} from '@data/categories';
 import {ScrollContainer} from '@components/atoms/containers/ScrollContainer';
-import { Spacer } from '@components/atoms/containers/Spacer';
+import {Spacer} from '@components/atoms/containers/Spacer';
+import {incomes} from '@data/incomes';
+import {categoryType} from '@data/categoryType';
 
 interface FormScreenProps extends StackScreenProps<StackNavParams, 'Form'> {}
 
-export const FormScreen = ({navigation}: FormScreenProps) => {
+export const FormScreen = ({navigation, route}: FormScreenProps) => {
+  const categories = Object.values(route?.params);
+
   const {
     inputText,
     onChangeInputText,
@@ -37,11 +40,12 @@ export const FormScreen = ({navigation}: FormScreenProps) => {
 
   return (
     <KeyboardContainer>
-      <ScrollContainer>
+      <ScrollContainer style={{ 
+        // backgroundColor: 'blue' 
+        }}>
         <ScreenContainer
           containerStyle={{
-            // backgroundColor: 'red',
-            //  paddingVertical: 10
+              // backgroundColor: 'red',
           }}>
           <NavigationControl
             firstActionPress={() => navigation.navigate('Dashboard')}
@@ -60,43 +64,62 @@ export const FormScreen = ({navigation}: FormScreenProps) => {
             <></>
           )}
           <Spacer space={15} />
-         
-            <View
-              style={{
-                backgroundColor: 'white',
-                // width: '85%',
-                flexDirection: 'row',
-                flexWrap: 'wrap',
-                marginHorizontal: 'auto',
-                borderRadius: 15,
-                height: '85%'
-              }}>
-              {categories.map(({id, icon, name}: categoryType, index) => {
-                return (
-                  <TouchableOpacity
-                    key={id}
+
+          <View
+            style={{
+              backgroundColor: 'white',
+              // width: '85%',
+              flexDirection: 'row',
+              flexWrap: 'wrap',
+              marginHorizontal: 'auto',
+              borderRadius: 15,
+            }}>
+            {categories.map(({id, icon, name}: categoryType, index) => {
+              return (
+                <TouchableOpacity
+                  key={id}
+                  style={{
+                    // backgroundColor: 'red',
+                    flex: 1,
+                    minWidth: 100,
+                    maxWidth: 100,
+                    height: 100,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    backgroundColor:
+                      selectedCategory?.id === id
+                        ? colors[black]
+                        : 'transparent',
+                    borderRadius: 15,
+                  }}
+                  onPress={() => {
+                    setVisibleInputText(true);
+                    onChangeInputText('');
+                    onChangeSelectedCategory({id, icon, name});
+                  }}>
+                  <Icon
+                    name={icon}
+                    size={30}
+                    color={
+                      selectedCategory?.id === id
+                        ? colors[white]
+                        : colors[black]
+                    }
+                  />
+                  <Text
                     style={{
-                      // backgroundColor: 'red',
-                      flex: 1,
-                      minWidth: 100,
-                      maxWidth: 100,
-                      height: 100,
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      backgroundColor: selectedCategory?.id === id ? colors[black] : 'transparent',
-                      borderRadius: 15
-                    }}
-                    onPress={() => {
-                      setVisibleInputText(true);
-                      onChangeInputText('')
-                      onChangeSelectedCategory({id, icon, name});
+                      fontSize: 12,
+                      color:
+                        selectedCategory?.id === id
+                          ? colors[white]
+                          : colors[black],
                     }}>
-                    <Icon name={icon} size={30} color={ selectedCategory?.id === id ? colors[white] : colors[black] } />
-                    <Text style={{fontSize: 12, color: selectedCategory?.id === id ? colors[white] : colors[black] }}>{name}</Text>
-                  </TouchableOpacity>
-                );
-              })}
-            </View>
+                    {name}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
         </ScreenContainer>
       </ScrollContainer>
     </KeyboardContainer>

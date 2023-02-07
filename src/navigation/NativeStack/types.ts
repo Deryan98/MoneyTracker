@@ -1,4 +1,6 @@
+import { categoryType } from "@data/categoryType";
+
 export type StackNavParams = {
     Dashboard: undefined;
-    Form: undefined;
-  };
+    Form: {category: categoryType[]};
+};

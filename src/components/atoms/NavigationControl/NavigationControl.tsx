@@ -1,4 +1,5 @@
 import { black, colors, white } from '@constants/colors/colors';
+import { windowHeight } from '@constants/dimensions/Dimensions';
 import { GlobalStyles } from '@constants/styles/global.styles';
 import React, { useState } from 'react';
 import {Pressable, StyleSheet, Text, View} from 'react-native';
@@ -17,7 +18,7 @@ export const NavigationControl = ({
         {
           marginTop: 20,
           flexDirection: 'row',
-          height: '10%',
+          height: windowHeight * 0.07,
           // backgroundColor: 'black',
         },
       ]}>

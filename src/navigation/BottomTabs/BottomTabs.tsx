@@ -1,3 +1,6 @@
+import { fixedOutcomes } from '@data/fixedOutcomes';
+import { incomes } from '@data/incomes';
+import { varOutcomes } from '@data/varOutcomes';
 import { StackNav } from '@navigation/NativeStack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import FirstRun from '@screens/FirstRun';
@@ -14,30 +17,49 @@ export const BottomTabs = () => {
         tabBarActiveTintColor: '#e91e63'
       }}
     >
-      <Tab.Screen name="Incomes" component={StackNav} options={{
-        title: 'Ingresos',
-        tabBarIcon: ({color, size}) => (
-          <FontAwesome name="money" color={color} size={size} />
-        ),
-      }}  />
-      <Tab.Screen name="OutcomeFix" component={StackNav} options={{
-        title: 'Gastos Fijos',
-        tabBarIcon: ({color, size}) => (
-          <FontAwesome name="anchor" color={color} size={size} />
-        ),
-      }} />
-      <Tab.Screen name="Home" component={FirstRun} options={{
-        title: 'Inicio',
-        tabBarIcon: ({color, size}) => (
-          <FontAwesome name="pie-chart" color={color} size={size} />
-        ),
-      }} />
-      <Tab.Screen name="OutcomeVar" component={StackNav} options={{
-        title: 'Gastos Varios',
-        tabBarIcon: ({color, size}) => (
-          <FontAwesome name="credit-card-alt" color={color} size={size} />
-        ),
-      }} />
+      <Tab.Screen 
+        name="Incomes" 
+        component={StackNav}
+        initialParams={{category: incomes}} 
+        options={{
+          title: 'Ingresos',
+          tabBarIcon: ({color, size}) => (
+            <FontAwesome name="money" color={color} size={size} />
+          ),
+        }}  
+      />
+      <Tab.Screen 
+        name="OutcomeFix" 
+        component={StackNav} 
+        initialParams={{category: fixedOutcomes}}
+        options={{
+          title: 'Gastos Fijos',
+          tabBarIcon: ({color, size}) => (
+            <FontAwesome name="anchor" color={color} size={size} />
+          ),
+        }}
+      />
+      <Tab.Screen 
+        name="Home" 
+        component={FirstRun}
+        options={{
+          title: 'Inicio',
+          tabBarIcon: ({color, size}) => (
+            <FontAwesome name="pie-chart" color={color} size={size} />
+          ),
+        }} 
+      />
+      <Tab.Screen 
+        name="OutcomeVar" 
+        component={StackNav}
+        initialParams={{category: varOutcomes}} 
+        options={{
+          title: 'Gastos Varios',
+          tabBarIcon: ({color, size}) => (
+            <FontAwesome name="credit-card-alt" color={color} size={size} />
+          ),
+        }} 
+      />
       <Tab.Screen name="Settings" component={FirstRun} options={{
         title: 'Cuenta',
         tabBarIcon: ({color, size}) => (

@@ -1,4 +1,4 @@
-import { categoryType } from "@data/categories";
+import { categoryType } from "@data/categoryType";
 import { useEffect, useState } from "react";
 
 export const useFormScreen = () => {
