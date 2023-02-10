@@ -1,6 +1,6 @@
 import { NavigationControl } from '@components/atoms/NavigationControl'
 import { ScreenContainer } from '@components/atoms/containers/ScreenContainer';
-import { StackNavParams } from '@navigation/NativeStack/types';
+import { StackNavParams } from '@navigation/StackNav/types';
 import { StackScreenProps } from '@react-navigation/stack';
 import React from 'react'
 import {Pressable, StyleSheet, Text, View} from 'react-native';

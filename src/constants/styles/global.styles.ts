@@ -10,4 +10,7 @@ export const GlobalStyles = StyleSheet.create({
   alignItemsCenter: {
     alignItems: 'center',
   },
+  width100percent: {
+    width: '100%'
+  }
 });

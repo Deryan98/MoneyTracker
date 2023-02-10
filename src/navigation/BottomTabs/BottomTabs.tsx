@@ -1,9 +1,11 @@
+import { accent, black, colors, gray, primary, secondary, tertiary, white } from '@constants/colors/colors';
 import { fixedOutcomes } from '@data/fixedOutcomes';
 import { incomes } from '@data/incomes';
 import { varOutcomes } from '@data/varOutcomes';
-import { StackNav } from '@navigation/NativeStack';
+import { StackNav } from '@navigation/StackNav';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import FirstRun from '@screens/FirstRun';
+import { FormCategory } from '@screens/FormCategory';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 const Tab = createBottomTabNavigator();
@@ -14,7 +16,18 @@ export const BottomTabs = () => {
       screenOptions={{
         headerShown: false,
         tabBarHideOnKeyboard: true,
-        tabBarActiveTintColor: '#e91e63'
+        tabBarStyle: {
+          backgroundColor: colors[black],
+          borderTopRightRadius: 10,
+          borderTopLeftRadius: 10
+        },
+        tabBarActiveTintColor: colors[primary],
+        tabBarInactiveTintColor: colors[gray],
+        tabBarActiveBackgroundColor: colors[secondary],
+        tabBarItemStyle: {
+          borderRadius: 10
+        }
+
       }}
     >
       <Tab.Screen 
@@ -60,10 +73,10 @@ export const BottomTabs = () => {
           ),
         }} 
       />
-      <Tab.Screen name="Settings" component={FirstRun} options={{
-        title: 'Cuenta',
+      <Tab.Screen name="FormCategory" component={FormCategory} options={{
+        title: 'Categorias',
         tabBarIcon: ({color, size}) => (
-          <FontAwesome name="user-circle" color={color} size={size} />
+          <FontAwesome name="tags" color={color} size={size} />
         ),
       }} />
     </Tab.Navigator>

@@ -24,6 +24,7 @@
       "@icons/*": ["assets/icons/*"],
       "@navigation/*": ["navigation/*"],
       "@data/*": ["data/*"],
+      "@db/*": ["db/*"],
     },
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,

@@ -1,6 +1,6 @@
 import {NavigationControl} from '@components/atoms/NavigationControl';
 import {black, colors, white} from '@constants/colors/colors';
-import {StackNavParams} from '@navigation/NativeStack/types';
+import {StackNavParams} from '@navigation/StackNav/types';
 import {StackScreenProps} from '@react-navigation/stack';
 import React, {useState} from 'react';
 import {
@@ -53,13 +53,18 @@ export const FormScreen = ({navigation, route}: FormScreenProps) => {
           />
 
           {visibleInputText ? (
-            <TextInput
-              value={inputText}
-              style={inputStyles.textInput}
-              onChangeText={onChangeInputText}
-              placeholder="$0.00"
-              keyboardType="decimal-pad"
-            />
+            <>
+              <TextInput
+                value={inputText}
+                style={inputStyles.textInput}
+                onChangeText={onChangeInputText}
+                placeholder="$0.00"
+                keyboardType="decimal-pad"
+              />
+              <Pressable>
+                <Text>Guardar</Text>
+              </Pressable>
+            </>
           ) : (
             <></>
           )}
