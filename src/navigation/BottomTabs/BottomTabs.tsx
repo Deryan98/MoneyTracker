@@ -73,12 +73,6 @@ export const BottomTabs = () => {
           ),
         }} 
       />
-      <Tab.Screen name="FormCategory" component={FormCategory} options={{
-        title: 'Categorias',
-        tabBarIcon: ({color, size}) => (
-          <FontAwesome name="tags" color={color} size={size} />
-        ),
-      }} />
     </Tab.Navigator>
   );
 }

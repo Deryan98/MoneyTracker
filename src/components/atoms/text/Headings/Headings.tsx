@@ -5,7 +5,7 @@ import {Text, View} from 'react-native';
 import styles from './styles';
 import {HeadingsProps} from './types';
 
-export const Headings = ({children, headingSize, color=black}: HeadingsProps) => {
+export const Headings = ({children, headingSize, color=black, containerStyle={}}: HeadingsProps) => {
   let fontSize;
 
   switch (headingSize) {
@@ -37,6 +37,7 @@ export const Headings = ({children, headingSize, color=black}: HeadingsProps) =>
         GlobalStyles.alignItemsCenter,
         GlobalStyles.width100percent,
         styles.container,
+        containerStyle
       ]}>
       <Text style={{fontSize: fontSize, color: color}}>{children}</Text>
     </View>

@@ -32,45 +32,21 @@ import {iconType} from '@data/iconType';
 import {Headings} from '@components/atoms/text/Headings/Headings';
 import {GlobalStyles} from '@constants/styles/global.styles';
 import {getDbConnection, insertCategory} from '@db/db';
+import {useFormCategory} from './useFormCategory';
 
 interface FormScreenProps extends StackScreenProps<StackNavParams, 'Form'> {}
 
 export const FormCategory = ({navigation, route}: FormScreenProps) => {
-  const [inputText, onChangeInputText] = useState<string>('');
-
-  const [visibleInputText, setVisibleInputText] = useState<boolean>(false);
-
-  const [selectedIcon, onChangeSelectedIcon] = useState<iconType>();
-
-  const [error, setError] = useState<string>('');
-
-  const createCategory = async () => {
-    if (inputText === '') {
-      setError('A category name is required before submitting');
-      return;
-    }
-    try {
-      const db = await getDbConnection();
-      await insertCategory(db, inputText, selectedIcon?.icon!);
-      setError('')
-      onChangeInputText('')
-      Alert.alert(
-        'Success',
-        'Task created',
-        [
-          {
-            text: 'Ok',
-            onPress: () => console.log('navega al listado de categorias'),
-          },
-        ],
-        {cancelable: false},
-      );
-      db.close();
-    } catch (e: any) {
-      console.log(e.message)
-      setError(`An error occurred saving the task: ${e.message}`);
-    }
-  };
+  const {
+    inputText,
+    onChangeInputText,
+    visibleInputText,
+    selectedIcon,
+    error,
+    setError,
+    createCategory,
+    handlePressItem
+  } = useFormCategory();
 
   return (
     <KeyboardContainer>
@@ -84,9 +60,15 @@ export const FormCategory = ({navigation, route}: FormScreenProps) => {
           containerStyle={{
             backgroundColor: colors[accent],
           }}>
+          <Headings
+            headingSize="H4"
+            color={colors[white]}
+            containerStyle={titleStyles.titleContainer}>
+            Categories
+          </Headings>
           <Spacer space={10} />
           <Headings
-            headingSize={selectedIcon ? 'H4' : 'H3'}
+            headingSize={selectedIcon ? 'H5' : 'H4'}
             color={colors[gray]}>
             {selectedIcon
               ? 'Elige un nombre para tu categoría'
@@ -103,31 +85,18 @@ export const FormCategory = ({navigation, route}: FormScreenProps) => {
                 placeholderTextColor={colors[gray]}
                 keyboardType="default"
               />
-              <Headings headingSize="H6" color={colors[secondary]}>{error}</Headings>
+              <Headings headingSize="H6" color={colors[secondary]}>
+                {error}
+              </Headings>
               <View style={GlobalStyles.row}>
                 <TouchableOpacity
                   onPress={createCategory}
-                  style={{
-                    backgroundColor: colors[primary],
-                    width: '25%',
-                    paddingVertical: 10,
-                    borderRadius: 10,
-                    marginVertical: 10,
-                    marginHorizontal: 5,
-                  }}>
+                  style={buttonStyles.save}>
                   <Headings headingSize="H5" color={white}>
                     Guardar
                   </Headings>
                 </TouchableOpacity>
-                <TouchableOpacity
-                  style={{
-                    backgroundColor: colors[secondary],
-                    width: '25%',
-                    paddingVertical: 10,
-                    borderRadius: 10,
-                    marginVertical: 10,
-                    marginHorizontal: 5,
-                  }}>
+                <TouchableOpacity style={buttonStyles.cancel}>
                   <Headings headingSize="H5" color={white}>
                     Cancelar
                   </Headings>
@@ -139,38 +108,21 @@ export const FormCategory = ({navigation, route}: FormScreenProps) => {
           )}
           <Spacer space={15} />
 
-          <View
-            style={{
-              backgroundColor: colors[white],
-              // width: '85%',
-              flexDirection: 'row',
-              flexWrap: 'wrap',
-              marginHorizontal: 'auto',
-              borderRadius: 15,
-            }}>
+          <View style={listStyles.listContainer}>
             {icons.map(({id, icon}: iconType, index) => {
               return (
                 <TouchableOpacity
                   key={id}
-                  style={{
-                    // backgroundColor: 'red',
-                    flex: 1,
-                    minWidth: 100,
-                    maxWidth: 100,
-                    height: 100,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    backgroundColor:
-                      selectedIcon?.id === id
-                        ? colors[tertiary]
-                        : 'transparent',
-                    borderRadius: 15,
-                  }}
-                  onPress={() => {
-                    setVisibleInputText(true);
-                    onChangeInputText('');
-                    onChangeSelectedIcon({id, icon});
-                  }}>
+                  style={[
+                    listStyles.listItemContainer,
+                    {
+                      backgroundColor:
+                        selectedIcon?.id === id
+                          ? colors[tertiary]
+                          : 'transparent',
+                    },
+                  ]}
+                  onPress={() => handlePressItem(id, icon)}>
                   <Icon
                     name={icon}
                     size={30}
@@ -188,6 +140,17 @@ export const FormCategory = ({navigation, route}: FormScreenProps) => {
   );
 };
 
+const titleStyles = StyleSheet.create({
+  titleContainer: {
+    height: 40,
+    width: '50%',
+    borderBottomLeftRadius: 25,
+    borderBottomRightRadius: 25,
+    justifyContent: 'center',
+    backgroundColor: colors[black],
+  },
+});
+
 const inputStyles = StyleSheet.create({
   textInput: {
     height: 40,
@@ -198,5 +161,44 @@ const inputStyles = StyleSheet.create({
     borderColor: colors[black],
     borderRadius: 10,
     borderWidth: 1,
+  },
+});
+
+const buttonStyles = StyleSheet.create({
+  save: {
+    backgroundColor: colors[primary],
+    width: '25%',
+    paddingVertical: 10,
+    borderRadius: 10,
+    marginVertical: 10,
+    marginHorizontal: 5,
+  },
+  cancel: {
+    backgroundColor: colors[secondary],
+    width: '25%',
+    paddingVertical: 10,
+    borderRadius: 10,
+    marginVertical: 10,
+    marginHorizontal: 5,
+  },
+});
+
+const listStyles = StyleSheet.create({
+  listContainer: {
+    backgroundColor: colors[white],
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    marginHorizontal: 'auto',
+    borderRadius: 15,
+  },
+  listItemContainer: {
+    // backgroundColor: 'red',
+    flex: 1,
+    minWidth: 100,
+    maxWidth: 100,
+    height: 100,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 15,
   },
 });

@@ -8,6 +8,7 @@ const Stack = createStackNavigator<StackNavParams>();
 export const StackNav = ({route}) => {
   return (
     <Stack.Navigator
+      initialRouteName='Form'
       screenOptions={{
         headerShown: false,
       }}>
