@@ -1,49 +1,44 @@
-import {colors, primary, white} from '@constants/colors/colors';
-import {RootNavigator} from '@navigation/RootNavigator';
+import {accent, colors, primary, white} from '@constants/colors/colors';
 import {createDrawerNavigator} from '@react-navigation/drawer';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import { FormCategory } from '@screens/FormCategory';
+import {drawerRouter} from './router';
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
+import {faLayerGroup} from '@fortawesome/free-solid-svg-icons/faLayerGroup';
+import CustomDrawer from './CustomDrawer';
 
 const Drawer = createDrawerNavigator();
 
 export const DrawerNav = () => {
   return (
-    <Drawer.Navigator screenOptions={{
-      drawerActiveTintColor: colors['tertiary'],
-      drawerInactiveTintColor: colors['inactive'],
-      // drawerInactiveBackgroundColor: 'red',
-      // drawerActiveBackgroundColor: colors[primary],
-      headerTintColor: colors[white],
-      headerStyle: {
-        backgroundColor: colors[primary],
-      },
-      drawerStyle: {
-        backgroundColor: colors[primary],
-        width: '50%'
-      },
-      title: 'Money Tracker',
-      drawerType:'back'
-    }}>
-      <Drawer.Screen
-        name="DrawerNav"
-        component={RootNavigator}
-        options={{
-          drawerLabel: 'Inicio',
-          drawerIcon: ({color, focused, size}) => (
-            <FontAwesome name="home" color={color} size={size} />
-          ),
-        }}
-      />
-      <Drawer.Screen
-        name="FormCategory"
-        component={FormCategory}
-        options={{
-          drawerLabel: 'Categories',
-          drawerIcon: ({color, focused, size}) => (
-            <FontAwesome name="tags" color={color} size={size} />
-          ),
-        }}
-      />
+    <Drawer.Navigator
+      drawerContent={props => <CustomDrawer {...props} />}
+      screenOptions={{
+        title: 'Money Tracker',
+        drawerType: 'slide',
+        drawerActiveTintColor: colors[accent][0],
+        drawerInactiveTintColor: colors[accent][2],
+        // drawerInactiveBackgroundColor: 'red',
+        // drawerActiveBackgroundColor: colors[accent],
+        headerTintColor: colors[accent][0],
+        headerStyle: {
+          backgroundColor: colors[primary][0],
+        },
+        drawerStyle: {
+          backgroundColor: colors[primary][0],
+          width: '50%',
+        },
+        drawerItemStyle: {
+          borderBottomColor: colors[primary][0],
+          borderBottomWidth: 2,
+        },
+      }}>
+      {drawerRouter.map(({name, component, options}, index) => (
+        <Drawer.Screen
+          key={name + index}
+          name={name}
+          component={component}
+          options={options}
+        />
+      ))}
     </Drawer.Navigator>
   );
 };
