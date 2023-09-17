@@ -1,9 +1,8 @@
 import 'react-native-gesture-handler';
-import { NavigationContainer } from '@react-navigation/native';
-
 import { useEffect } from 'react';
 import { initDatabase } from '@db/db';
 import { DrawerNav } from '@navigation/DrawerNav';
+import { ThemeProvider } from '@context/ThemeContext';
 
 
 
@@ -19,10 +18,18 @@ function App(): JSX.Element {
   
 
   return (
-    <NavigationContainer>
+    <AppState>
       <DrawerNav />
-    </NavigationContainer>
+    </AppState>
   );
+}
+
+const AppState = ({ children }: any) => {
+  return (
+    <ThemeProvider>
+      {children}
+    </ThemeProvider>
+  )
 }
 
 export default App;
