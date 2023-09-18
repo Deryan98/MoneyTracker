@@ -5,10 +5,10 @@ import {StackNavParams} from './types';
 
 const Stack = createStackNavigator<StackNavParams>();
 
-export const StackNav = ({route}) => {
+export const StackNav = ({route}: any) => {
   return (
     <Stack.Navigator
-      initialRouteName='Form'
+      initialRouteName="Form"
       screenOptions={{
         headerShown: false,
       }}>

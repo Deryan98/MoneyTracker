@@ -1,5 +1,4 @@
 import {RootNavigator} from '@navigation/RootNavigator';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {selectedLanguage} from '@constants/languages';
 import {FormCategory} from '@screens/FormCategory';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
@@ -7,7 +6,7 @@ import {faLayerGroup} from '@fortawesome/free-solid-svg-icons/faLayerGroup';
 import {faHome} from '@fortawesome/free-solid-svg-icons/faHome';
 import {faBookBookmark} from '@fortawesome/free-solid-svg-icons/faBookBookmark';
 
-export const drawerRouter: ScreenInterface[] = [
+export const drawerRouter: IDrawer[] = [
   {
     name: selectedLanguage.drawer[0].label,
     component: RootNavigator,
