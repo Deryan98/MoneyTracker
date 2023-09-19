@@ -7,7 +7,7 @@ interface CustomTabBarButtonProps {
   children?: ReactNode;
   onPress?: any;
 }
-
+/* @deprecated */
 const CustomTabBarButton: FC<CustomTabBarButtonProps> = ({
   children,
   onPress,

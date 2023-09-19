@@ -12,11 +12,12 @@ import {varOutcomes} from '@data/varOutcomes';
 import {incomes} from '@data/incomes';
 import {accent, colors} from '@constants/colors/colors';
 import {TouchableOpacity, View} from 'react-native';
+import Resumen from '@screens/Resumen';
 
 export const bottomTabsRoutes: IBottomTab[] = [
   {
     name: 'Incomes',
-    component: StackNav,
+    component: Resumen,
     initialParams: {category: incomes},
     options: {
       title: 'Resumen',
