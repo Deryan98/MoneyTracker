@@ -16,9 +16,8 @@ const CustomTabBarButton: FC<CustomTabBarButtonProps> = ({
     <TouchableOpacity
       style={{
         bottom: 30,
-        width: 65,
-        height: 70,
-        backgroundColor: 'transparent',
+        width: 70,
+        height: 100,
         justifyContent: 'center',
         alignItems: 'center',
       }}
@@ -26,12 +25,12 @@ const CustomTabBarButton: FC<CustomTabBarButtonProps> = ({
       <View
         style={{
           backgroundColor: colors[accent][0],
-          width: 35,
-          height: 35,
+          width: 70,
+          height: 70,
           borderRadius: 50,
-        }}>
-        {children}
-      </View>
+          zIndex: 0,
+        }}></View>
+      {children}
     </TouchableOpacity>
   );
 };

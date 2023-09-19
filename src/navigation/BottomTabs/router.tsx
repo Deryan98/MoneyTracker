@@ -1,6 +1,5 @@
 import {StackNav} from '@navigation/StackNav';
 import FirstRun from '@screens/FirstRun';
-import CustomTabBarButton from './CustomTabBarButton';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faHome} from '@fortawesome/free-solid-svg-icons/faHome';
 import {fixedOutcomes} from '@data/fixedOutcomes';
@@ -12,6 +11,7 @@ import {faChartPie} from '@fortawesome/free-solid-svg-icons/faChartPie';
 import {varOutcomes} from '@data/varOutcomes';
 import {incomes} from '@data/incomes';
 import {accent, colors} from '@constants/colors/colors';
+import {TouchableOpacity, View} from 'react-native';
 
 export const bottomTabsRoutes: IBottomTab[] = [
   {
@@ -57,12 +57,35 @@ export const bottomTabsRoutes: IBottomTab[] = [
         <FontAwesomeIcon
           icon={faPlusCircle}
           color={colors[accent][2]}
-          size={50}
+          size={70}
+          style={{
+            zIndex: 1,
+            // bottom: 43,
+            backgroundColor: colors[accent][0],
+            borderRadius: 50,
+          }}
         />
       ),
+      tabBarItemStyle: {},
+      tabBarIconStyle: {},
       tabBarButton: ({onPress, children}) => {
         return (
-          <CustomTabBarButton onPress={onPress}>{children}</CustomTabBarButton>
+          // <CustomTabBarButton onPress={onPress}>{children}</CustomTabBarButton>
+          <TouchableOpacity
+            style={{
+              position: 'absolute',
+              bottom: 0,
+              top: 0,
+              left: '43%',
+              width: 70,
+              height: 0,
+              backgroundColor: 'red',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+            onPress={onPress}>
+            {children}
+          </TouchableOpacity>
         );
       },
     },
