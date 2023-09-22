@@ -12,7 +12,7 @@ import {varOutcomes} from '@data/varOutcomes';
 import {incomes} from '@data/incomes';
 import {accent, colors} from '@constants/colors/colors';
 import {TouchableOpacity, View} from 'react-native';
-import Resumen from '@screens/Resumen';
+import Resumen from '@screens/ResumenScreen';
 
 export const bottomTabsRoutes: IBottomTab[] = [
   {

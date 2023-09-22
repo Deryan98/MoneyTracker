@@ -1,18 +1,21 @@
 import {BottomTabNavigationOptions} from '@react-navigation/bottom-tabs';
-import {accent, colors, primary} from '@constants/colors/colors';
+import {accent, primary} from '@constants/colors/colors';
+import {heightDP} from '@utils/responsive';
 
-export const bottomTabNavScreenOptions: BottomTabNavigationOptions = {
+type BottomTabNavType = (colors: any) => BottomTabNavigationOptions;
+
+export const bottomTabNavScreenOptions: BottomTabNavType = (colors: any) => ({
   headerShown: false,
   tabBarHideOnKeyboard: true,
   tabBarStyle: {
-    backgroundColor: colors[primary][0],
+    backgroundColor: colors.primary,
     borderTopRightRadius: 50,
     borderTopLeftRadius: 50,
-    height: '10%',
+    height: heightDP(12),
   },
-  tabBarActiveTintColor: colors[accent][1],
-  tabBarInactiveTintColor: colors[accent][2],
-  tabBarActiveBackgroundColor: `${colors[accent][1]}33`,
+  tabBarActiveTintColor: colors.secondary,
+  tabBarInactiveTintColor: colors.inactive,
+  tabBarActiveBackgroundColor: `${colors.secondary}33`,
   tabBarItemStyle: {
     borderRadius: 50,
     marginVertical: 5,
@@ -26,4 +29,4 @@ export const bottomTabNavScreenOptions: BottomTabNavigationOptions = {
   tabBarIconStyle: {
     marginTop: 0,
   },
-};
+});

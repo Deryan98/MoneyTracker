@@ -1,21 +1,22 @@
 import {DrawerNavigationOptions} from '@react-navigation/drawer';
-import {accent, colors, primary} from '@constants/colors/colors';
 
-export const drawerNavScreenOptions: DrawerNavigationOptions = {
+type DrawerNavOptionsType = (colors: any) => DrawerNavigationOptions;
+
+export const drawerNavScreenOptions: DrawerNavOptionsType = colors => ({
   title: 'Money Tracker',
   drawerType: 'slide',
-  drawerActiveTintColor: colors[accent][0],
-  drawerInactiveTintColor: colors[accent][2],
-  headerTintColor: colors[accent][0],
+  drawerActiveTintColor: colors.accent,
+  drawerInactiveTintColor: colors.secondary,
+  headerTintColor: colors.accent,
   headerStyle: {
-    backgroundColor: colors[primary][0],
+    backgroundColor: colors.primary,
   },
   drawerStyle: {
-    backgroundColor: colors[primary][0],
+    backgroundColor: colors.primary,
     width: '50%',
   },
   drawerItemStyle: {
-    borderBottomColor: colors[primary][0],
+    borderBottomColor: colors.primary,
     borderBottomWidth: 2,
   },
-};
+});
