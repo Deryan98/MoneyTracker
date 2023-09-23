@@ -7,6 +7,7 @@ export const themeLight = {
     inactive: '#5CA41B',
     success: '#C7FF70',
     warning: '#f5a623',
+    info: '#0BB7E3',
     error: '#f21361',
   },
 };

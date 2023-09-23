@@ -1,7 +1,5 @@
 interface PieChartProps {
-  data: ChartItem[];
+  data: any;
   radius: number;
-  onPress: any;
-  balanceGnrl: number;
-  balanceLbl: string;
+  items: SelectOptions[];
 }

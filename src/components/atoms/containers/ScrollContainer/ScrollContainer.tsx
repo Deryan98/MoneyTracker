@@ -1,11 +1,11 @@
-import React from 'react'
-import { ScrollView } from 'react-native'
-import { ScrollContainerProps } from './types'
+import React from 'react';
+import {ScrollView} from 'react-native';
+import {ScrollContainerProps} from './types';
 
-export const ScrollContainer = ({children, style}:ScrollContainerProps) => {
+export const ScrollContainer = ({children, style}: ScrollContainerProps) => {
   return (
-    <ScrollView style={[style]}>
+    <ScrollView style={[style]} nestedScrollEnabled>
       {children}
     </ScrollView>
-  )
-}
+  );
+};

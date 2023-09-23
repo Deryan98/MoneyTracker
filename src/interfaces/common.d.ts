@@ -18,6 +18,11 @@ declare global {
   interface IBottomTab extends ScreenInterface {
     options?: BottomTabNavigationOptions;
   }
+
+  interface SelectOptions {
+    value: string;
+    label: string;
+  }
   interface ChartItem {
     value: number;
     color: string;
