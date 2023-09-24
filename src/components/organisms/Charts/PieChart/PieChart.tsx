@@ -49,6 +49,8 @@ export const PieChart: FC<PieChartProps> = ({data, radius, items}) => {
         defaultOption={items[0]}
         onSelect={onSelect}
         clearable={false}
+        animation={100}
+        theme="dark"
       />
       <PieChartGifted
         data={chartData}

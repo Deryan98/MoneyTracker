@@ -7,11 +7,13 @@ export const selectStyles: SelectStylesType = colors => ({
     marginTop: -110,
     backgroundColor: colors.info,
     padding: 5,
+    height: 200,
   },
   option: {
     container: {
       marginVertical: 2,
       marginRight: 10,
+      height: 50,
     },
     text: {
       color: colors.accent,

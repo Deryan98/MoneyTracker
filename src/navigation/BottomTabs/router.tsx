@@ -1,5 +1,4 @@
 import {StackNav} from '@navigation/StackNav';
-import FirstRun from '@screens/FirstRun';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faHome} from '@fortawesome/free-solid-svg-icons/faHome';
 import {fixedOutcomes} from '@data/fixedOutcomes';
@@ -13,10 +12,14 @@ import {incomes} from '@data/incomes';
 import {accent, colors} from '@constants/colors/colors';
 import {TouchableOpacity, View} from 'react-native';
 import Resumen from '@screens/ResumenScreen';
+import CategoriesScreen from '@screens/CategoriesScreen';
+import AccountsScreen from '@screens/AccountsScreen';
+import BudgetsScreen from '@screens/BudgetsScreen';
+import AnalysisScreen from '@screens/AnalysisScreen';
 
 export const bottomTabsRoutes: IBottomTab[] = [
   {
-    name: 'Incomes',
+    name: 'Resumen',
     component: Resumen,
     initialParams: {category: incomes},
     options: {
@@ -27,8 +30,8 @@ export const bottomTabsRoutes: IBottomTab[] = [
     },
   },
   {
-    name: 'OutcomeFix',
-    component: StackNav,
+    name: 'Accounts',
+    component: AccountsScreen,
     initialParams: {category: fixedOutcomes},
     options: {
       title: 'Accounts',
@@ -38,8 +41,8 @@ export const bottomTabsRoutes: IBottomTab[] = [
     },
   },
   {
-    name: 'OutcomeFix2',
-    component: StackNav,
+    name: 'Categories',
+    component: CategoriesScreen,
     initialParams: {category: fixedOutcomes},
     options: {
       title: 'Categories',
@@ -49,7 +52,7 @@ export const bottomTabsRoutes: IBottomTab[] = [
     },
   },
   {
-    name: 'OutcomeFix3',
+    name: 'Outcomes',
     component: StackNav,
     initialParams: {category: fixedOutcomes},
     options: {
@@ -93,7 +96,7 @@ export const bottomTabsRoutes: IBottomTab[] = [
   },
   {
     name: 'Budgets',
-    component: FirstRun,
+    component: BudgetsScreen,
     options: {
       title: 'Budgets',
       tabBarIcon: ({color, size}) => (
@@ -102,8 +105,8 @@ export const bottomTabsRoutes: IBottomTab[] = [
     },
   },
   {
-    name: 'OutcomeVar',
-    component: StackNav,
+    name: 'AnalysisScreen',
+    component: AnalysisScreen,
     initialParams: {category: varOutcomes},
     options: {
       title: 'Analysis',
