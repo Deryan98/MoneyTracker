@@ -1,6 +1,6 @@
-import { ViewStyle } from "react-native/types";
+import {PropsWithChildren} from 'react';
+import {ViewStyle} from 'react-native/types';
 
-export interface ScreenContainerTypes {
-    children: JSX.Element |  JSX.Element[];
-    containerStyle?: ViewStyle;
+export interface ScreenContainerTypes extends PropsWithChildren {
+  containerStyle?: ViewStyle;
 }

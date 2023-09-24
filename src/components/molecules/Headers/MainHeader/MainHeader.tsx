@@ -5,21 +5,24 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import {useNavigation} from '@react-navigation/native';
 import {useTheme} from '@redshank/native';
 
-type Props = {
-  title: string;
+type MainHeaderProps = {
+  title?: string;
 };
 
-const MainHeader = ({title}: Props) => {
+const MainHeader = ({title = ''}: MainHeaderProps) => {
   const [title1, title2] = title.split(' ');
 
   const navigation = useNavigation();
   const {colors} = useTheme();
+
+  console.log({title1, title2});
 
   return (
     <View
       style={{
         flexDirection: 'row',
         padding: 30,
+        width: '100%',
       }}>
       <TouchableOpacity onPress={() => navigation.openDrawer()}>
         <FontAwesomeIcon
@@ -29,13 +32,19 @@ const MainHeader = ({title}: Props) => {
           style={{marginRight: 30, marginTop: 10}}
         />
       </TouchableOpacity>
-      <View>
-        <Text style={styles.title1}>
-          {title1}
-          {'\n'}
-          <Text style={styles.title2}>{title2}</Text>
-        </Text>
-      </View>
+      {title && (
+        <View>
+          <Text style={styles.title1}>
+            {title1}
+            {title2 && (
+              <Text style={styles.title2}>
+                {'\n'}
+                {title2}
+              </Text>
+            )}
+          </Text>
+        </View>
+      )}
     </View>
   );
 };
@@ -43,14 +52,14 @@ const MainHeader = ({title}: Props) => {
 const styles = StyleSheet.create({
   title1: {
     color: '#373737',
-    fontSize: 24,
-    fontWeight: '400',
+    fontSize: 36,
+    fontWeight: 'bold',
     textAlign: 'left',
   },
   title2: {
     color: '#373737',
-    fontSize: 36,
-    fontWeight: 'bold',
+    fontSize: 24,
+    fontWeight: '400',
     textAlign: 'left',
   },
 });

@@ -1,12 +1,13 @@
-import {Text, View} from 'react-native';
+import {ScreenTemplate} from '@components/templates/ScreenTemplate';
+import {Text} from 'react-native';
 
 type Props = {};
 
 const CategoriesScreen = (props: Props) => {
   return (
-    <View>
-      <Text>CategoriesScreen</Text>
-    </View>
+    <ScreenTemplate headerTitle="Categorias">
+      <Text>Categorias</Text>
+    </ScreenTemplate>
   );
 };
 

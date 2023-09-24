@@ -1,15 +1,13 @@
-import React from 'react';
+import React, {FC} from 'react';
 import {View, KeyboardAvoidingView, Platform} from 'react-native';
 import styles from './styles';
-import { ScreenContainerTypes } from './types';
+import {ScreenContainerTypes} from './types';
 
-export const ScreenContainer = ({
+export const ScreenContainer: FC<ScreenContainerTypes> = ({
   children,
   containerStyle,
-}: ScreenContainerTypes) => {
+}) => {
   return (
-    <View style={[styles.screenContainer, containerStyle]}>
-      {children}
-    </View>
+    <View style={[styles.screenContainer, containerStyle]}>{children}</View>
   );
 };

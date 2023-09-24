@@ -1,12 +1,13 @@
+import {ScreenTemplate} from '@components/templates/ScreenTemplate';
 import {Text, View} from 'react-native';
 
 type Props = {};
 
 const BudgetsScreen = (props: Props) => {
   return (
-    <View>
-      <Text>BudgetsScreen</Text>
-    </View>
+    <ScreenTemplate headerTitle="Presupuestos Mensuales">
+      <Text>Presupuestos</Text>
+    </ScreenTemplate>
   );
 };
 
