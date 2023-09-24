@@ -45,7 +45,7 @@ export const FormCategory = ({navigation, route}: FormScreenProps) => {
     error,
     setError,
     createCategory,
-    handlePressItem
+    handlePressItem,
   } = useFormCategory();
 
   return (

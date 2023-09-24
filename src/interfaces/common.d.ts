@@ -29,4 +29,11 @@ declare global {
     text?: string;
     focused?: boolean;
   }
+  interface TransactItem {
+    icon: any;
+    category: string;
+    amount: number;
+    date: string;
+    color: string;
+  }
 }

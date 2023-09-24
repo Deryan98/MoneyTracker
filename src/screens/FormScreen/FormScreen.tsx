@@ -40,13 +40,18 @@ export const FormScreen = ({navigation, route}: FormScreenProps) => {
 
   return (
     <KeyboardContainer>
-      <ScrollContainer style={{ 
-        // backgroundColor: 'blue' 
-        }}>
+      <ScrollContainer
+        style={
+          {
+            // backgroundColor: 'blue'
+          }
+        }>
         <ScreenContainer
-          containerStyle={{
+          containerStyle={
+            {
               // backgroundColor: 'red',
-          }}>
+            }
+          }>
           <NavigationControl
             firstActionPress={() => navigation.navigate('Dashboard')}
             secondActionPress={() => navigation.navigate('Form')}

@@ -4,7 +4,7 @@ import {ScrollContainerProps} from './types';
 
 export const ScrollContainer = ({children, style}: ScrollContainerProps) => {
   return (
-    <ScrollView style={[style]} nestedScrollEnabled>
+    <ScrollView style={style} nestedScrollEnabled>
       {children}
     </ScrollView>
   );

@@ -1,5 +1,4 @@
 import {BottomTabNavigationOptions} from '@react-navigation/bottom-tabs';
-import {accent, primary} from '@constants/colors/colors';
 import {heightDP} from '@utils/responsive';
 
 type BottomTabNavType = (colors: any) => BottomTabNavigationOptions;
@@ -23,8 +22,6 @@ export const bottomTabNavScreenOptions: BottomTabNavType = (colors: any) => ({
     width: 50,
     marginTop: 10,
     bottom: -27,
-
-    // marginHorizontal: 15,
   },
   tabBarIconStyle: {
     marginTop: 0,
