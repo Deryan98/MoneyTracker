@@ -3,7 +3,7 @@ import {DrawerNavigationOptions} from '@react-navigation/drawer';
 type DrawerNavOptionsType = (colors: any) => DrawerNavigationOptions;
 
 export const drawerNavScreenOptions: DrawerNavOptionsType = colors => ({
-  title: 'Money Tracker',
+  headerShown: false,
   drawerType: 'slide',
   drawerActiveTintColor: colors.accent,
   drawerInactiveTintColor: colors.secondary,

@@ -6,23 +6,14 @@ import {data, items} from './partials/chartData';
 import {TransactCard} from '@components/molecules/Cards/TransactCard';
 import {ScrollContainer} from '@components/atoms/containers/ScrollContainer';
 import {transactData} from './partials/transactData';
+import {MainHeader} from '@components/molecules/Headers/MainHeader';
 
 const ResumenScreen = () => {
   return (
     <ScrollContainer style={{flex: 1}}>
       <ScreenContainer
         containerStyle={{alignItems: 'flex-start', paddingBottom: 100}}>
-        <Text
-          style={{
-            color: 'black',
-            fontSize: 32,
-            fontWeight: 'bold',
-            marginBottom: 12,
-            textAlign: 'left',
-          }}>
-          Balance General
-        </Text>
-
+        <MainHeader title="Balance General" />
         <PieChart items={items} data={data} radius={heightDP(20)} />
         <TransactCard transactions={transactData} />
       </ScreenContainer>
