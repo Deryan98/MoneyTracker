@@ -1,5 +1,5 @@
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
-import {Card, Text, Title} from '@redshank/native';
+import {Card, Text, Title, useTheme} from '@redshank/native';
 import {FC} from 'react';
 import {StyleSheet, View} from 'react-native';
 
@@ -11,9 +11,18 @@ const CatalogCard: FC<CatalogCard> = ({
   balance,
   onPress,
   iconBackground,
+  selectedId,
 }) => {
+  const {colors} = useTheme();
+  const isActive = selectedId === id;
   return (
-    <Card style={styles.card} isPressable onPress={onPress}>
+    <Card
+      style={[
+        styles.card,
+        isActive && {borderColor: colors.info, borderWidth: 1.5},
+      ]}
+      isPressable
+      onPress={onPress}>
       <Card.Body style={styles.cardBody}>
         <View style={styles.cardBodyContnr}>
           <View
@@ -32,7 +41,7 @@ const CatalogCard: FC<CatalogCard> = ({
 
 const styles = StyleSheet.create({
   card: {
-    borderRadius: 25,
+    borderRadius: 20,
     elevation: 10,
     marginVertical: 20,
     marginLeft: 20,

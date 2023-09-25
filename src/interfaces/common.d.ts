@@ -43,6 +43,7 @@ declare global {
     iconBackground: string;
     field: string;
     balance: number;
+    selectedId?: number;
     onPress?: () => void;
   }
 

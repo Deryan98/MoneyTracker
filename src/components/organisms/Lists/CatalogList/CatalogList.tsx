@@ -4,10 +4,11 @@ import {FlatList, View} from 'react-native';
 
 type CatalogListProps = {
   data: CatalogCard[];
+  selectedId: number;
   onPressItem: (id: number) => void;
 };
 
-const CatalogList: FC<CatalogListProps> = ({data, onPressItem}) => {
+const CatalogList: FC<CatalogListProps> = ({data, selectedId, onPressItem}) => {
   return (
     <FlatList
       keyExtractor={item => item.field}
@@ -22,6 +23,7 @@ const CatalogList: FC<CatalogListProps> = ({data, onPressItem}) => {
           iconBackground={item.iconBackground}
           field={item.field}
           balance={item.balance}
+          selectedId={selectedId}
           onPress={() => onPressItem(item.id)}
         />
       )}

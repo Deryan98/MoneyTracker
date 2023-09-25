@@ -14,8 +14,10 @@ const AccountsScreen = (props: Props) => {
   const {colors} = useTheme();
   const [transactData, setTransactData] = useState(transactSections[0].data);
   const accounts = getAccounts(colors);
+  const [selectedFieldId, setSelectedFieldId] = useState<number>(1);
 
   const onPresCatalogListItem = (id: number) => {
+    setSelectedFieldId(id);
     setTransactData(
       transactSections.find(tsection => tsection.id === id)!?.data,
     );
@@ -23,7 +25,11 @@ const AccountsScreen = (props: Props) => {
 
   return (
     <ScreenTemplate headerTitle="Cuentas">
-      <CatalogList data={accounts} onPressItem={onPresCatalogListItem} />
+      <CatalogList
+        data={accounts}
+        selectedId={selectedFieldId}
+        onPressItem={onPresCatalogListItem}
+      />
       <TransactList sectionData={transactData} />
       <Spacer space={50} />
     </ScreenTemplate>
