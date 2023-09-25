@@ -12,7 +12,6 @@ import {incomes} from '@data/incomes';
 import {accent, colors} from '@constants/colors/colors';
 import {TouchableOpacity, View} from 'react-native';
 import Resumen from '@components/pages/ResumenScreen';
-import CategoriesScreen from '@components/pages/CategoriesScreen';
 import AccountsScreen from '@components/pages/AccountsScreen';
 import BudgetsScreen from '@components/pages/BudgetsScreen';
 import AnalysisScreen from '@components/pages/AnalysisScreen';
@@ -37,17 +36,6 @@ export const bottomTabsRoutes: IBottomTab[] = [
       title: 'Accounts',
       tabBarIcon: ({color, size}) => (
         <FontAwesomeIcon icon={faLayerGroup} color={color} size={size} />
-      ),
-    },
-  },
-  {
-    name: 'Categories',
-    component: CategoriesScreen,
-    initialParams: {category: fixedOutcomes},
-    options: {
-      title: 'Categories',
-      tabBarIcon: ({color, size}) => (
-        <FontAwesomeIcon icon={faBookBookmark} color={color} size={size} />
       ),
     },
   },
