@@ -1,12 +1,10 @@
-import CatalogList from '@components/organisms/Lists/CatalogList/CatalogList';
-import {ScreenTemplate} from '@components/templates/ScreenTemplate';
-
 import {useTheme} from '@redshank/native';
+import {ScreenTemplate} from '@components/templates/ScreenTemplate';
 import {getAccounts} from './partials/accountsData';
-import {TransactList} from '@components/organisms/Lists/TransactList';
 import {transactSections} from './partials/transactData';
 import {useState} from 'react';
 import {Spacer} from '@components/atoms/containers/Spacer';
+import {FragmentSection} from '@components/templates/FragmentSection';
 
 type Props = {};
 
@@ -25,12 +23,12 @@ const AccountsScreen = (props: Props) => {
 
   return (
     <ScreenTemplate headerTitle="Cuentas">
-      <CatalogList
+      <FragmentSection
         data={accounts}
         selectedId={selectedFieldId}
         onPressItem={onPresCatalogListItem}
+        transactData={transactData}
       />
-      <TransactList sectionData={transactData} />
       <Spacer space={50} />
     </ScreenTemplate>
   );

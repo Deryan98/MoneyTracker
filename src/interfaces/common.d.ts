@@ -51,4 +51,10 @@ declare global {
     date: string;
     data: TransactItem[];
   };
+
+  type CatalogList = {
+    data: CatalogCard[];
+    selectedId: number;
+    onPressItem: (id: number) => void;
+  };
 }

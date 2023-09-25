@@ -2,13 +2,7 @@ import {FC} from 'react';
 import {CatalogCard} from '@components/molecules/Cards/CatalogCard';
 import {FlatList, View} from 'react-native';
 
-type CatalogListProps = {
-  data: CatalogCard[];
-  selectedId: number;
-  onPressItem: (id: number) => void;
-};
-
-const CatalogList: FC<CatalogListProps> = ({data, selectedId, onPressItem}) => {
+const CatalogList: FC<CatalogList> = ({data, selectedId, onPressItem}) => {
   return (
     <FlatList
       keyExtractor={item => item.field}
