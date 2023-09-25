@@ -1,6 +1,6 @@
 import {createStackNavigator} from '@react-navigation/stack';
-import {DashboardScreen} from '@screens/DashboardScreen';
-import {FormScreen} from '@screens/FormScreen';
+import {DashboardScreen} from '@components/pages/DashboardScreen';
+import {FormScreen} from '@components/pages/FormScreen';
 import {StackNavParams} from './types';
 
 const Stack = createStackNavigator<StackNavParams>();

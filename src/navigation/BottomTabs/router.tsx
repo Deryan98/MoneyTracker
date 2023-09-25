@@ -11,11 +11,11 @@ import {varOutcomes} from '@data/varOutcomes';
 import {incomes} from '@data/incomes';
 import {accent, colors} from '@constants/colors/colors';
 import {TouchableOpacity, View} from 'react-native';
-import Resumen from '@screens/ResumenScreen';
-import CategoriesScreen from '@screens/CategoriesScreen';
-import AccountsScreen from '@screens/AccountsScreen';
-import BudgetsScreen from '@screens/BudgetsScreen';
-import AnalysisScreen from '@screens/AnalysisScreen';
+import Resumen from '@components/pages/ResumenScreen';
+import CategoriesScreen from '@components/pages/CategoriesScreen';
+import AccountsScreen from '@components/pages/AccountsScreen';
+import BudgetsScreen from '@components/pages/BudgetsScreen';
+import AnalysisScreen from '@components/pages/AnalysisScreen';
 
 export const bottomTabsRoutes: IBottomTab[] = [
   {

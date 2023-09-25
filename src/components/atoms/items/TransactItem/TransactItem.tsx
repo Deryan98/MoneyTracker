@@ -45,7 +45,7 @@ function TransactItem(transactItem: TransactItem) {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: 'transparent',
-    height: '30%',
+    height: 90,
     flexDirection: 'row',
     alignItems: 'center',
     marginVertical: 5,

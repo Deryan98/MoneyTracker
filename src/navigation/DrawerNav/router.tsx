@@ -1,6 +1,6 @@
 import {RootNavigator} from '@navigation/RootNavigator';
 import {selectedLanguage} from '@constants/languages';
-import {FormCategory} from '@screens/FormCategory';
+import {FormCategory} from '@components/pages/FormCategory';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faLayerGroup} from '@fortawesome/free-solid-svg-icons/faLayerGroup';
 import {faHome} from '@fortawesome/free-solid-svg-icons/faHome';

@@ -36,4 +36,18 @@ declare global {
     date: string;
     color: string;
   }
+  interface CatalogCard {
+    id: number;
+    icon: any;
+    iconColor: string;
+    iconBackground: string;
+    field: string;
+    balance: number;
+    onPress?: () => void;
+  }
+
+  type SectionTransactItem = {
+    date: string;
+    data: TransactItem[];
+  };
 }
