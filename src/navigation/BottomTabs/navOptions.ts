@@ -10,7 +10,7 @@ export const bottomTabNavScreenOptions: BottomTabNavType = (colors: any) => ({
     backgroundColor: colors.primary,
     borderTopRightRadius: 50,
     borderTopLeftRadius: 50,
-    height: heightDP(10),
+    height: heightDP(13),
   },
   tabBarActiveTintColor: colors.secondary,
   tabBarInactiveTintColor: colors.inactive,

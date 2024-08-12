@@ -24,6 +24,7 @@ import {iconType} from '@data/iconType';
 import {Headings} from '@components/atoms/text/Headings/Headings';
 import {GlobalStyles} from '@constants/styles/global.styles';
 import {useFormCategory} from './useFormCategory';
+import { ScreenTemplate } from '@components/templates/ScreenTemplate';
 
 interface FormScreenProps extends StackScreenProps<StackNavParams, 'Form'> {}
 
@@ -41,22 +42,7 @@ export const FormCategory = ({navigation, route}: FormScreenProps) => {
 
   return (
     <KeyboardContainer>
-      <ScrollContainer
-        style={
-          {
-            backgroundColor: colors[accent][1]
-          }
-        }>
-        <ScreenContainer
-          containerStyle={{
-            // backgroundColor: colors[accent][1],
-          }}>
-          <Headings
-            headingSize="H4"
-            color={colors[white][0]}
-            containerStyle={titleStyles.titleContainer}>
-            Categories
-          </Headings>
+      <ScreenTemplate headerTitle="Categories">
           <Spacer space={10} />
           <Headings
             headingSize={selectedIcon ? 'H5' : 'H4'}
@@ -125,8 +111,7 @@ export const FormCategory = ({navigation, route}: FormScreenProps) => {
               );
             })}
           </View>
-        </ScreenContainer>
-      </ScrollContainer>
+        </ScreenTemplate>
     </KeyboardContainer>
   );
 };
