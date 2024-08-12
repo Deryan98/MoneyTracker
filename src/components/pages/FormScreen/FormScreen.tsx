@@ -95,7 +95,7 @@ export const FormScreen = ({navigation, route}: FormScreenProps) => {
                     alignItems: 'center',
                     backgroundColor:
                       selectedCategory?.id === id
-                        ? colors[black]
+                        ? colors[black][0]
                         : 'transparent',
                     borderRadius: 15,
                   }}
@@ -109,8 +109,8 @@ export const FormScreen = ({navigation, route}: FormScreenProps) => {
                     size={30}
                     color={
                       selectedCategory?.id === id
-                        ? colors[white]
-                        : colors[black]
+                        ? colors[white][0]
+                        : colors[black][0]
                     }
                   />
                   <Text
@@ -118,8 +118,8 @@ export const FormScreen = ({navigation, route}: FormScreenProps) => {
                       fontSize: 12,
                       color:
                         selectedCategory?.id === id
-                          ? colors[white]
-                          : colors[black],
+                          ? colors[white][0]
+                          : colors[black][0],
                     }}>
                     {name}
                   </Text>
@@ -138,8 +138,8 @@ const inputStyles = StyleSheet.create({
     height: 40,
     width: '60%',
     textAlign: 'center',
-    backgroundColor: colors[white],
-    borderColor: colors[black],
+    backgroundColor: colors[white][0],
+    borderColor: colors[black][0],
     borderRadius: 10,
     borderWidth: 1,
   },

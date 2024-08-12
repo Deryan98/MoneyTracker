@@ -29,7 +29,7 @@ export const NavigationControl = ({
           GlobalStyles.justifyContentCenter,
           GlobalStyles.alignItemsCenter,
           {
-            backgroundColor: firstActive ? colors[black] : colors[white],
+            backgroundColor: firstActive ? colors[black][0] : colors[white][0],
             width: '30%',
             height: '70%',
             borderTopLeftRadius: 10,
@@ -40,7 +40,7 @@ export const NavigationControl = ({
         <Text
           style={{
             // backgroundColor: 'green',
-            color: firstActive ? colors[white] : colors[black],
+            color: firstActive ? colors[white][0] : colors[black][0],
             fontWeight: 'bold'
           }}>
           Dashboard
@@ -55,7 +55,7 @@ export const NavigationControl = ({
           {
             width: '30%',
             height: '70%',
-            backgroundColor: !firstActive ? colors[black] : colors[white],
+            backgroundColor: !firstActive ? colors[black][0] : colors[white][0],
             borderTopRightRadius: 10,
             borderBottomRightRadius: 10,
             borderWidth: !firstActive ? 0 : 3,
@@ -65,7 +65,7 @@ export const NavigationControl = ({
         <Text
           style={{
             // backgroundColor: 'blue',
-            color: !firstActive ? colors[white] : colors[black],
+            color: !firstActive ? colors[white][0] : colors[black][0],
             fontWeight: 'bold'
           }}>
           Registros

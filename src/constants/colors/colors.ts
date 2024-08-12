@@ -14,6 +14,8 @@ export const colors = {
   black: ['black'],
 };
 
+export type ColorType = keyof typeof colors;
+
 export const black: ColorType = 'black';
 export const white: ColorType = 'white';
 export const primary: ColorType = 'primary';
@@ -22,4 +24,4 @@ export const tertiary: ColorType = 'tertiary';
 export const accent: ColorType = 'accent';
 export const gray: ColorType = 'gray';
 
-export type ColorType = keyof typeof colors;
+

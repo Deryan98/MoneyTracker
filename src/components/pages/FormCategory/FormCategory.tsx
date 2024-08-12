@@ -44,23 +44,23 @@ export const FormCategory = ({navigation, route}: FormScreenProps) => {
       <ScrollContainer
         style={
           {
-            // backgroundColor: 'blue'
+            backgroundColor: colors[accent][1]
           }
         }>
         <ScreenContainer
           containerStyle={{
-            backgroundColor: colors[accent],
+            // backgroundColor: colors[accent][1],
           }}>
           <Headings
             headingSize="H4"
-            color={colors[white]}
+            color={colors[white][0]}
             containerStyle={titleStyles.titleContainer}>
             Categories
           </Headings>
           <Spacer space={10} />
           <Headings
             headingSize={selectedIcon ? 'H5' : 'H4'}
-            color={colors[gray]}>
+            color={colors[gray][0]}>
             {selectedIcon
               ? 'Elige un nombre para tu categoría'
               : 'Selecciona un icono'}
@@ -73,10 +73,10 @@ export const FormCategory = ({navigation, route}: FormScreenProps) => {
                 style={inputStyles.textInput}
                 onChangeText={onChangeInputText}
                 placeholder="Categoría"
-                placeholderTextColor={colors[gray]}
+                placeholderTextColor={colors[gray][0]}
                 keyboardType="default"
               />
-              <Headings headingSize="H6" color={colors[secondary]}>
+              <Headings headingSize="H6" color={colors[secondary][0]}>
                 {error}
               </Headings>
               <View style={GlobalStyles.row}>
@@ -109,7 +109,7 @@ export const FormCategory = ({navigation, route}: FormScreenProps) => {
                     {
                       backgroundColor:
                         selectedIcon?.id === id
-                          ? colors[tertiary]
+                          ? colors['tertiary'][0]
                           : 'transparent',
                     },
                   ]}
@@ -118,7 +118,7 @@ export const FormCategory = ({navigation, route}: FormScreenProps) => {
                     name={icon}
                     size={30}
                     color={
-                      selectedIcon?.id === id ? colors[primary] : colors[black]
+                      selectedIcon?.id === id ? colors[primary][0] : colors[black][0]
                     }
                   />
                 </TouchableOpacity>
@@ -130,7 +130,7 @@ export const FormCategory = ({navigation, route}: FormScreenProps) => {
     </KeyboardContainer>
   );
 };
-
+//TODO: split the screeen into reusable components if needed
 const titleStyles = StyleSheet.create({
   titleContainer: {
     height: 40,
@@ -138,7 +138,7 @@ const titleStyles = StyleSheet.create({
     borderBottomLeftRadius: 25,
     borderBottomRightRadius: 25,
     justifyContent: 'center',
-    backgroundColor: colors[black],
+    backgroundColor: colors[black][0],
   },
 });
 
@@ -147,9 +147,9 @@ const inputStyles = StyleSheet.create({
     height: 40,
     width: '60%',
     textAlign: 'center',
-    color: colors[primary],
-    backgroundColor: colors[white],
-    borderColor: colors[black],
+    color: colors[primary][0],
+    backgroundColor: colors[white][0],
+    borderColor: colors[black][0],
     borderRadius: 10,
     borderWidth: 1,
   },
@@ -157,7 +157,7 @@ const inputStyles = StyleSheet.create({
 
 const buttonStyles = StyleSheet.create({
   save: {
-    backgroundColor: colors[primary],
+    backgroundColor: colors[primary][0],
     width: '25%',
     paddingVertical: 10,
     borderRadius: 10,
@@ -165,7 +165,7 @@ const buttonStyles = StyleSheet.create({
     marginHorizontal: 5,
   },
   cancel: {
-    backgroundColor: colors[secondary],
+    backgroundColor: colors[secondary][0],
     width: '25%',
     paddingVertical: 10,
     borderRadius: 10,
@@ -176,7 +176,7 @@ const buttonStyles = StyleSheet.create({
 
 const listStyles = StyleSheet.create({
   listContainer: {
-    backgroundColor: colors[white],
+    backgroundColor: colors[white][0],
     flexDirection: 'row',
     flexWrap: 'wrap',
     marginHorizontal: 'auto',
