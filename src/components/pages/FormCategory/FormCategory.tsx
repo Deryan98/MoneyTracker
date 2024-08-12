@@ -1,4 +1,3 @@
-import {NavigationControl} from '@components/atoms/NavigationControl';
 import {
   accent,
   black,
@@ -11,27 +10,19 @@ import {
 } from '@constants/colors/colors';
 import {StackNavParams} from '@navigation/StackNav/types';
 import {StackScreenProps} from '@react-navigation/stack';
-import React, {useState} from 'react';
+import React from 'react';
 import {
-  Pressable,
   StyleSheet,
-  Text,
   View,
   TextInput,
-  Keyboard,
   TouchableOpacity,
-  Alert,
 } from 'react-native';
-import {ScreenContainer} from '@components/atoms/containers/ScreenContainer';
-import {KeyboardContainer} from '@components/atoms/containers/KeyboardContainer';
+import {ScreenContainer, KeyboardContainer, ScrollContainer, Spacer} from '@components/atoms';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {ScrollContainer} from '@components/atoms/containers/ScrollContainer';
-import {Spacer} from '@components/atoms/containers/Spacer';
 import {icons} from '@data/icons';
 import {iconType} from '@data/iconType';
 import {Headings} from '@components/atoms/text/Headings/Headings';
 import {GlobalStyles} from '@constants/styles/global.styles';
-import {getDbConnection, insertCategory} from '@db/db';
 import {useFormCategory} from './useFormCategory';
 
 interface FormScreenProps extends StackScreenProps<StackNavParams, 'Form'> {}

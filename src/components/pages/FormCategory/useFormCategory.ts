@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
-import {getDbConnection, insertCategory} from '@db/db';
+import {getDbConnection} from '@db/db'
+import {insertCategory} from '@db/queries';
 import {Alert} from 'react-native';
 import {iconType} from '@data/iconType';
 

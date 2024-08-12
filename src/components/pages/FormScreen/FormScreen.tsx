@@ -12,12 +12,9 @@ import {
   Keyboard,
   TouchableOpacity,
 } from 'react-native';
-import {ScreenContainer} from '@components/atoms/containers/ScreenContainer';
-import {KeyboardContainer} from '@components/atoms/containers/KeyboardContainer';
+import {ScreenContainer, KeyboardContainer, ScrollContainer, Spacer} from '@components/atoms';
 import {useFormScreen} from '@hooks/useFormScreen';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {ScrollContainer} from '@components/atoms/containers/ScrollContainer';
-import {Spacer} from '@components/atoms/containers/Spacer';
 import {incomes} from '@data/incomes';
 import {categoryType} from '@data/categoryType';
 
