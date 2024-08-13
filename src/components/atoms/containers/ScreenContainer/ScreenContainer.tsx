@@ -1,5 +1,5 @@
 import React, {FC} from 'react';
-import {View, KeyboardAvoidingView, Platform} from 'react-native';
+import {View} from 'react-native';
 import styles from './styles';
 import {ScreenContainerTypes} from './types';
 

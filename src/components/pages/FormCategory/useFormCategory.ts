@@ -5,7 +5,7 @@ import {Alert} from 'react-native';
 import {iconType} from '@data/iconType';
 
 export const useFormCategory = () => {
-  const [inputText, onChangeInputText] = useState<string>('');
+  const [inputText, setInputText] = useState<string>('');
 
   const [visibleInputText, setVisibleInputText] = useState<boolean>(false);
 
@@ -13,9 +13,13 @@ export const useFormCategory = () => {
 
   const [error, setError] = useState<string>('');
 
+  const onChangeInputText = (text: string) => {
+    setInputText(text);
+  }
+
   const handlePressItem = (id: number, icon: string) => {
     setVisibleInputText(true);
-    onChangeInputText('');
+    setInputText('');
     onChangeSelectedIcon({id, icon});
   }
 
@@ -28,7 +32,7 @@ export const useFormCategory = () => {
       const db = await getDbConnection();
       await insertCategory(db, inputText, selectedIcon?.icon!);
       setError('');
-      onChangeInputText('');
+      setInputText('');
       Alert.alert(
         'Success',
         'Task created',

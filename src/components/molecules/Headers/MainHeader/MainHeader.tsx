@@ -15,7 +15,6 @@ const MainHeader = ({title = ''}: MainHeaderProps) => {
   const navigation = useNavigation();
   const {colors} = useTheme();
 
-  console.log({title1, title2});
 
   return (
     <View
