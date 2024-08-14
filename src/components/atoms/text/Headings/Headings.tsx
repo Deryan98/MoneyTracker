@@ -1,11 +1,17 @@
-import { black } from '@constants/colors/colors';
+import {black} from '@constants/colors/colors';
 import {GlobalStyles} from '@constants/styles/global.styles';
 import React from 'react';
 import {Text, View} from 'react-native';
 import styles from './styles';
 import {HeadingsProps} from './types';
 
-export const Headings = ({children, headingSize, color=black, containerStyle={}}: HeadingsProps) => {
+export const Headings = ({
+  children,
+  headingSize,
+  color = black,
+  fontWeight = 'normal',
+  containerStyle = {},
+}: HeadingsProps) => {
   let fontSize;
 
   switch (headingSize) {
@@ -37,9 +43,9 @@ export const Headings = ({children, headingSize, color=black, containerStyle={}}
         GlobalStyles.alignItemsCenter,
         GlobalStyles.width100percent,
         styles.container,
-        containerStyle
+        containerStyle,
       ]}>
-      <Text style={{fontSize: fontSize, color: color}}>{children}</Text>
+      <Text style={{fontSize, color, fontWeight}}>{children}</Text>
     </View>
   );
 };

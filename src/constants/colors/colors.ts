@@ -1,6 +1,6 @@
 export const colors = {
   white: ['white'],
-  gray: ['#7B7B7B'],
+  gray: ['#7B7B7B', '#333333'],
   primary: ['#010062'],
   secondary: ['#CF0A0A'],
   tertiary: ['#DC5F00'],
@@ -23,5 +23,3 @@ export const secondary: ColorType = 'secondary';
 export const tertiary: ColorType = 'tertiary';
 export const accent: ColorType = 'accent';
 export const gray: ColorType = 'gray';
-
-

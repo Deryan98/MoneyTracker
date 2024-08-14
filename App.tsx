@@ -5,10 +5,14 @@ import {DrawerNav} from '@navigation/DrawerNav';
 import {ThemeProvider} from '@redshank/native';
 import {NavigationContainer} from '@react-navigation/native';
 import {themeLight} from '@constants/theme/theme';
+import icons from './src/icons';
 
 function App(): JSX.Element {
   useEffect(() => {
     const init = async () => {
+      // registrando iconos
+      icons();
+      // iniciando base de datos
       await initDatabase();
     };
     init();

@@ -26,6 +26,8 @@ import {GlobalStyles} from '@constants/styles/global.styles';
 import {useFormCategory} from './useFormCategory';
 import {ScreenTemplate} from '@components/templates/ScreenTemplate';
 import {MainHeader} from '@components/molecules/Headers/MainHeader';
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
+import {Text} from '@redshank/native';
 
 interface FormScreenProps extends StackScreenProps<StackNavParams, 'Form'> {}
 
@@ -45,13 +47,9 @@ export const FormCategory = ({navigation, route}: FormScreenProps) => {
     <KeyboardContainer>
       <ScreenContainer>
         <MainHeader title="Categories" />
-        {/* <Spacer space={10} /> */}
-        <Headings
-          headingSize={'H5'}
-          color={colors[black][0]}
-          containerStyle={{paddingLeft: 20, alignItems: 'flex-start'}}>
+        <Text style={{paddingHorizontal: 5}}>
           You can register all your categories through this form
-        </Headings>
+        </Text>
         <Spacer space={30} />
 
         <TextInput
@@ -73,42 +71,78 @@ export const FormCategory = ({navigation, route}: FormScreenProps) => {
           color={colors[secondary][0]}>
           {error}
         </Headings>
-
-        <Headings
-          headingSize={'H4'}
-          color={colors[black][0]}
-          containerStyle={{paddingLeft: 15, alignItems: 'flex-start'}}>
-          Choose an icon
-        </Headings>
+        <View
+          style={{
+            flexDirection: 'row',
+            width: '100%',
+            paddingHorizontal: 20,
+            alignItems: 'center',
+            justifyContent: 'space-around',
+          }}>
+          <Headings
+            headingSize={'H3'}
+            color={colors[gray][1]}
+            fontWeight="600"
+            containerStyle={{
+              width: 160,
+              paddingLeft: 0,
+              alignItems: 'flex-start',
+            }}>
+            Choose an icon
+          </Headings>
+          <TouchableOpacity
+            style={{
+              width: 40,
+              height: 40,
+              borderRadius: 50,
+              justifyContent: 'center',
+              alignItems: 'center',
+              backgroundColor: colors[accent][1],
+            }}>
+            <FontAwesomeIcon
+              style={{}}
+              icon="ellipsis"
+              size={25}
+              color={colors[accent][0]}
+            />
+          </TouchableOpacity>
+        </View>
         <Spacer space={15} />
         <View style={listStyles.listContainer}>
           {icons.map(({id, icon}: iconType, index) => {
             return (
               <TouchableOpacity
                 key={id}
-                style={[
-                  listStyles.listItemContainer,
-                  {
+                activeOpacity={0.5}
+                style={listStyles.listItemContainer}
+                onPress={() => handlePressItem(id, icon)}>
+                <View
+                  style={{
                     backgroundColor:
                       selectedIcon?.id === id
-                        ? colors['tertiary'][0]
+                        ? colors[accent][1]
                         : 'transparent',
-                  },
-                ]}
-                onPress={() => handlePressItem(id, icon)}>
-                <Icon
-                  name={icon}
-                  size={30}
-                  color={
-                    selectedIcon?.id === id
-                      ? colors[primary][0]
-                      : colors[black][0]
-                  }
-                />
+                    width: 55,
+                    height: 55,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    borderRadius: 15,
+                  }}>
+                  <Icon
+                    name={icon}
+                    size={30}
+                    color={
+                      selectedIcon?.id === id
+                        ? colors[accent][0]
+                        : colors[gray][1]
+                    }
+                  />
+                </View>
               </TouchableOpacity>
             );
           })}
         </View>
+        <Spacer space={20} />
         <View style={GlobalStyles.row}>
           <TouchableOpacity onPress={createCategory} style={buttonStyles.save}>
             <Headings headingSize="H5" color={white}>
