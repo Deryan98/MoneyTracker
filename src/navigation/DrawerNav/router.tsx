@@ -1,6 +1,6 @@
 import {RootNavigator} from '@navigation/RootNavigator';
 import {selectedLanguage} from '@constants/languages';
-import {FormCategory} from '@screens/FormCategory';
+import {CreateCategory} from '@screens/categories/CreateCategory';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faLayerGroup} from '@fortawesome/free-solid-svg-icons/faLayerGroup';
 import {faHome} from '@fortawesome/free-solid-svg-icons/faHome';
@@ -19,7 +19,7 @@ export const drawerRouter: IDrawer[] = [
   },
   {
     name: selectedLanguage.drawer[1].label,
-    component: FormCategory,
+    component: CreateCategory,
     options: {
       drawerLabel: selectedLanguage.drawer[1].label,
       drawerIcon: ({color, focused, size}) => (
@@ -29,7 +29,7 @@ export const drawerRouter: IDrawer[] = [
   },
   {
     name: selectedLanguage.drawer[2].label,
-    component: FormCategory,
+    component: CreateCategory,
     options: {
       drawerLabel: selectedLanguage.drawer[2].label,
       drawerIcon: ({color, focused, size}) => (

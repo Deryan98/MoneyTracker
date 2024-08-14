@@ -27,12 +27,12 @@ import {useFormCategory} from './useFormCategory';
 import {ScreenTemplate} from '@components/templates/ScreenTemplate';
 import {MainHeader} from '@components/molecules/Headers/MainHeader';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
-import {Radio, Text} from '@redshank/native';
+import {Radio, Text, Title} from '@redshank/native';
 import {NavigationControl} from '@components/atoms/NavigationControl';
 
 interface FormScreenProps extends StackScreenProps<StackNavParams, 'Form'> {}
 
-export const FormCategory = ({navigation, route}: FormScreenProps) => {
+export const CreateCategory = ({navigation, route}: FormScreenProps) => {
   const {
     inputText,
     onChangeInputText,
@@ -47,7 +47,27 @@ export const FormCategory = ({navigation, route}: FormScreenProps) => {
   return (
     <KeyboardContainer>
       <ScreenContainer>
-        <MainHeader title="Categories" />
+        <View
+          style={{
+            flexDirection: 'row',
+            padding: 30,
+            paddingLeft: 15,
+            paddingBottom: 0,
+            width: '100%',
+          }}>
+          <TouchableOpacity
+            onPress={() => {
+              console.log('back');
+            }}>
+            <FontAwesomeIcon
+              icon="chevron-left"
+              color={colors[gray][1]}
+              size={30}
+              style={{marginRight: 10, marginTop: 5}}
+            />
+          </TouchableOpacity>
+          <Title level={1}>Create Category</Title>
+        </View>
         <Text style={{paddingHorizontal: 5}}>
           You can register all your categories through this form
         </Text>
@@ -71,6 +91,7 @@ export const FormCategory = ({navigation, route}: FormScreenProps) => {
           color={colors[secondary][0]}>
           {error}
         </Headings>
+        <Spacer space={20} />
         <View
           style={{
             width: '100%',
@@ -107,7 +128,7 @@ export const FormCategory = ({navigation, route}: FormScreenProps) => {
             style={{
               width: 40,
               height: 40,
-              borderRadius: 50,
+              borderRadius: 15,
               justifyContent: 'center',
               alignItems: 'center',
               backgroundColor: colors[accent][1],
@@ -157,14 +178,15 @@ export const FormCategory = ({navigation, route}: FormScreenProps) => {
         </View>
         <Spacer space={20} />
         <View style={GlobalStyles.row}>
-          <TouchableOpacity onPress={createCategory} style={buttonStyles.save}>
-            <Headings headingSize="H5" color={white}>
-              Guardar
-            </Headings>
-          </TouchableOpacity>
-          <TouchableOpacity style={buttonStyles.cancel}>
-            <Headings headingSize="H5" color={white}>
-              Cancelar
+          <TouchableOpacity
+            disabled
+            onPress={createCategory}
+            style={buttonStyles.save}>
+            <Headings
+              headingSize="H4"
+              color={colors[accent][0]}
+              fontWeight="500">
+              Save
             </Headings>
           </TouchableOpacity>
         </View>
@@ -201,20 +223,11 @@ const inputStyles = StyleSheet.create({
 
 const buttonStyles = StyleSheet.create({
   save: {
-    backgroundColor: colors[primary][0],
-    width: '45%',
+    backgroundColor: colors[accent][2],
+    width: '70%',
     height: 50,
     paddingVertical: 10,
-    borderRadius: 10,
-    marginVertical: 10,
-    marginHorizontal: 5,
-    justifyContent: 'center',
-  },
-  cancel: {
-    backgroundColor: colors[secondary][0],
-    width: '45%',
-    paddingVertical: 10,
-    borderRadius: 10,
+    borderRadius: 15,
     marginVertical: 10,
     marginHorizontal: 5,
     justifyContent: 'center',
