@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {getDbConnection} from '@db/db'
+import {getDbConnection} from '@db/db';
 import {insertCategory} from '@db/queries';
 import {Alert} from 'react-native';
 import {iconType} from '@data/iconType';
@@ -7,21 +7,17 @@ import {iconType} from '@data/iconType';
 export const useFormCategory = () => {
   const [inputText, setInputText] = useState<string>('');
 
-  const [visibleInputText, setVisibleInputText] = useState<boolean>(false);
-
   const [selectedIcon, onChangeSelectedIcon] = useState<iconType>();
 
   const [error, setError] = useState<string>('');
 
   const onChangeInputText = (text: string) => {
     setInputText(text);
-  }
+  };
 
   const handlePressItem = (id: number, icon: string) => {
-    setVisibleInputText(true);
-    setInputText('');
     onChangeSelectedIcon({id, icon});
-  }
+  };
 
   const createCategory = async () => {
     if (inputText === '') {
@@ -54,8 +50,6 @@ export const useFormCategory = () => {
   return {
     inputText,
     onChangeInputText,
-    visibleInputText,
-    setVisibleInputText,
     selectedIcon,
     onChangeSelectedIcon,
     error,
