@@ -27,7 +27,8 @@ import {useFormCategory} from './useFormCategory';
 import {ScreenTemplate} from '@components/templates/ScreenTemplate';
 import {MainHeader} from '@components/molecules/Headers/MainHeader';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
-import {Text} from '@redshank/native';
+import {Radio, Text} from '@redshank/native';
+import {NavigationControl} from '@components/atoms/NavigationControl';
 
 interface FormScreenProps extends StackScreenProps<StackNavParams, 'Form'> {}
 
@@ -50,7 +51,7 @@ export const FormCategory = ({navigation, route}: FormScreenProps) => {
         <Text style={{paddingHorizontal: 5}}>
           You can register all your categories through this form
         </Text>
-        <Spacer space={30} />
+        <Spacer space={20} />
 
         <TextInput
           value={inputText}
@@ -65,7 +66,6 @@ export const FormCategory = ({navigation, route}: FormScreenProps) => {
             justifyContent: 'center',
             alignItems: 'flex-start',
             paddingHorizontal: 20,
-            paddingVertical: 10,
           }}
           headingSize="H6"
           color={colors[secondary][0]}>
@@ -73,11 +73,24 @@ export const FormCategory = ({navigation, route}: FormScreenProps) => {
         </Headings>
         <View
           style={{
+            width: '100%',
+            paddingHorizontal: 20,
+          }}>
+          <Radio.Group
+            defaultValue="2"
+            size="middle"
+            activeColor={colors[accent][1]}>
+            <Radio label="Gastos" value="yes" />
+            <Radio label="Ingresos" value="no" />
+          </Radio.Group>
+        </View>
+        <View
+          style={{
             flexDirection: 'row',
             width: '100%',
             paddingHorizontal: 20,
             alignItems: 'center',
-            justifyContent: 'space-around',
+            justifyContent: 'space-between',
           }}>
           <Headings
             headingSize={'H3'}
