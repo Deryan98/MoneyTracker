@@ -7,6 +7,12 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import React from 'react';
 import {StyleSheet, View, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import {
+  activeItemContainerStyle,
+  listStyles,
+  listTitle,
+  selectedIconColor,
+} from './styles';
 
 type SymbolListProps = {
   selectedIcon: any;
@@ -29,12 +35,6 @@ const SymbolListHeader = () => (
 );
 
 const SymbolList = ({selectedIcon, onPressItem}: SymbolListProps) => {
-  const backgroundActiveItemContainer = (id: number) =>
-    selectedIcon?.id === id ? colors[accent][1] : 'transparent';
-
-  const getSelectedIconColor = (id: number) =>
-    selectedIcon?.id === id ? colors[accent][0] : colors[gray][1];
-
   return (
     <>
       <SymbolListHeader />
@@ -47,14 +47,12 @@ const SymbolList = ({selectedIcon, onPressItem}: SymbolListProps) => {
               activeOpacity={0.5}
               style={listStyles.listItemContainer}
               onPress={() => onPressItem(id, icon)}>
-              <View
-                style={[
-                  listStyles.activeItemContainer,
-                  {
-                    backgroundColor: backgroundActiveItemContainer(id),
-                  },
-                ]}>
-                <Icon name={icon} size={30} color={getSelectedIconColor(id)} />
+              <View style={activeItemContainerStyle(id, selectedIcon?.id)}>
+                <Icon
+                  name={icon}
+                  size={30}
+                  color={selectedIconColor(id, selectedIcon?.id)}
+                />
               </View>
             </TouchableOpacity>
           );
@@ -65,53 +63,3 @@ const SymbolList = ({selectedIcon, onPressItem}: SymbolListProps) => {
 };
 
 export default SymbolList;
-
-const listTitle = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    width: '100%',
-    paddingHorizontal: 20,
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  heading: {
-    width: 160,
-    paddingLeft: 0,
-    alignItems: 'flex-start',
-  },
-  action: {
-    width: 40,
-    height: 40,
-    borderRadius: 15,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: colors[accent][1],
-  },
-});
-
-const listStyles = StyleSheet.create({
-  listContainer: {
-    backgroundColor: colors[white][0],
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    marginHorizontal: 'auto',
-    borderRadius: 15,
-  },
-  listItemContainer: {
-    // backgroundColor: 'red',
-    flex: 1,
-    minWidth: 75,
-    maxWidth: 75,
-    height: 75,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 15,
-  },
-  activeItemContainer: {
-    width: 55,
-    height: 55,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 15,
-  },
-});

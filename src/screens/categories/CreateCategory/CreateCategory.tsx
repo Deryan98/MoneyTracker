@@ -2,7 +2,7 @@ import {StackNavParams} from '@navigation/StackNav/types';
 import {StackScreenProps} from '@react-navigation/stack';
 import React from 'react';
 import {ScreenContainer, KeyboardContainer, Spacer} from '@components/atoms';
-import {useFormCategory} from './useFormCategory';
+import {useCreateCategory} from './useCreateCategory';
 import {
   Header,
   InputField,
@@ -26,7 +26,7 @@ export const CreateCategory = ({navigation, route}: FormScreenProps) => {
     setError,
     createCategory,
     handlePressItem,
-  } = useFormCategory();
+  } = useCreateCategory();
 
   return (
     <KeyboardContainer>

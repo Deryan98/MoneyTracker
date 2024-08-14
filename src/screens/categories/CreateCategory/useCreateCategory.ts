@@ -4,7 +4,7 @@ import {insertCategory} from '@db/queries';
 import {Alert} from 'react-native';
 import {iconType} from '@data/iconType';
 
-export const useFormCategory = () => {
+export const useCreateCategory = () => {
   const [inputText, setInputText] = useState<string>('');
 
   const [selectedIcon, onChangeSelectedIcon] = useState<iconType>();
