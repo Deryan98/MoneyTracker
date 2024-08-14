@@ -35,11 +35,7 @@ const InputField = ({inputText, onChangeInputText, error}: Props) => {
         keyboardType="default"
       />
       <Headings
-        containerStyle={{
-          justifyContent: 'center',
-          alignItems: 'flex-start',
-          paddingHorizontal: 20,
-        }}
+        containerStyle={inputStyles.errorMessage}
         headingSize="H6"
         color={colors[secondary][0]}>
         {error}
@@ -60,6 +56,11 @@ const inputStyles = StyleSheet.create({
     borderColor: colors[black][0],
     borderRadius: 10,
     borderWidth: 1,
+  },
+  errorMessage: {
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+    paddingHorizontal: 20,
   },
 });
 
