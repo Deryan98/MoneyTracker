@@ -1,5 +1,6 @@
 import {black, colors, gray} from '@constants/colors/colors';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
+import {useNavigation} from '@react-navigation/native';
 import {Title} from '@redshank/native';
 import React from 'react';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
@@ -7,12 +8,11 @@ import {StyleSheet, TouchableOpacity, View} from 'react-native';
 type Props = {};
 
 const Header = (props: Props) => {
+  const navigation = useNavigation();
+
   return (
     <View style={headerStyles.container}>
-      <TouchableOpacity
-        onPress={() => {
-          console.log('back');
-        }}>
+      <TouchableOpacity onPress={navigation.goBack}>
         <FontAwesomeIcon
           icon="chevron-left"
           color={colors[gray][1]}
@@ -30,8 +30,8 @@ export default Header;
 const headerStyles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    padding: 30,
-    paddingLeft: 15,
+    padding: 25,
+    paddingLeft: 0,
     paddingBottom: 0,
     width: '100%',
   },

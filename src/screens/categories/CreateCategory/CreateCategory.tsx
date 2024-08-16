@@ -10,13 +10,12 @@ import {
   SaveAction,
   RadioField,
 } from './partials';
+import {ScrollView} from 'react-native-gesture-handler';
 
 interface FormScreenProps extends StackScreenProps<StackNavParams, 'Form'> {}
-//TODO: adjust input fontSize
-//TODO: Fix Input missing value when changing selected icon
 //TODO: Add navigation to more icons
+//TODO: Change the more icons location at the end of the icon list
 //TODO: posibility to implement formik if needed
-//TODO: Implement goback navigation
 export const CreateCategory = ({navigation, route}: FormScreenProps) => {
   const {
     inputText,
@@ -30,19 +29,25 @@ export const CreateCategory = ({navigation, route}: FormScreenProps) => {
 
   return (
     <KeyboardContainer>
-      <ScreenContainer>
-        <Header />
-        <InputField
-          inputText={inputText}
-          onChangeInputText={onChangeInputText}
-          error={error}
-        />
-        <Spacer space={20} />
-        <RadioField />
-        <SymbolList selectedIcon={selectedIcon} onPressItem={handlePressItem} />
-        <Spacer space={20} />
-        <SaveAction onSave={createCategory} />
-      </ScreenContainer>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <ScreenContainer>
+          <Header />
+          <InputField
+            inputText={inputText}
+            onChangeInputText={onChangeInputText}
+            error={error}
+          />
+          <Spacer space={20} />
+          <RadioField />
+          <SymbolList
+            selectedIcon={selectedIcon}
+            onPressItem={handlePressItem}
+          />
+          <Spacer space={20} />
+          <SaveAction onSave={createCategory} />
+          <Spacer space={30} />
+        </ScreenContainer>
+      </ScrollView>
     </KeyboardContainer>
   );
 };

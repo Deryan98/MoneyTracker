@@ -9,7 +9,7 @@ type TransactCardProps = {
 
 const TransactCard: FC<TransactCardProps> = ({transactions}) => {
   return (
-    <View style={{width: '100%', height: 350, paddingHorizontal: 25}}>
+    <View style={{width: '100%', height: 350}}>
       <Title level={2}>Transactions</Title>
       <Card
         isPressable

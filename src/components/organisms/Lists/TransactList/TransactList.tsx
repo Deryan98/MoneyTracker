@@ -28,7 +28,7 @@ const TransactList: FC<TransactList> = ({sectionData}) => {
   );
 };
 const styles = StyleSheet.create({
-  section: {width: '100%', padding: 20},
+  section: {width: '100%', padding: 0},
   item: {
     backgroundColor: '#f9c2ff',
     padding: 20,

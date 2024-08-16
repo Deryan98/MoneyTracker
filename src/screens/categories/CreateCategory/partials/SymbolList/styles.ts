@@ -5,7 +5,6 @@ export const listTitle = StyleSheet.create({
   container: {
     flexDirection: 'row',
     width: '100%',
-    paddingHorizontal: 20,
     alignItems: 'center',
     justifyContent: 'space-between',
   },
@@ -26,6 +25,7 @@ export const listTitle = StyleSheet.create({
 
 export const listStyles = StyleSheet.create({
   listContainer: {
+    width: '100%',
     backgroundColor: colors[white][0],
     flexDirection: 'row',
     flexWrap: 'wrap',
@@ -35,7 +35,7 @@ export const listStyles = StyleSheet.create({
   listItemContainer: {
     // backgroundColor: 'red',
     flex: 1,
-    minWidth: 75,
+    minWidth: 70,
     maxWidth: 75,
     height: 75,
     justifyContent: 'center',

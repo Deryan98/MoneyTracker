@@ -11,8 +11,7 @@ export const KeyboardContainer = ({
     <KeyboardAvoidingView
       style={[styles.keyboardAvoidingViewContainer, containerStyle]}
       keyboardVerticalOffset={Platform.select({ios: 0, android: 500})}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      enabled>
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       {children}
     </KeyboardAvoidingView>
   );

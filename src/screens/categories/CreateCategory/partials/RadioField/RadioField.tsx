@@ -10,7 +10,6 @@ const RadioField = (props: Props) => {
     <View
       style={{
         width: '100%',
-        paddingHorizontal: 20,
       }}>
       <Radio.Group
         defaultValue="2"
