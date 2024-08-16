@@ -23,3 +23,5 @@ export const secondary: ColorType = 'secondary';
 export const tertiary: ColorType = 'tertiary';
 export const accent: ColorType = 'accent';
 export const gray: ColorType = 'gray';
+export const surface: ColorType = 'surface';
+export const inactive: ColorType = 'inactive';

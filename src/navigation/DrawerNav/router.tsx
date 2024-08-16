@@ -1,15 +1,16 @@
-import {RootNavigator} from '@navigation/RootNavigator';
+import {HomeNavigator} from '@navigation/[home]/HomeNavigator';
 import {selectedLanguage} from '@constants/languages';
-import {CreateCategory} from '@screens/categories/CreateCategory';
+import {CategoriesScreen, CreateCategory} from '@screens/[categories]';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faLayerGroup} from '@fortawesome/free-solid-svg-icons/faLayerGroup';
 import {faHome} from '@fortawesome/free-solid-svg-icons/faHome';
 import {faBookBookmark} from '@fortawesome/free-solid-svg-icons/faBookBookmark';
+import {CategoriesTopTabs} from '@navigation/[categories]/CategoriesTopTabs';
 
 export const drawerRouter: IDrawer[] = [
   {
     name: selectedLanguage.drawer[0].label,
-    component: RootNavigator,
+    component: HomeNavigator,
     options: {
       drawerLabel: selectedLanguage.drawer[0].label,
       drawerIcon: ({color, focused, size}: any) => (
@@ -19,7 +20,7 @@ export const drawerRouter: IDrawer[] = [
   },
   {
     name: selectedLanguage.drawer[1].label,
-    component: CreateCategory,
+    component: CategoriesTopTabs,
     options: {
       drawerLabel: selectedLanguage.drawer[1].label,
       drawerIcon: ({color, focused, size}) => (

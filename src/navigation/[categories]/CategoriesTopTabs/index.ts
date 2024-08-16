@@ -1,0 +1,1 @@
+export {CategoriesTopTabs} from './CategoriesTopTabs';

@@ -1,14 +1,13 @@
 import {StackNavParams} from '@navigation/StackNav/types';
 import {StackScreenProps} from '@react-navigation/stack';
-import React from 'react';
 import {ScreenContainer, KeyboardContainer, Spacer} from '@components/atoms';
 import {useCreateCategory} from './useCreateCategory';
 import {
-  Header,
   InputField,
   SymbolList,
   SaveAction,
   RadioField,
+  Header,
 } from './partials';
 import {ScrollView} from 'react-native-gesture-handler';
 
@@ -31,7 +30,10 @@ export const CreateCategory = ({navigation, route}: FormScreenProps) => {
     <KeyboardContainer>
       <ScrollView showsVerticalScrollIndicator={false}>
         <ScreenContainer>
-          <Header />
+          <Header
+            title="Create Category"
+            message="You can register all your categories through this form"
+          />
           <InputField
             inputText={inputText}
             onChangeInputText={onChangeInputText}

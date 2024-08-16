@@ -22,11 +22,6 @@ type Props = {
 const InputField = ({inputText, onChangeInputText, error}: Props) => {
   return (
     <>
-      <Text style={{}}>
-        You can register all your categories through this form
-      </Text>
-      <Spacer space={20} />
-
       <TextInput
         value={inputText}
         style={inputStyles.textInput}

@@ -2,6 +2,7 @@ import React from 'react';
 import {DrawerNavigationOptions} from '@react-navigation/drawer';
 import {NativeStackNavigationOptions} from '@react-navigation/native-stack';
 import {BottomTabNavigationOptions} from '@react-navigation/bottom-tabs';
+import {MaterialTopTabNavigationOptions} from '@react-navigation/material-top-tabs';
 
 declare global {
   interface ScreenInterface {
@@ -17,6 +18,10 @@ declare global {
   }
   interface IBottomTab extends ScreenInterface {
     options?: BottomTabNavigationOptions;
+  }
+
+  interface IMaterialTopTab extends ScreenInterface {
+    options?: MaterialTopTabNavigationOptions;
   }
 
   interface SelectOptions {
@@ -57,4 +62,6 @@ declare global {
     selectedId: number;
     onPressItem: (id: number) => void;
   };
+
+  type FinanceType = 'expenses' | 'incomes';
 }

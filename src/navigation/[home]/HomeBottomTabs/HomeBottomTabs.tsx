@@ -5,7 +5,7 @@ import {useTheme} from '@redshank/native';
 
 const Tab = createBottomTabNavigator();
 
-export const BottomTabs = () => {
+export const HomeBottomTabs = () => {
   const {colors} = useTheme();
 
   return (
