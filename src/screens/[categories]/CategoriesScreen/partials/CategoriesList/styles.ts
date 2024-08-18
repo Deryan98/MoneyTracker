@@ -1,5 +1,6 @@
 import {accent, colors, gray, white} from '@constants/colors/colors';
 import {StyleSheet} from 'react-native';
+import {widthPercentageToDP} from 'react-native-responsive-screen';
 
 export const listTitle = StyleSheet.create({
   container: {
@@ -9,45 +10,53 @@ export const listTitle = StyleSheet.create({
     justifyContent: 'space-between',
   },
   heading: {
-    width: 160,
+    width: widthPercentageToDP(50),
     paddingLeft: 0,
     alignItems: 'flex-start',
   },
   action: {
-    width: 40,
-    height: 40,
-    borderRadius: 15,
+    width: 75,
+    height: 75,
+    // borderRadius: 50,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: colors[accent][1],
   },
 });
 
 export const listStyles = StyleSheet.create({
   listContainer: {
-    width: '100%',
-    backgroundColor: colors[white][0],
     flexDirection: 'row',
     flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    width: '100%',
+    paddingVertical: 7,
+    paddingHorizontal: 2,
+    // backgroundColor: colors[white][0],
     marginHorizontal: 'auto',
     borderRadius: 15,
+    gap: 3,
   },
   listItemContainer: {
     // backgroundColor: 'red',
     flex: 1,
-    minWidth: 70,
-    maxWidth: 75,
+    minWidth: 85,
+    // maxWidth: 90,
     height: 75,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  activeItemContainer: {
+    width: 80,
+    height: 80,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 15,
   },
-  activeItemContainer: {
-    width: 55,
-    height: 55,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 15,
+  label: {
+    fontSize: 12,
+    fontWeight: '500',
+    textAlign: 'center',
+    paddingTop: 5,
   },
 });
 
@@ -61,4 +70,10 @@ export const activeItemContainerStyle = (id: number, selectedIconId: number) =>
       backgroundColor:
         selectedIconId === id ? colors[accent][1] : 'transparent',
     },
+  ]);
+
+export const activeItemLabelStyle = (id: number, selectedIconId: number) =>
+  StyleSheet.flatten([
+    listStyles.label,
+    {color: selectedIconId === id ? colors[accent][0] : colors[gray][2]},
   ]);

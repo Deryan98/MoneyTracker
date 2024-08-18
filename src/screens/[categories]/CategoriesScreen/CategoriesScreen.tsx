@@ -31,20 +31,10 @@ export const CategoriesScreen = ({navigation, route}: FormScreenProps) => {
     <KeyboardContainer>
       <ScrollView showsVerticalScrollIndicator={false}>
         <ScreenContainer>
-          {/* <InputField
-            inputText={inputText}
-            onChangeInputText={onChangeInputText}
-            error={error}
-          />
-          <Spacer space={20} />
-          <RadioField /> */}
           <SymbolList
             selectedIcon={selectedIcon}
             onPressItem={handlePressItem}
           />
-          <Spacer space={20} />
-          <SaveAction onSave={createCategory} />
-          <Spacer space={30} />
         </ScreenContainer>
       </ScrollView>
     </KeyboardContainer>

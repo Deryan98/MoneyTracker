@@ -1,14 +1,14 @@
 import {StackNav} from '@navigation/StackNav';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faHome} from '@fortawesome/free-solid-svg-icons/faHome';
-import {fixedOutcomes} from '@data/fixedOutcomes';
+// import {fixedExpenses} from '@data/fixedExpenses';
 import {faLayerGroup} from '@fortawesome/free-solid-svg-icons/faLayerGroup';
 import {faBookBookmark} from '@fortawesome/free-solid-svg-icons/faBookBookmark';
 import {faPlusCircle} from '@fortawesome/free-solid-svg-icons/faPlusCircle';
 import {faPiggyBank} from '@fortawesome/free-solid-svg-icons/faPiggyBank';
 import {faChartPie} from '@fortawesome/free-solid-svg-icons/faChartPie';
-import {varOutcomes} from '@data/varOutcomes';
-import {incomes} from '@data/incomes';
+// import {varOutcomes} from '@data/varOutcomes';
+// import {incomes} from '@data/incomes';
 import {accent, colors} from '@constants/colors/colors';
 import {TouchableOpacity, View} from 'react-native';
 import Resumen from '@screens/ResumenScreen';
@@ -20,7 +20,7 @@ export const bottomTabsRoutes: IBottomTab[] = [
   {
     name: 'Resumen',
     component: Resumen,
-    initialParams: {category: incomes},
+    initialParams: {category: 'incomes'},
     options: {
       title: 'Resumen',
       tabBarIcon: ({color, size}) => (
@@ -31,7 +31,7 @@ export const bottomTabsRoutes: IBottomTab[] = [
   {
     name: 'Accounts',
     component: AccountsScreen,
-    initialParams: {category: fixedOutcomes},
+    initialParams: {category: 'fixedExpenses'},
     options: {
       title: 'Accounts',
       tabBarIcon: ({color, size}) => (
@@ -42,7 +42,7 @@ export const bottomTabsRoutes: IBottomTab[] = [
   {
     name: 'Outcomes',
     component: StackNav,
-    initialParams: {category: fixedOutcomes},
+    initialParams: {category: 'fixedExpenses'},
     options: {
       title: '',
       tabBarIcon: ({color, size}) => (
@@ -95,7 +95,7 @@ export const bottomTabsRoutes: IBottomTab[] = [
   {
     name: 'AnalysisScreen',
     component: AnalysisScreen,
-    initialParams: {category: varOutcomes},
+    initialParams: {category: 'varOutcomes'},
     options: {
       title: 'Analysis',
       tabBarIcon: ({color, size}) => (

@@ -12,11 +12,14 @@ import {
   Keyboard,
   TouchableOpacity,
 } from 'react-native';
-import {ScreenContainer, KeyboardContainer, ScrollContainer, Spacer} from '@components/atoms';
+import {
+  ScreenContainer,
+  KeyboardContainer,
+  ScrollContainer,
+  Spacer,
+} from '@components/atoms';
 import {useFormScreen} from '@hooks/useFormScreen';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {incomes} from '@data/incomes';
-import {categoryType} from '@data/categoryType';
 
 interface FormScreenProps extends StackScreenProps<StackNavParams, 'Form'> {}
 

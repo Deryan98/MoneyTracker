@@ -1,16 +1,13 @@
-import { categoryType } from "@data/categoryType";
-import { useEffect, useState } from "react";
+import {useEffect, useState} from 'react';
 
 export const useFormScreen = () => {
-
   const [inputText, onChangeInputText] = useState<string>('');
 
   const [visibleInputText, setVisibleInputText] = useState<boolean>(false);
 
-  const [selectedCategory, onChangeSelectedCategory] = useState<categoryType>();
+  const [selectedCategory, onChangeSelectedCategory] = useState<ICategory>();
 
-  console.log({selectedCategory})
-
+  console.log({selectedCategory});
 
   return {
     inputText,
@@ -18,6 +15,6 @@ export const useFormScreen = () => {
     visibleInputText,
     setVisibleInputText,
     selectedCategory,
-    onChangeSelectedCategory
-  }
-}
+    onChangeSelectedCategory,
+  };
+};

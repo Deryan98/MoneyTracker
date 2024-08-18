@@ -64,4 +64,12 @@ declare global {
   };
 
   type FinanceType = 'expenses' | 'incomes';
+  interface IIcon {
+    id: number;
+    icon: string;
+  }
+  interface ICategory extends IIcon {
+    name: string;
+    type: 'income' | 'expense';
+  }
 }

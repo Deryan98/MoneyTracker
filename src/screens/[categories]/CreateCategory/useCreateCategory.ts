@@ -2,12 +2,11 @@ import React, {useState} from 'react';
 import {getDbConnection} from '@db/db';
 import {insertCategory} from '@db/queries';
 import {Alert} from 'react-native';
-import {iconType} from '@data/iconType';
 
 export const useCreateCategory = () => {
   const [inputText, setInputText] = useState<string>('');
 
-  const [selectedIcon, onChangeSelectedIcon] = useState<iconType>();
+  const [selectedIcon, onChangeSelectedIcon] = useState<IIcon>();
 
   const [error, setError] = useState<string>('');
 

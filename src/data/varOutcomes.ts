@@ -1,44 +1,44 @@
-import { categoryType } from "./categoryType";
+import {categoryType} from './ICategory';
 
 export const varOutcomes: categoryType[] = [
   {
     id: 1,
     icon: 'car',
-    name: "Car"
+    name: 'Car',
   },
   {
     id: 2,
     icon: 'train',
-    name: "Transport"
+    name: 'Transport',
   },
   {
     id: 3,
     icon: 'heartbeat',
-    name: "Health"
+    name: 'Health',
   },
   {
     id: 4,
     icon: 'gift',
-    name: "Gifts"
+    name: 'Gifts',
   },
   {
     id: 5,
     icon: 'paw',
-    name: "Pets"
+    name: 'Pets',
   },
   {
     id: 6,
     icon: 'cutlery',
-    name: "Eating Out"
+    name: 'Eating Out',
   },
   {
     id: 7,
     icon: 'phone',
-    name: "Communications"
+    name: 'Communications',
   },
   {
     id: 8,
     icon: 'futbol-o',
-    name: "Sports"
+    name: 'Sports',
   },
-]
+];

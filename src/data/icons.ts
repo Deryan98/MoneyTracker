@@ -1,7 +1,4 @@
-import { categoryType } from "./categoryType";
-import { iconType } from "./iconType";
-
-export const icons: iconType[] = [
+export const icons: IIcon[] = [
   {
     id: 1,
     icon: 'money',
@@ -66,4 +63,4 @@ export const icons: iconType[] = [
     id: 16,
     icon: 'futbol-o',
   },
-]
+];

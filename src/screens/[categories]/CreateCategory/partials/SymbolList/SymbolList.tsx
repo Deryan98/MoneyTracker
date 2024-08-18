@@ -2,7 +2,6 @@ import {Spacer} from '@components/atoms';
 import {Headings} from '@components/atoms/text/Headings/Headings';
 import {accent, colors, gray, white} from '@constants/colors/colors';
 import {icons} from '@data/icons';
-import {iconType} from '@data/iconType';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import React from 'react';
 import {StyleSheet, View, TouchableOpacity} from 'react-native';
@@ -40,7 +39,7 @@ const SymbolList = ({selectedIcon, onPressItem}: SymbolListProps) => {
       <SymbolListHeader />
       <Spacer space={15} />
       <View style={listStyles.listContainer}>
-        {icons.map(({id, icon}: iconType, index) => {
+        {icons.map(({id, icon}: IIcon, index) => {
           return (
             <TouchableOpacity
               key={id}

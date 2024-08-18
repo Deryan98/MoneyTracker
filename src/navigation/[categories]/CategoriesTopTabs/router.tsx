@@ -1,3 +1,5 @@
+import {faHome} from '@fortawesome/free-solid-svg-icons';
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {CategoriesScreen} from '@screens/[categories]';
 
 export const categoriesTopTabsRouter: IMaterialTopTab[] = [
