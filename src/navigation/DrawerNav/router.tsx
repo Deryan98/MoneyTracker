@@ -6,6 +6,7 @@ import {faLayerGroup} from '@fortawesome/free-solid-svg-icons/faLayerGroup';
 import {faHome} from '@fortawesome/free-solid-svg-icons/faHome';
 import {faBookBookmark} from '@fortawesome/free-solid-svg-icons/faBookBookmark';
 import {CategoriesTopTabs} from '@navigation/[categories]/CategoriesTopTabs';
+import {CategoriesNavigator} from '@navigation/[categories]/CategoriesNavigator/CategoriesNavigator';
 
 export const drawerRouter: IDrawer[] = [
   {
@@ -20,7 +21,7 @@ export const drawerRouter: IDrawer[] = [
   },
   {
     name: selectedLanguage.drawer[1].label,
-    component: CategoriesTopTabs,
+    component: CategoriesNavigator,
     options: {
       drawerLabel: selectedLanguage.drawer[1].label,
       drawerIcon: ({color, focused, size}) => (
@@ -28,14 +29,14 @@ export const drawerRouter: IDrawer[] = [
       ),
     },
   },
-  {
-    name: selectedLanguage.drawer[2].label,
-    component: CreateCategory,
-    options: {
-      drawerLabel: selectedLanguage.drawer[2].label,
-      drawerIcon: ({color, focused, size}) => (
-        <FontAwesomeIcon icon={faLayerGroup} color={color} size={size} />
-      ),
-    },
-  },
+  // {
+  //   name: selectedLanguage.drawer[2].label,
+  //   component: CreateCategory,
+  //   options: {
+  //     drawerLabel: selectedLanguage.drawer[2].label,
+  //     drawerIcon: ({color, focused, size}) => (
+  //       <FontAwesomeIcon icon={faLayerGroup} color={color} size={size} />
+  //     ),
+  //   },
+  // },
 ];

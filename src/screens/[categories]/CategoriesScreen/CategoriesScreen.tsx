@@ -3,20 +3,18 @@ import {StackScreenProps} from '@react-navigation/stack';
 import React from 'react';
 import {ScreenContainer, KeyboardContainer, Spacer} from '@components/atoms';
 import {useCategories} from './useCategories';
-import {
-  Header,
-  InputField,
-  SymbolList,
-  SaveAction,
-  RadioField,
-} from './partials';
+import {CategoriesList} from './partials';
 import {ScrollView} from 'react-native-gesture-handler';
-
-interface FormScreenProps extends StackScreenProps<StackNavParams, 'Form'> {}
+import {CategoriesNavParams} from '@navigation/[categories]/CategoriesNavigator/CategoriesNavigator';
+interface CategoriesScreenProps
+  extends StackScreenProps<CategoriesNavParams, 'CategoriesList'> {}
 //TODO: Add navigation to more icons
 //TODO: Change the more icons location at the end of the icon list
 //TODO: posibility to implement formik if needed
-export const CategoriesScreen = ({navigation, route}: FormScreenProps) => {
+export const CategoriesScreen = ({
+  navigation,
+  route,
+}: CategoriesScreenProps) => {
   const {
     inputText,
     onChangeInputText,
@@ -27,11 +25,13 @@ export const CategoriesScreen = ({navigation, route}: FormScreenProps) => {
     handlePressItem,
   } = useCategories();
 
+  navigation.navigate('CategoriesList');
+
   return (
     <KeyboardContainer>
       <ScrollView showsVerticalScrollIndicator={false}>
         <ScreenContainer>
-          <SymbolList
+          <CategoriesList
             selectedIcon={selectedIcon}
             onPressItem={handlePressItem}
           />

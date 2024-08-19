@@ -2,20 +2,17 @@ import {StackNavParams} from '@navigation/StackNav/types';
 import {StackScreenProps} from '@react-navigation/stack';
 import {ScreenContainer, KeyboardContainer, Spacer} from '@components/atoms';
 import {useCreateCategory} from './useCreateCategory';
-import {
-  InputField,
-  SymbolList,
-  SaveAction,
-  RadioField,
-  Header,
-} from './partials';
+import {InputField, SymbolList, SaveAction, RadioField} from './partials';
 import {ScrollView} from 'react-native-gesture-handler';
+import Header from '../components/Header/Header';
+import {CategoriesNavParams} from '@navigation/[categories]/CategoriesNavigator/CategoriesNavigator';
 
-interface FormScreenProps extends StackScreenProps<StackNavParams, 'Form'> {}
+interface CreateCategoryProps
+  extends StackScreenProps<CategoriesNavParams, 'CategoriesList'> {}
 //TODO: Add navigation to more icons
 //TODO: Change the more icons location at the end of the icon list
 //TODO: posibility to implement formik if needed
-export const CreateCategory = ({navigation, route}: FormScreenProps) => {
+export const CreateCategory = ({navigation, route}: CreateCategoryProps) => {
   const {
     inputText,
     onChangeInputText,

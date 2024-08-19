@@ -1,6 +1,9 @@
 import {accent, colors, gray, white} from '@constants/colors/colors';
 import {StyleSheet} from 'react-native';
-import {widthPercentageToDP} from 'react-native-responsive-screen';
+import {
+  heightPercentageToDP,
+  widthPercentageToDP,
+} from 'react-native-responsive-screen';
 
 export const listTitle = StyleSheet.create({
   container: {
@@ -24,6 +27,14 @@ export const listTitle = StyleSheet.create({
 });
 
 export const listStyles = StyleSheet.create({
+  scrollContainer: {
+    padding: 0,
+    width: '100%',
+    backgroundColor: colors[white][0],
+    borderRadius: 15,
+    // height: ,
+    maxHeight: heightPercentageToDP(70),
+  },
   listContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
@@ -57,6 +68,14 @@ export const listStyles = StyleSheet.create({
     fontWeight: '500',
     textAlign: 'center',
     paddingTop: 5,
+  },
+  addCategoryButton: {
+    backgroundColor: colors[accent][2],
+    width: 50,
+    height: 50,
+    borderRadius: 15,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

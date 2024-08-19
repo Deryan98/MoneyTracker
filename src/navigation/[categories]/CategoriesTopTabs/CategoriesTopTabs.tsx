@@ -14,8 +14,8 @@ import {
   surface,
   tertiary,
 } from '@constants/colors/colors';
-import {Header} from '@screens/[categories]/CreateCategory/partials';
 import {useTheme} from '@redshank/native';
+import Header from '@screens/[categories]/components/Header/Header';
 
 const Tab = createMaterialTopTabNavigator();
 
