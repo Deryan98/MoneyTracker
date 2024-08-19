@@ -1,20 +1,26 @@
 import {StackNavParams} from '@navigation/StackNav/types';
-import {StackScreenProps} from '@react-navigation/stack';
+// import {StackScreenProps} from '@react-navigation/stack';
 import React from 'react';
 import {ScreenContainer, KeyboardContainer, Spacer} from '@components/atoms';
 import {useCategories} from './useCategories';
 import {CategoriesList} from './partials';
 import {ScrollView} from 'react-native-gesture-handler';
-import {CategoriesNavParams} from '@navigation/[categories]/CategoriesNavigator/CategoriesNavigator';
+import {CategoriesNavParams} from '@navigation/[categories]/CategoriesNavigator/types';
+import {MaterialTopTabScreenProps} from '@react-navigation/material-top-tabs';
+
 interface CategoriesScreenProps
-  extends StackScreenProps<CategoriesNavParams, 'CategoriesList'> {}
-//TODO: Add navigation to more icons
-//TODO: Change the more icons location at the end of the icon list
-//TODO: posibility to implement formik if needed
+  extends MaterialTopTabScreenProps<
+    CategoriesNavParams,
+    'CategoriesTopTabsNavigation'
+  > {}
 export const CategoriesScreen = ({
   navigation,
   route,
 }: CategoriesScreenProps) => {
+  route.params;
+
+  console.log(route.params.financeType);
+
   const {
     inputText,
     onChangeInputText,
@@ -24,8 +30,6 @@ export const CategoriesScreen = ({
     createCategory,
     handlePressItem,
   } = useCategories();
-
-  navigation.navigate('CategoriesList');
 
   return (
     <KeyboardContainer>

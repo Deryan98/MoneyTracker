@@ -1,1 +1,0 @@
-export {CategoriesTopTabs} from './CategoriesTopTabs';

@@ -5,7 +5,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faLayerGroup} from '@fortawesome/free-solid-svg-icons/faLayerGroup';
 import {faHome} from '@fortawesome/free-solid-svg-icons/faHome';
 import {faBookBookmark} from '@fortawesome/free-solid-svg-icons/faBookBookmark';
-import {CategoriesTopTabs} from '@navigation/[categories]/CategoriesTopTabs';
+import {CategoriesTopTabs} from '@navigation/[categories]/CategoriesTopTabsNavigator';
 import {CategoriesNavigator} from '@navigation/[categories]/CategoriesNavigator/CategoriesNavigator';
 
 export const drawerRouter: IDrawer[] = [

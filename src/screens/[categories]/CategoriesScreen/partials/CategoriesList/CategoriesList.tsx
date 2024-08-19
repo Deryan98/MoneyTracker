@@ -15,7 +15,7 @@ import {
 } from './styles';
 import {Text} from '@redshank/native';
 import {useNavigation} from '@react-navigation/native';
-import {CategoriesListNavigationProp} from '@navigation/[categories]/CategoriesNavigator/CategoriesNavigator';
+import {CreateCategoryNavigationProp} from '@navigation/[categories]/CategoriesNavigator/types';
 
 type SymbolListProps = {
   selectedIcon: any;
@@ -37,7 +37,7 @@ const AddCategory = ({onPress}: AddCategoryProps) => {
 };
 
 const CategoriesList = ({selectedIcon, onPressItem}: SymbolListProps) => {
-  const navigation = useNavigation<CategoriesListNavigationProp>();
+  const navigation = useNavigation<CreateCategoryNavigationProp>();
   const addCategoryHadler = () => {
     console.log('que');
     navigation.navigate('CreateCategory');

@@ -5,10 +5,10 @@ import {useCreateCategory} from './useCreateCategory';
 import {InputField, SymbolList, SaveAction, RadioField} from './partials';
 import {ScrollView} from 'react-native-gesture-handler';
 import Header from '../components/Header/Header';
-import {CategoriesNavParams} from '@navigation/[categories]/CategoriesNavigator/CategoriesNavigator';
+import {CategoriesNavParams} from '@navigation/[categories]/CategoriesNavigator/types';
 
 interface CreateCategoryProps
-  extends StackScreenProps<CategoriesNavParams, 'CategoriesList'> {}
+  extends StackScreenProps<CategoriesNavParams, 'CreateCategory'> {}
 //TODO: Add navigation to more icons
 //TODO: Change the more icons location at the end of the icon list
 //TODO: posibility to implement formik if needed

@@ -1,0 +1,1 @@
+export {CategoriesTopTabsNavigator} from './CategoriesTopTabsNavigator';

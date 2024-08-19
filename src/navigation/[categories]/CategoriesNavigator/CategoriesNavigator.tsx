@@ -1,30 +1,17 @@
-import {
-  createNativeStackNavigator,
-  NativeStackNavigationProp,
-} from '@react-navigation/native-stack';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react';
-import {CategoriesTopTabs} from '../CategoriesTopTabs';
+import {CategoriesTopTabsNavigator} from '../CategoriesTopTabsNavigator';
 import {CreateCategory} from '@screens/[categories]';
-
-export type CategoriesNavParams = {
-  CategoriesList: undefined;
-  CreateCategory: undefined;
-};
-
-export type CategoriesListNavigationProp = NativeStackNavigationProp<
-  CategoriesNavParams,
-  'CategoriesList'
->;
+import {CategoriesNavParams} from './types';
 
 const Stack = createNativeStackNavigator<CategoriesNavParams>();
 
 export const CategoriesNavigator = () => {
-  console.log('render');
   return (
     <Stack.Navigator>
       <Stack.Screen
-        name="CategoriesList"
-        component={CategoriesTopTabs}
+        name="CategoriesTopTabsNavigation"
+        component={CategoriesTopTabsNavigator}
         options={{
           headerShown: false,
         }}

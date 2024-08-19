@@ -5,23 +5,23 @@ import {
   MaterialTopTabBarProps,
 } from '@react-navigation/material-top-tabs';
 import {categoriesTopTabsRouter} from './router';
-import {
-  accent,
-  colors,
-  gray,
-  inactive,
-  primary,
-  surface,
-  tertiary,
-} from '@constants/colors/colors';
+import {colors, primary} from '@constants/colors/colors';
 import {useTheme} from '@redshank/native';
 import Header from '@screens/[categories]/components/Header/Header';
+import {CategoriesScreen} from '@screens/[categories]';
 
-const Tab = createMaterialTopTabNavigator();
+export type CategoriesTopTabsNavigatorParams = {
+  Expenses: {
+    financeType: 'expenses';
+  };
+  Incomes: {
+    financeType: 'incomes';
+  };
+};
 
-interface CategoriesTopTabsProps {}
+const Tab = createMaterialTopTabNavigator<CategoriesTopTabsNavigatorParams>();
 
-export const CategoriesTopTabs = (props: CategoriesTopTabsProps) => {
+export const CategoriesTopTabsNavigator = () => {
   const {colors: colorTheme} = useTheme();
   return (
     <>
@@ -65,17 +65,22 @@ export const CategoriesTopTabs = (props: CategoriesTopTabsProps) => {
             // display: 'none',
           },
         }}>
-        {categoriesTopTabsRouter.map(
-          ({name, component, initialParams, options}, index) => (
-            <Tab.Screen
-              key={name + index}
-              name={name}
-              component={component}
-              initialParams={initialParams}
-              options={options}
-            />
-          ),
-        )}
+        <Tab.Screen
+          name="Expenses"
+          component={CategoriesScreen}
+          initialParams={{financeType: 'expenses'}}
+          options={{
+            tabBarLabel: 'Expenses',
+          }}
+        />
+        <Tab.Screen
+          name="Incomes"
+          component={CategoriesScreen}
+          initialParams={{financeType: 'incomes'}}
+          options={{
+            tabBarLabel: 'Incomes',
+          }}
+        />
       </Tab.Navigator>
     </>
   );
