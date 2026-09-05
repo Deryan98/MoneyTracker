@@ -7,6 +7,8 @@ import {
   assignToEnvelope,
   completeEnvelope,
   copyCategoryBudgetsToPeriod,
+  EnvelopeOverdrawError,
+  IWithdrawFromEnvelopeResult,
   getAllCategoryBudgetsWithSpent,
   CompleteEnvelopeRejection,
   getAvailableToAssign,
@@ -29,6 +31,12 @@ import {
 } from '@screens/AchievementsScreen/monthlyOutcomes';
 
 export type LoadStatus = 'loading' | 'success' | 'error';
+
+/** Los tres desenlaces de un retiro — ver `withdrawFromEnvelopeById`. */
+export type WithdrawOutcome =
+  | {ok: true; result: IWithdrawFromEnvelopeResult}
+  | {ok: false; reason: 'overdraw'; available: number}
+  | {ok: false; reason: 'failed'};
 
 /**
  * All state/data-fetching for `BudgetsScreen`'s two independent
@@ -209,19 +217,32 @@ export const useBudgetsScreen = () => {
   /** Same shape as `assignToEnvelopeById`, for a withdrawal — see
    * `withdrawFromEnvelope`'s own non-blocking `envelopeOverdrawn`
    * signal. */
+  /**
+   * Retirar distingue TRES desenlaces, no dos.
+   *
+   * "Retiraste mas de lo que hay" no es un fallo del sistema sino una
+   * peticion imposible, y necesita decir CUANTO habia. Devolverlo como
+   * `null` —como cualquier otro error— obligaba a la pantalla a mostrar
+   * un "no se pudo retirar" generico que no ayuda a corregir. Mismo
+   * patron que `completeEnvelopeById`, que ya devuelve el motivo del
+   * rechazo en vez de un booleano.
+   */
   const withdrawFromEnvelopeById = useCallback(
-    async (idEnvelope: number, amount: number, note?: string) => {
+    async (idEnvelope: number, amount: number, note?: string): Promise<WithdrawOutcome> => {
       try {
         const db = await getDbConnection();
         const result = await withdrawFromEnvelope(db, {idEnvelope, amount, note});
         await loadEnvelopes();
-        return result;
+        return {ok: true, result};
       } catch (e: any) {
+        if (e instanceof EnvelopeOverdrawError) {
+          return {ok: false, reason: 'overdraw', available: e.available};
+        }
         console.warn(
           '[useBudgetsScreen] withdrawFromEnvelopeById failed:',
           e?.message ?? e,
         );
-        return null;
+        return {ok: false, reason: 'failed'};
       }
     },
     [loadEnvelopes],

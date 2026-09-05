@@ -145,7 +145,7 @@
     "setNewLimit": "Set a new monthly limit",
     "setLimit": "Set a limit",
     "limitRowAccessibilityHint": "Opens this category's limit to edit it",
-    "assignMoney": "Assign money",
+    "assignMoney": "Add money",
     "withdrawMoney": "Withdraw money",
     "archive": "Archive",
     "archiveEnvelopeTitle": "Archive this envelope?",
@@ -155,7 +155,6 @@
     "withdrawErrorMessage": "Could not withdraw this amount. Please try again.",
     "headsUp": "Heads up",
     "overAllocatedMessage": "You have committed more to goals than you hold in cash and bank. You are over by {{amount}}.",
-    "envelopeOverdrawnMessage": "This envelope's balance is now negative: {{amount}}. You've withdrawn more than was apartado.",
     "limitSaveErrorMessage": "Could not save this limit. Please try again.",
     "chooseCategory": "Choose a category",
     "invalidLimit": "Enter a valid limit greater than $0.00",
@@ -164,7 +163,7 @@
     "everyCategoryHasLimit": "Every expense category already has a limit set this month.",
     "monthlyLimitPlaceholder": "Monthly limit, e.g. 300.00",
     "monthlyLimitAccessibilityLabel": "Monthly limit",
-    "assignToTitle": "Assign to {{name}}",
+    "assignToTitle": "Add to {{name}}",
     "withdrawFromTitle": "Withdraw from {{name}}",
     "availableToAssignContext": "{{amount}} available to assign",
     "currentBalanceContext": "Current balance: {{amount}}",
@@ -189,11 +188,9 @@
     "retryLoadingEnvelope": "Retry loading envelope",
     "overBy": "You went over by {{amount}}",
     "progress": {
-      "paidLeft": "{{pct}}% paid · {{amount}} left",
-      "paidOff": "Paid off",
-      "paidOffOverpaid": "Paid off · {{amount}} overpaid",
       "savedNoGoal": "{{amount}} saved · no goal set",
-      "pctOfGoal": "{{pct}}% of {{amount}}"
+      "pctOfGoal": "{{pct}}% of {{amount}}",
+      "goalExceeded": "Goal exceeded by {{amount}}"
     },
     "envelopeForm": {
       "notFound": "This envelope could not be found.",
@@ -245,7 +242,8 @@
     "rolloverApply": "Use these limits",
     "rolloverAdjust": "Apply and adjust them",
     "rolloverDismiss": "Dismiss the limit suggestion",
-    "rolloverErrorMessage": "Could not create the limits. Please try again."
+    "rolloverErrorMessage": "Could not create the limits. Please try again.",
+    "withdrawTooMuchMessage": "You can't withdraw more than the goal holds. Available: {{amount}}."
   },
   "achievements": {
     "title": "Achievements",

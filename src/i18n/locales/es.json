@@ -145,7 +145,7 @@
     "setNewLimit": "Establecer un nuevo límite mensual",
     "setLimit": "Establecer un límite",
     "limitRowAccessibilityHint": "Abre el límite de esta categoría para editarlo",
-    "assignMoney": "Apartar dinero",
+    "assignMoney": "Abonar dinero",
     "withdrawMoney": "Retirar dinero",
     "archive": "Archivar",
     "archiveEnvelopeTitle": "¿Archivar este sobre?",
@@ -155,7 +155,6 @@
     "withdrawErrorMessage": "No se pudo retirar este monto. Inténtalo de nuevo.",
     "headsUp": "Aviso",
     "overAllocatedMessage": "Has comprometido en metas más dinero del que tienes en efectivo y banco. Te has pasado por {{amount}}.",
-    "envelopeOverdrawnMessage": "El saldo de este sobre ahora es negativo: {{amount}}. Retiraste más de lo que tenías apartado.",
     "limitSaveErrorMessage": "No se pudo guardar este límite. Inténtalo de nuevo.",
     "chooseCategory": "Elige una categoría",
     "invalidLimit": "Ingresa un límite válido mayor a $0.00",
@@ -164,7 +163,7 @@
     "everyCategoryHasLimit": "Todas las categorías de gasto ya tienen un límite establecido este mes.",
     "monthlyLimitPlaceholder": "Límite mensual, ej. 300.00",
     "monthlyLimitAccessibilityLabel": "Límite mensual",
-    "assignToTitle": "Apartar a {{name}}",
+    "assignToTitle": "Abonar a {{name}}",
     "withdrawFromTitle": "Retirar de {{name}}",
     "availableToAssignContext": "{{amount}} disponible para apartar",
     "currentBalanceContext": "Saldo actual: {{amount}}",
@@ -189,11 +188,9 @@
     "retryLoadingEnvelope": "Reintentar carga del sobre",
     "overBy": "Te pasaste por {{amount}}",
     "progress": {
-      "paidLeft": "{{pct}}% pagado · quedan {{amount}}",
-      "paidOff": "Pagado por completo",
-      "paidOffOverpaid": "Pagado por completo · {{amount}} de más",
       "savedNoGoal": "{{amount}} ahorrado · sin meta establecida",
-      "pctOfGoal": "{{pct}}% de {{amount}}"
+      "pctOfGoal": "{{pct}}% de {{amount}}",
+      "goalExceeded": "Meta superada por {{amount}}"
     },
     "envelopeForm": {
       "notFound": "No se encontró este sobre.",
@@ -245,7 +242,8 @@
     "rolloverApply": "Usar estos límites",
     "rolloverAdjust": "Aplicarlos y ajustarlos",
     "rolloverDismiss": "Cerrar la sugerencia de límites",
-    "rolloverErrorMessage": "No se pudieron crear los límites. Inténtalo de nuevo."
+    "rolloverErrorMessage": "No se pudieron crear los límites. Inténtalo de nuevo.",
+    "withdrawTooMuchMessage": "No puedes retirar más de lo que hay en la meta. Disponible: {{amount}}."
   },
   "achievements": {
     "title": "Logros",

@@ -100,35 +100,21 @@ export interface IEnvelopeProgress {
 export const getEnvelopeProgress = (
   envelope: IEnvelopeWithBalance,
 ): IEnvelopeProgress => {
-  if (envelope.kind === 'debt') {
-    // `targetAmount`/`paidAmount`/`remainingDebt` are never `null` for a
-    // `debt` row (DB `CHECK` + `ENVELOPES_WITH_BALANCE_SELECT` — see
-    // `envelopesQueries.ts`) — the `?? 0`/`?? 1` fallbacks below only
-    // guard the type, they are not expected to ever fire.
-    const target = envelope.targetAmount ?? 1;
-    const paid = envelope.paidAmount ?? 0;
-    const remaining = envelope.remainingDebt ?? target;
-    const ratio = target > 0 ? paid / target : 0;
-    const pct = Math.round(Math.max(0, ratio) * 100);
-
-    let contextLine: string;
-    if (remaining > 0) {
-      contextLine = i18n.t('budgets.progress.paidLeft', {
-        pct,
-        amount: formatCentsToCurrency(remaining),
-      });
-    } else if (remaining === 0) {
-      contextLine = i18n.t('budgets.progress.paidOff');
-    } else {
-      contextLine = i18n.t('budgets.progress.paidOffOverpaid', {
-        amount: formatCentsToCurrency(Math.abs(remaining)),
-      });
-    }
-
-    return {hasProgress: true, ratio, contextLine};
-  }
-
-  // `fund`
+  // UNA sola regla de progreso, para fondos y para deudas.
+  //
+  // Antes habia dos, y eran OPUESTAS: un fondo progresaba METIENDO
+  // dinero (progreso = saldo) y una deuda progresaba SACANDOLO, porque
+  // pagar era retirar del sobre (progreso = `paidAmount`). El mismo par
+  // de botones significaba cosas contrarias segun el tipo, y como en una
+  // deuda "retirar" era avanzar, nada impedia pasar del 100% y dejar el
+  // restante en negativo — ocurrio de verdad: iPhone 13 acabo con
+  // `remainingDebt = -$300`.
+  //
+  // Decision del dueno (2026-09-05): las deudas usan la logica de los
+  // fondos. Abonar sube la barra, retirar la baja. `paidAmount` y
+  // `remainingDebt` dejan de alimentar esta pantalla; siguen existiendo
+  // para la tarjeta de deudas de Analitica, que responde otra pregunta
+  // ("cuanto debo", no "cuanto llevo juntado").
   if (envelope.targetAmount === null) {
     return {
       hasProgress: false,
@@ -141,6 +127,22 @@ export const getEnvelopeProgress = (
 
   const ratio = envelope.targetAmount > 0 ? envelope.balance / envelope.targetAmount : 0;
   const pct = Math.round(Math.max(0, ratio) * 100);
+
+  // Pasarse de la meta se PERMITE —juntar $1,800 para algo de $1,500 es
+  // bueno, no un error— pero se dice, en vez de dejar que el porcentaje
+  // se dispare a 120% y la barra se salga. El `ratio` que se devuelve va
+  // sin topar: toparlo es cosa de quien pinta la barra, y la frase de
+  // abajo necesita el exceso real.
+  if (envelope.balance > envelope.targetAmount) {
+    return {
+      hasProgress: true,
+      ratio,
+      contextLine: i18n.t('budgets.progress.goalExceeded', {
+        amount: formatCentsToCurrency(envelope.balance - envelope.targetAmount),
+      }),
+    };
+  }
+
   return {
     hasProgress: true,
     ratio,
