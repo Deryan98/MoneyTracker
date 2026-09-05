@@ -154,7 +154,7 @@
     "assignErrorMessage": "Could not assign this amount. Please try again.",
     "withdrawErrorMessage": "Could not withdraw this amount. Please try again.",
     "headsUp": "Heads up",
-    "overAllocatedMessage": "You've now assigned more than you currently have. Available to assign: {{amount}}.",
+    "overAllocatedMessage": "You have committed more to goals than you hold in cash and bank. You are over by {{amount}}.",
     "envelopeOverdrawnMessage": "This envelope's balance is now negative: {{amount}}. You've withdrawn more than was apartado.",
     "limitSaveErrorMessage": "Could not save this limit. Please try again.",
     "chooseCategory": "Choose a category",

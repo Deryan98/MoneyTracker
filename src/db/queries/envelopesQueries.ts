@@ -1,6 +1,6 @@
 import {ResultSet, SQLiteDatabase, Transaction} from 'react-native-sqlite-storage';
 import {isFiniteInteger} from './numberGuards';
-import {getNetWorth} from './accountsQueries';
+import {getLiquidBalance} from './accountsQueries';
 
 /**
  * Sobres — Fondos (ahorro, emergencia, seguridad, vacaciones) y Deudas
@@ -712,17 +712,24 @@ export const getTotalRemainingDebt = async (
 };
 
 /**
- * `netWorth - totalApartado` (all active envelopes, every kind) — "money
- * not yet claimed by any envelope". Negative means more has been
- * assigned across envelopes in total than currently exists across active
- * accounts (see this file's top-of-file doc on why that is ALLOWED, not
- * rejected). Cents. Exported directly (not just used internally by
- * `assignToEnvelope`) so a "create/edit assignment" form can show
- * "$X disponible para asignar" before the user even submits.
+ * `liquidBalance - totalApartado` — el dinero que TIENES y que todavia
+ * no has comprometido en ninguna meta. Cents; negativo significa que
+ * entre todas las metas has apartado mas de lo que hay en efectivo y
+ * banco (permitido, no rechazado — ver el doc de cabecera de este
+ * archivo).
+ *
+ * Antes restaba del PATRIMONIO NETO, que incluye los prestamos en
+ * negativo: con una deuda grande el resultado era negativo antes de
+ * apartar nada y el aviso saltaba en cada asignacion. Ver
+ * `getLiquidBalance` para el caso real que lo destapo.
+ *
+ * Exportada (no solo usada por `assignToEnvelope`) para que un
+ * formulario de asignacion pueda mostrar "$X disponible para apartar"
+ * antes incluso de enviar.
  */
 export const getAvailableToAssign = async (db: SQLiteDatabase): Promise<number> => {
-  const [netWorth, totalApartado] = await Promise.all([getNetWorth(db), getEnvelopesTotal(db)]);
-  return netWorth - totalApartado;
+  const [liquid, totalApartado] = await Promise.all([getLiquidBalance(db), getEnvelopesTotal(db)]);
+  return liquid - totalApartado;
 };
 
 export interface IEnvelopeMovement {

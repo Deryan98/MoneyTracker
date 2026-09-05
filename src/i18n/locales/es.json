@@ -154,7 +154,7 @@
     "assignErrorMessage": "No se pudo apartar este monto. Inténtalo de nuevo.",
     "withdrawErrorMessage": "No se pudo retirar este monto. Inténtalo de nuevo.",
     "headsUp": "Aviso",
-    "overAllocatedMessage": "Ahora has apartado más de lo que tienes disponible. Disponible para apartar: {{amount}}.",
+    "overAllocatedMessage": "Has comprometido en metas más dinero del que tienes en efectivo y banco. Te has pasado por {{amount}}.",
     "envelopeOverdrawnMessage": "El saldo de este sobre ahora es negativo: {{amount}}. Retiraste más de lo que tenías apartado.",
     "limitSaveErrorMessage": "No se pudo guardar este límite. Inténtalo de nuevo.",
     "chooseCategory": "Elige una categoría",

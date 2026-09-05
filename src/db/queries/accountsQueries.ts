@@ -46,6 +46,18 @@ export const DEBT_ACCOUNT_KINDS: readonly AccountKind[] = [
 export const isDebtAccountKind = (kind: AccountKind): boolean =>
   DEBT_ACCOUNT_KINDS.includes(kind);
 
+/**
+ * Los tipos que contienen dinero DISPONIBLE HOY.
+ *
+ * Deja fuera las deudas (`credit_card`, `loan`) por lo obvio, pero
+ * tambien `receivable`: lo que alguien te debe todavia no lo tienes, y
+ * no puedes apartar dinero que no ha llegado.
+ *
+ * Existe para `getLiquidBalance`, que es lo que decide cuanto se puede
+ * comprometer en metas — ver alli por que no vale el patrimonio neto.
+ */
+export const LIQUID_ACCOUNT_KINDS: readonly AccountKind[] = ['cash', 'bank'] as const;
+
 export const ACCOUNT_KINDS: readonly AccountKind[] = [
   'cash',
   'bank',
@@ -357,6 +369,53 @@ export const getAccountById = async (
  * covering-index-backed aggregate `getAccounts` uses) instead of
  * fetching every account row into JS just to add them up.
  */
+/**
+ * El dinero que de verdad tienes hoy: la suma de los saldos de las
+ * cuentas liquidas activas (efectivo y banco). Cents; puede ser
+ * negativo si un banco esta en descubierto.
+ *
+ * ## Por que esto y no `getNetWorth`
+ *
+ * `getAvailableToAssign` restaba lo apartado del PATRIMONIO NETO, y el
+ * patrimonio neto incluye los prestamos con signo negativo. Con un
+ * prestamo de $30,000 el resultado era negativo antes de apartar un
+ * solo dolar, asi que el aviso de "has apartado mas de lo disponible"
+ * saltaba en CADA asignacion, con cualquier importe, para siempre.
+ * Reportado por el dueno con captura: el dialogo decia
+ * "Disponible para apartar: -$29,910.00" al apartar $6,000.
+ *
+ * Un aviso que sale siempre no avisa de nada — ensena a aceptarlo sin
+ * leer, y entonces tampoco se lee el dia que dice algo cierto.
+ *
+ * Y el error no era solo de calibracion sino conceptual: apartar dinero
+ * es repartir lo que TIENES, no lo que VALES. Se puede reservar $900 de
+ * la cuenta de ahorro debiendo $30,000 de un prestamo a diez anos; las
+ * dos cosas son ciertas a la vez y restarlas mezcla dos preguntas
+ * distintas.
+ *
+ * `getNetWorth` sigue existiendo sin cambios: es la cifra correcta para
+ * "cuanto valgo", que es lo que muestra la tarjeta de Balance. Lo que
+ * cambia es quien la usa para decidir cuanto se puede comprometer.
+ *
+ * La lista de tipos se interpola desde `LIQUID_ACCOUNT_KINDS`, no se
+ * escribe a mano: es la unica interpolacion que este proyecto permite
+ * en SQL —valores de una constante del propio codigo, nunca entrada del
+ * usuario— y evita que la constante y la consulta se separen.
+ */
+export const getLiquidBalance = async (db: SQLiteDatabase): Promise<number> => {
+  const placeholders = LIQUID_ACCOUNT_KINDS.map(() => '?').join(', ');
+  const [resultSet] = await db.executeSql(
+    `SELECT COALESCE(SUM(a.initialBalance + COALESCE(f.total, 0)), 0) AS liquid
+      FROM accounts a
+      LEFT JOIN (
+        SELECT idAccount, SUM(amount) AS total FROM finances GROUP BY idAccount
+      ) f ON f.idAccount = a.id
+      WHERE a.archivedAt IS NULL AND a.kind IN (${placeholders});`,
+    [...LIQUID_ACCOUNT_KINDS],
+  );
+  return resultSet.rows.item(0).liquid;
+};
+
 export const getNetWorth = async (db: SQLiteDatabase): Promise<number> => {
   const [resultSet] = await db.executeSql(
     `SELECT COALESCE(SUM(a.initialBalance + COALESCE(f.total, 0)), 0) AS netWorth

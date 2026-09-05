@@ -309,7 +309,10 @@ const BudgetsScreen = ({navigation}: BudgetsScreenProps) => {
             'warning',
             t('budgets.headsUp'),
             t('budgets.overAllocatedMessage', {
-              amount: formatCentsToCurrency(result.availableToAssign),
+              // `availableToAssign` viene NEGATIVO cuando hay exceso, y
+              // el mensaje ya dice "te has pasado por": sin el valor
+              // absoluto se leeria "te has pasado por -$6,650.00".
+              amount: formatCentsToCurrency(Math.abs(result.availableToAssign)),
             }),
           );
         }
