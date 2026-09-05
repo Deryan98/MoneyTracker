@@ -109,13 +109,17 @@ const SCHEMA_VERSION = migrations[migrations.length - 1].version;
 let dbInstance: SQLiteDatabase | null = null;
 
 /**
- * Returns the single shared `SQLiteDatabase` connection for the app.
+ * Abre (o reutiliza) el handle nativo y deja el pragma listo. Separado de
+ * `getDbConnection` a proposito: esta funcion solo abre la conexion, NO
+ * garantiza que el esquema este migrado. Lo segundo es responsabilidad de
+ * `startup` mas abajo — mezclarlo aqui era exactamente el bug que este
+ * cambio arregla (ver el comentario de `getDbConnection`).
  *
- * react-native-sqlite-storage connections are not cheap to open, and
- * this library shares a native handle per database name — closing it
- * while another query is in flight can abort that query. We therefore
- * open the connection lazily, once, and keep it open for the lifetime
- * of the app process instead of opening/closing per call.
+ * react-native-sqlite-storage connections are not cheap to open, and this
+ * library shares a native handle per database name — closing it while
+ * another query is in flight can abort that query. We therefore open the
+ * connection lazily, once, and keep it open for the lifetime of the app
+ * process instead of opening/closing per call.
  *
  * `PRAGMA foreign_keys = ON` is set once here, immediately after the
  * connection is opened and before anything else runs against it. Two
@@ -131,11 +135,8 @@ let dbInstance: SQLiteDatabase | null = null;
  *   have any effect at all once this is set — before this fix SQLite
  *   parsed and stored the constraint but never enforced it, silently
  *   accepting `finances` rows pointing at nonexistent categories.
- *
- * Callers must NOT call `.close()` on the value returned here; use
- * `closeDbConnection` (app teardown / tests only) instead.
  */
-export const getDbConnection = async (): Promise<SQLiteDatabase> => {
+const openConnection = async (): Promise<SQLiteDatabase> => {
   if (dbInstance) {
     return dbInstance;
   }
@@ -143,6 +144,71 @@ export const getDbConnection = async (): Promise<SQLiteDatabase> => {
   await db.executeSql('PRAGMA foreign_keys = ON;');
   dbInstance = db;
   return dbInstance;
+};
+
+/**
+ * Un unico arranque compartido a nivel de modulo: abre la conexion Y corre
+ * las migraciones pendientes. Ver `getDbConnection` para el porque de este
+ * `let` en vez de simplemente `await`-ear esto en cada llamada.
+ */
+let startupPromise: Promise<SQLiteDatabase> | null = null;
+
+/**
+ * Abre la conexion y dejala esquema al dia. Nunca se llama directamente
+ * fuera de este fichero — es el cuerpo de `startupPromise`, memoizado por
+ * `getDbConnection`.
+ */
+const startup = async (): Promise<SQLiteDatabase> => {
+  const db = await openConnection();
+  await createTables(db);
+  return db;
+};
+
+/**
+ * Devuelve la conexion compartida — ya migrada — para toda la app.
+ *
+ * BUG que esto arregla: antes, esta funcion abria la conexion y la
+ * devolvia sin esperar a `createTables`. `initDatabase` (llamado desde un
+ * `useEffect` en `App.tsx`, que corre DESPUES del primer render) era quien
+ * disparaba las migraciones — pero cualquier hook cuyo `useFocusEffect`
+ * disparara antes de que ese efecto terminara llamaba a esta misma
+ * funcion, obtenia una conexion recien abierta y consultaba una base
+ * TODAVIA sin tablas. Eso es exactamente el error visto en Resumen en una
+ * instalacion limpia: `no such table: accounts`. "Retry" funcionaba
+ * porque para entonces `initDatabase` ya habia terminado.
+ *
+ * La solucion: una unica promesa de arranque (`startupPromise`) compartida
+ * a nivel de modulo. El primer llamador (sea `initDatabase` o cualquier
+ * hook — el orden ya no importa) crea la promesa y dispara `startup()`;
+ * todos los demas, concurrentes o posteriores, esperan esa MISMA promesa
+ * en vez de abrir su propia conexion. Ninguna consulta puede ejecutarse
+ * antes de que las migraciones terminen, y no hizo falta tocar ni un solo
+ * hook: todos ya llamaban a `getDbConnection()`.
+ *
+ * Por que la asignacion a `startupPromise` es segura frente a llamadas
+ * concurrentes sin necesitar un lock: JS es de un solo hilo y no hay
+ * ningun `await` entre el `if` y la asignacion, asi que dos llamadas que
+ * lleguen "a la vez" (antes de que la primera ceda el control) ven la
+ * comprobacion y la escritura como una unica operacion atomica — la
+ * segunda siempre encuentra la promesa que la primera acaba de crear.
+ *
+ * Si `startup()` falla (base bloqueada, migracion rota, disco lleno), el
+ * `.catch` de abajo limpia `startupPromise` ANTES de relanzar el error:
+ * sin ese reset, un arranque fallido dejaria cacheada para siempre una
+ * promesa ya rechazada, y el boton "Retry" del usuario recibiria SIEMPRE
+ * esa misma promesa rota en vez de disparar un intento nuevo.
+ *
+ * Callers must NOT call `.close()` on the value returned here; use
+ * `closeDbConnection` (app teardown / tests only) instead.
+ */
+export const getDbConnection = async (): Promise<SQLiteDatabase> => {
+  if (!startupPromise) {
+    startupPromise = startup().catch(error => {
+      startupPromise = null;
+      throw error;
+    });
+  }
+  return startupPromise;
 };
 
 /**
@@ -156,6 +222,11 @@ export const closeDbConnection = async (): Promise<void> => {
   }
   const db = dbInstance;
   dbInstance = null;
+  // El arranque compartido tiene que reiniciarse junto con la conexion:
+  // sin esto, la siguiente llamada a `getDbConnection` devolveria la
+  // promesa ya resuelta de la conexion que acabamos de cerrar, en vez de
+  // abrir (y volver a migrar) una nueva.
+  startupPromise = null;
   await db.close();
 };
 
@@ -284,10 +355,16 @@ export const createTables = async (db: SQLiteDatabase): Promise<void> => {
  * to date. Rejects if table creation fails — callers should handle/log
  * that rejection (e.g. surface it to the user or crash reporting)
  * rather than assuming the database is ready.
+ *
+ * Ya no llama a `createTables` por su cuenta: `getDbConnection` ahora
+ * ES el arranque (abrir + migrar), memoizado en `startupPromise`. Este
+ * export se conserva sin cambiar su firma — `App.tsx` sigue llamandolo
+ * igual — pero volver a invocar `createTables` aqui habria corrido la
+ * comprobacion de version pendiente dos veces en cada arranque, sin
+ * aportar nada: `getDbConnection` ya la garantiza.
  */
 export const initDatabase = async (): Promise<void> => {
-  const db = await getDbConnection();
-  await createTables(db);
+  await getDbConnection();
 };
 
 export {SCHEMA_VERSION};
