@@ -22,11 +22,11 @@ import {
   NO_ACCOUNT_SELECTED_ID,
   SEE_ALL_ACCOUNTS_CARD_ID,
   sortAccountsByRelevance,
-  formatCurrentMonthLabel,
   groupFinancesByDate,
   mapAccountsToCatalogCards,
 } from './mappers';
 import {useTranslation} from 'react-i18next';
+import {usePeriod} from '@context/PeriodContext';
 
 const AccountsScreen = () => {
   /**
@@ -94,6 +94,37 @@ const AccountsScreen = () => {
   // own alert title, kept separate since it only runs on a press, not
   // every render.
   const selectedAccount = accounts.find(a => a.id === selectedAccountId);
+
+  /**
+   * El vacio de la lista tiene que decir la VERDAD, y la verdad depende
+   * del periodo.
+   *
+   * Decia "Aun no hay transacciones para esta cuenta" siempre. Con
+   * Efectivo —saldo -$250 por un movimiento del 1 de agosto— y el
+   * periodo en septiembre, la pantalla mostraba el saldo al lado de esa
+   * frase y se leia como si la app se hubiera perdido el dinero. El
+   * saldo NO se filtra por fecha (es lo que hay en la cuenta, no lo que
+   * se movio en una ventana; ver `getAccounts`) mientras que la lista SI,
+   * asi que las dos cifras responden preguntas distintas y ninguna lo
+   * decia.
+   *
+   * La segunda frase solo aparece cuando la cuenta tiene movimientos
+   * fuera del tramo, y eso se deduce sin consultar nada: el saldo se
+   * calcula como `initialBalance + SUM(movimientos)`, asi que si difiere
+   * del inicial es que hay movimientos en alguna parte.
+   */
+  const {resolved} = usePeriod();
+  const emptyMessage =
+    selectedAccount === undefined
+      ? undefined
+      : [
+          t('accounts.noMovementsInPeriod', {period: resolved.label}),
+          selectedAccount.balance !== selectedAccount.initialBalance
+            ? t('accounts.balanceFromOtherPeriods')
+            : null,
+        ]
+          .filter(Boolean)
+          .join(' ');
 
   return (
     <>
@@ -209,8 +240,12 @@ const AccountsScreen = () => {
             onPressItem={onPressCatalogItem}
             transactSections={groupFinancesByDate(financeItems)}
             transactHeaderTitle={selectedAccount?.name ?? ''}
-            transactHeaderSubtitle={formatCurrentMonthLabel()}
+            // El periodo SELECCIONADO, no el mes en curso: con el
+            // selector puesto en agosto este subtitulo seguia diciendo
+            // "Septiembre" sobre una lista de agosto.
+            transactHeaderSubtitle={resolved.label}
             financesStatus={financesStatus}
+            emptyMessage={emptyMessage}
             financesErrorMessage={financesErrorMessage}
             onRetryFinances={reloadFinances}
             isLoadingMoreFinances={isLoadingMore}

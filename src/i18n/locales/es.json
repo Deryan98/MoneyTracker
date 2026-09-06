@@ -55,6 +55,8 @@
     "retryLoadingTransactions": "Reintentar carga de transacciones",
     "loadingMoreTransactions": "Cargando más transacciones",
     "noTransactionsYet": "Aún no hay transacciones para esta cuenta.",
+    "noMovementsInPeriod": "No hay movimientos en {{period}}.",
+    "balanceFromOtherPeriods": "El saldo que ves viene de movimientos de otros periodos.",
     "archive": "Archivar",
     "archiveTitle": "¿Archivar esta cuenta?",
     "archiveMessage": "\"{{name}}\" dejará de aparecer en tu lista de cuentas. No se elimina nada — su historial de transacciones se conserva, y puedes revisarlo en \"Cuentas archivadas\".",

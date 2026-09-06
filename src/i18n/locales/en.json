@@ -55,6 +55,8 @@
     "retryLoadingTransactions": "Retry loading transactions",
     "loadingMoreTransactions": "Loading more transactions",
     "noTransactionsYet": "No transactions yet for this account.",
+    "noMovementsInPeriod": "No movements in {{period}}.",
+    "balanceFromOtherPeriods": "The balance shown comes from movements in other periods.",
     "archive": "Archive",
     "archiveTitle": "Archive this account?",
     "archiveMessage": "\"{{name}}\" will stop appearing in your accounts list. Nothing is deleted — its transaction history is kept, and you can review it under \"Archived accounts\".",
