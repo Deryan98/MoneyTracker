@@ -8,6 +8,7 @@ import {
   getFinanceById,
   IAccountWithBalance,
   insertFinance,
+  insertTransfer,
   updateFinance,
 } from '@db/queries';
 import {formatCentsToCurrency} from '@utils/currency';
@@ -17,7 +18,18 @@ export type CategoriesStatus = 'loading' | 'success' | 'error';
 export type FormMode = 'create' | 'edit';
 export type FinanceLoadStatus = 'idle' | 'loading' | 'success' | 'error';
 export type AccountsStatus = 'loading' | 'success' | 'error';
-export type TransactionType = 'expense' | 'income';
+/**
+ * Las tres cosas que se pueden registrar desde "Nuevo movimiento".
+ *
+ * `'transfer'` no es un tercer tipo de gasto: es dinero que se mueve
+ * ENTRE cuentas propias, sin salir del patrimonio y por tanto sin
+ * categoria. Vive en el mismo selector que las otras dos porque el
+ * usuario decide las tres cosas en el mismo momento y en el mismo sitio
+ * — tenerlo escondido en otra pantalla es lo que empujaba a inventarse
+ * una categoria "Tarjeta de credito" para pagar la tarjeta, contando el
+ * gasto dos veces.
+ */
+export type TransactionType = 'expense' | 'income' | 'transfer';
 
 // Re-exported for backward compatibility — this used to be defined here;
 // it now lives in `@utils/currency` alongside `formatCentsToCurrency`
@@ -49,6 +61,14 @@ export const useFormScreen = (financeId?: number) => {
   // category grid is filtered to match it. See `selectType` for what
   // happens to `selectedCategory` when this changes.
   const [selectedType, setSelectedType] = useState<TransactionType>('expense');
+  /**
+   * La cuenta que RECIBE, solo en modo transferencia.
+   *
+   * Se guarda por id y no por objeto para que no quede apuntando a una
+   * copia vieja cuando `accounts` se recarga (el saldo de una cuenta
+   * cambia con cada movimiento).
+   */
+  const [destinationAccountId, setDestinationAccountId] = useState<number>();
 
   const [selectedCategory, onChangeSelectedCategory] = useState<ICategory>();
 
@@ -144,6 +164,13 @@ export const useFormScreen = (financeId?: number) => {
 
   const selectAccount = (account: IAccountWithBalance) => {
     setSelectedAccount(account);
+    // Si el nuevo ORIGEN es la cuenta que ya estaba elegida como
+    // destino, el destino se olvida: una transferencia de una cuenta a
+    // si misma la rechaza `insertTransfer`, y sin esto el usuario no se
+    // enteraria hasta pulsar Guardar. Se hace aqui y no derivandolo en
+    // el render porque llamar a un `setState` durante el render provoca
+    // un render extra y, con las dependencias mal puestas, un bucle.
+    setDestinationAccountId(current => (current === account.id ? undefined : current));
   };
 
   // Only categories matching the active segment are ever shown in the
@@ -158,6 +185,10 @@ export const useFormScreen = (financeId?: number) => {
   );
 
   const selectType = (type: TransactionType) => {
+    // Cambiar de segmento limpia el destino por el mismo motivo por el
+    // que ya limpia la categoria: son campos de UN modo, y arrastrarlos
+    // al otro deja al usuario guardando algo que no ve.
+    setDestinationAccountId(undefined);
     setSelectedType(type);
     onChangeSelectedCategory(undefined);
     setAmountError('');
@@ -242,8 +273,26 @@ export const useFormScreen = (financeId?: number) => {
     loadFinance();
   }, [loadFinance]);
 
+  const destinationAccount = accounts.find(a => a.id === destinationAccountId);
+
+  /**
+   * Las cuentas que pueden RECIBIR la transferencia: todas menos la de
+   * origen.
+   *
+   * Excluirla aqui, y no validarlo al guardar, es deliberado: si no se
+   * puede elegir, no hace falta un mensaje de error explicando que no se
+   * podia. Es el mismo criterio que ya usa `useTransferScreen`.
+   */
+  const destinationAccounts = accounts.filter(a => a.id !== selectedAccount?.id);
+
   const saveTransaction = async (): Promise<boolean> => {
-    if (!selectedCategory) {
+    // Una transferencia NO lleva categoria: el dinero no sale del
+    // patrimonio, solo cambia de cuenta. Por eso la comprobacion de
+    // categoria se salta entera en vez de aflojarse — pedirla "opcional"
+    // habria dejado la puerta abierta a guardar una transferencia
+    // categorizada, que es justo el dato incoherente que esto viene a
+    // impedir.
+    if (selectedType !== 'transfer' && !selectedCategory) {
       setAmountError(t('form.chooseCategoryFirst'));
       return false;
     }
@@ -256,14 +305,33 @@ export const useFormScreen = (financeId?: number) => {
       setAmountError(t('form.chooseAccountFirst'));
       return false;
     }
+    if (selectedType === 'transfer' && destinationAccount === undefined) {
+      setAmountError(t('form.chooseDestinationAccountFirst'));
+      return false;
+    }
     setAmountError('');
     setIsSaving(true);
     try {
       const db = await getDbConnection();
+      if (selectedType === 'transfer' && destinationAccount !== undefined) {
+        // `insertTransfer` escribe las DOS patas en una transaccion con
+        // `transferGroupId` compartido y sin categoria. No se toca: su
+        // callback sincrono esta documentado como intocable en
+        // `transfersQueries.ts` (un `await` entre las dos patas deja una
+        // confirmada sola y crea dinero de la nada).
+        await insertTransfer(db, {
+          idAccountFrom: selectedAccount.id,
+          idAccountTo: destinationAccount.id,
+          amount: amountInCents,
+        });
+        onChangeInputText('');
+        setDestinationAccountId(undefined);
+        return true;
+      }
       if (mode === 'edit' && financeId !== undefined) {
         await updateFinance(db, financeId, {
           amount: amountInCents,
-          idCategory: selectedCategory.id,
+          idCategory: selectedCategory!.id,
           idAccount: selectedAccount.id,
         });
         // Al editar NO se limpia el formulario: la pantalla vuelve atras
@@ -273,7 +341,7 @@ export const useFormScreen = (financeId?: number) => {
       }
       await insertFinance(db, {
         amount: amountInCents,
-        idCategory: selectedCategory.id,
+        idCategory: selectedCategory!.id,
         idAccount: selectedAccount.id,
       });
       // Sin dialogo de confirmacion: el usuario ve el movimiento aparecer
@@ -319,6 +387,9 @@ export const useFormScreen = (financeId?: number) => {
     accountsErrorMessage,
     reloadAccounts: loadAccounts,
     selectedAccount,
+    destinationAccount,
+    destinationAccounts,
+    selectDestinationAccount: setDestinationAccountId,
     selectAccount,
     amountError,
     isSaving,

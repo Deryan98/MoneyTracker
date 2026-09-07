@@ -24,6 +24,7 @@ import {useTranslation} from 'react-i18next';
 import AmountCard from './partials/AmountCard';
 import CategoryGrid from './partials/CategoryGrid';
 import TypeSegment from './partials/TypeSegment';
+import {DestinationAccountField} from './partials/DestinationAccountField';
 
 /**
  * Misma union de `RouteProp` que `CreateAccount`/`CreateCategory` —
@@ -85,6 +86,9 @@ export const FormScreen = ({navigation, route}: FormScreenProps) => {
     accountsStatus,
     accountsErrorMessage,
     selectedAccount,
+    destinationAccount,
+    destinationAccounts,
+    selectDestinationAccount,
     selectAccount,
     amountError,
     isSaving,
@@ -208,7 +212,19 @@ export const FormScreen = ({navigation, route}: FormScreenProps) => {
 
           <Spacer space={18} />
 
-          {categoriesStatus === 'loading' && (
+          {/* En transferencia, el selector de cuenta destino SUSTITUYE a
+              todo el bloque de categorias — carga, error, vacio y
+              rejilla. Ver `DestinationAccountField` para por que
+              sustituye en vez de acompanar. */}
+          {selectedType === 'transfer' && (
+            <DestinationAccountField
+              accounts={destinationAccounts}
+              selected={destinationAccount}
+              onSelect={selectDestinationAccount}
+            />
+          )}
+
+          {selectedType !== 'transfer' && categoriesStatus === 'loading' && (
             <View style={stateStyles.centered}>
               <ActivityIndicator
                 size="large"
@@ -218,7 +234,7 @@ export const FormScreen = ({navigation, route}: FormScreenProps) => {
             </View>
           )}
 
-          {categoriesStatus === 'error' && (
+          {selectedType !== 'transfer' && categoriesStatus === 'error' && (
             <View style={stateStyles.centered}>
               <Headings
                 headingSize="H5"
@@ -238,7 +254,7 @@ export const FormScreen = ({navigation, route}: FormScreenProps) => {
             </View>
           )}
 
-          {categoriesStatus === 'success' && categories.length === 0 && (
+          {selectedType !== 'transfer' && categoriesStatus === 'success' && categories.length === 0 && (
             <View style={stateStyles.centered}>
               <Headings
                 headingSize="H4"
@@ -255,7 +271,7 @@ export const FormScreen = ({navigation, route}: FormScreenProps) => {
             </View>
           )}
 
-          {categoriesStatus === 'success' && categories.length > 0 && (
+          {selectedType !== 'transfer' && categoriesStatus === 'success' && categories.length > 0 && (
             <CategoryGrid
               title={t('form.categoryHeading')}
               countLabel={categoryCountLabel}

@@ -507,7 +507,12 @@
     "deleteTransferMessage": "Se eliminará la transferencia completa de {{amount}} entre {{from}} y {{to}}. Se borran LAS DOS partes: media transferencia dejaría dinero descontado que nadie recibió.",
     "deleteTransactionError": "No se pudo eliminar el movimiento. Inténtalo de nuevo.",
     "transferNotEditableTitle": "Las transferencias no se editan",
-    "transferNotEditable": "Una transferencia son dos movimientos espejo, y cambiar solo uno inventaría dinero. Elimínala y vuelve a crearla desde Transferir."
+    "transferNotEditable": "Una transferencia son dos movimientos espejo, y cambiar solo uno inventaría dinero. Elimínala y vuelve a crearla desde Transferir.",
+    "segmentTransfer": "Transferencia",
+    "transferDestinationLabel": "Hacia la cuenta",
+    "chooseDestinationAccountFirst": "Elige la cuenta que recibe el dinero.",
+    "needsSecondAccountForTransfer": "Para transferir necesitas al menos dos cuentas. Crea otra y vuelve aquí.",
+    "destinationAccountAccessibilityLabel": "Transferir hacia {{name}}, {{kind}}"
   },
   "icons": {
     "pickerTitle": "Elige un ícono",

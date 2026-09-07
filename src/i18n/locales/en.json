@@ -507,7 +507,12 @@
     "deleteTransferMessage": "The whole {{amount}} transfer between {{from}} and {{to}} will be deleted. BOTH halves go: half a transfer would leave money debited that nobody received.",
     "deleteTransactionError": "The transaction could not be deleted. Please try again.",
     "transferNotEditableTitle": "Transfers cannot be edited",
-    "transferNotEditable": "A transfer is two mirrored movements, and changing only one would invent money. Delete it and create it again from Transfer."
+    "transferNotEditable": "A transfer is two mirrored movements, and changing only one would invent money. Delete it and create it again from Transfer.",
+    "segmentTransfer": "Transfer",
+    "transferDestinationLabel": "To account",
+    "chooseDestinationAccountFirst": "Choose the account that receives the money.",
+    "needsSecondAccountForTransfer": "You need at least two accounts to transfer. Create another one and come back.",
+    "destinationAccountAccessibilityLabel": "Transfer to {{name}}, {{kind}}"
   },
   "icons": {
     "pickerTitle": "Choose an icon",
