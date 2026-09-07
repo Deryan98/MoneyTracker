@@ -117,13 +117,34 @@ export const FormScreen = ({navigation, route}: FormScreenProps) => {
     navigation.getParent()?.navigate('Resumen' as never);
   };
 
+  /**
+   * Volver desde el formulario: SIEMPRE a Balance.
+   *
+   * NO se usa `navigation.canGoBack()` ni el indice de la pila, y las dos
+   * cosas estan medidas en el emulador:
+   *
+   * - `canGoBack()` consulta tambien al navegador PADRE, y este
+   *   formulario es una PESTANA, no una pantalla empujada. Con la pila en
+   *   `["Form"]` —nada que desapilar— devolvia `true` igualmente, el
+   *   `goBack()` subia al navegador de pestanas y este saltaba a su
+   *   primera ruta. El resultado no era solo un destino raro: la pantalla
+   *   se quedaba pintando "Movimientos" mientras la barra inferior
+   *   marcaba "Balance" como activa. Ese era el glitch reportado.
+   * - Mirar el indice de la pila y desapilar cuando se puede TAMPOCO
+   *   sirve: esa pila acumula rutas segun por donde se haya entrado
+   *   (`["Form"]`, `["NewTransfer"]`, `["NewTransfer","EditTransaction"]`
+   *   — las tres medidas), asi que el mismo gesto acababa en sitios
+   *   distintos. Con eso puesto, volver desde una edicion aterrizaba en
+   *   un formulario en blanco en vez de en Balance.
+   *
+   * Por eso el destino es fijo y no derivado: salir del formulario
+   * termina siempre en Balance, igual que guardar. `CreateCategory` no
+   * se ve afectada — se empuja desde aqui pero tiene su propio boton de
+   * volver, que no pasa por esta funcion.
+   */
   const handleBack = () => {
-    if (navigation.canGoBack()) {
-      navigation.goBack();
-    }
-  };
-
-  if (isEditMode && financeStatus === 'loading') {
+    navigation.getParent()?.navigate('Resumen' as never);
+  };  if (isEditMode && financeStatus === 'loading') {
     return (
       <KeyboardContainer>
         <ScreenContainer>
