@@ -37,6 +37,14 @@ export const StackNav = () => {
           animation: 'none',
         }}
       />
+      <Stack.Screen
+        name="NewTransfer"
+        component={FormScreen}
+        options={{
+          title: '',
+          animation: 'none',
+        }}
+      />
       {/* El boton "Mas categorias" del formulario abre DIRECTAMENTE el
           alta. Antes abria el listado de categorias, un desvio: en ese
           momento el usuario ya sabe que le falta una categoria, no

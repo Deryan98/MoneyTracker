@@ -28,17 +28,18 @@ import {DestinationAccountField} from './partials/DestinationAccountField';
 
 /**
  * Misma union de `RouteProp` que `CreateAccount`/`CreateCategory` —
- * esta pantalla sirve la ruta `Form` (crear) y `EditTransaction`
- * (editar).
+ * esta pantalla sirve tres rutas: `Form` (crear), `EditTransaction`
+ * (editar) y `NewTransfer` (crear, ya en modo transferencia).
  */
 type FormScreenProps = {
   navigation: StackScreenProps<
     StackNavParams,
-    'Form' | 'EditTransaction'
+    'Form' | 'EditTransaction' | 'NewTransfer'
   >['navigation'];
   route:
     | RouteProp<StackNavParams, 'Form'>
-    | RouteProp<StackNavParams, 'EditTransaction'>;
+    | RouteProp<StackNavParams, 'EditTransaction'>
+    | RouteProp<StackNavParams, 'NewTransfer'>;
 };
 
 // Same one-off ink hex as `TypeSegment`/`CategoryGrid` — the
@@ -93,7 +94,7 @@ export const FormScreen = ({navigation, route}: FormScreenProps) => {
     amountError,
     isSaving,
     saveTransaction,
-  } = useFormScreen(financeId);
+  } = useFormScreen(financeId, route.name === 'NewTransfer' ? 'transfer' : undefined);
 
   /**
    * Tras guardar, lleva al usuario a Balance en vez de mostrar un dialogo:

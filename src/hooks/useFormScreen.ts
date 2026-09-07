@@ -49,7 +49,7 @@ export {parseAmountToCents};
  * vez de dejar al usuario rellenar un formulario que va a fallar al
  * guardar.
  */
-export const useFormScreen = (financeId?: number) => {
+export const useFormScreen = (financeId?: number, initialType?: TransactionType) => {
   const mode: FormMode = financeId === undefined ? 'create' : 'edit';
   const {t} = useTranslation();
   const [inputText, onChangeInputText] = useState<string>('');
@@ -60,7 +60,14 @@ export const useFormScreen = (financeId?: number) => {
   // one flat list); now the segment is the primary choice and the
   // category grid is filtered to match it. See `selectType` for what
   // happens to `selectedCategory` when this changes.
-  const [selectedType, setSelectedType] = useState<TransactionType>('expense');
+  /**
+   * `initialType` solo fija el valor INICIAL; a partir de ahi manda el
+   * usuario. Llega de la ruta `NewTransfer` (el boton "Transferir" de
+   * Cuentas), que existe para abrir esta misma pantalla ya en modo
+   * transferencia sin guardar un parametro pegajoso en `Form` — ver el
+   * comentario de esa ruta en `StackNav/types.ts`.
+   */
+  const [selectedType, setSelectedType] = useState<TransactionType>(initialType ?? 'expense');
   /**
    * La cuenta que RECIBE, solo en modo transferencia.
    *
@@ -281,7 +288,8 @@ export const useFormScreen = (financeId?: number) => {
    *
    * Excluirla aqui, y no validarlo al guardar, es deliberado: si no se
    * puede elegir, no hace falta un mensaje de error explicando que no se
-   * podia. Es el mismo criterio que ya usa `useTransferScreen`.
+   * podia. Es el criterio que ya usaba la pantalla `Transfer`, que
+   * esta rebanada retira por quedar duplicada.
    */
   const destinationAccounts = accounts.filter(a => a.id !== selectedAccount?.id);
 

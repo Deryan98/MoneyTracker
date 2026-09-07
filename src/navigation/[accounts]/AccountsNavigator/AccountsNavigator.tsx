@@ -2,7 +2,6 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {MovementsTopTabs} from '@navigation/[movements]/MovementsTopTabs';
 import {CreateCategory} from '@screens/[categories]';
 import {CreateAccount} from '@screens/AccountsScreen/CreateAccount';
-import {Transfer} from '@screens/AccountsScreen/Transfer';
 import {AccountsNavParams} from './types';
 
 const Stack = createNativeStackNavigator<AccountsNavParams>();
@@ -61,7 +60,7 @@ export const AccountsNavigator = () => {
           dos rutas muertas. El alta se queda porque la tarjeta
           "Agregar cuenta" de la lista horizontal la sigue empujando. */}
       <Stack.Screen name="CreateAccount" component={CreateAccount} />
-      <Stack.Screen name="Transfer" component={Transfer} />
+
       <Stack.Screen name="CreateCategory" component={CreateCategory} />
       <Stack.Screen name="EditCategory" component={CreateCategory} />
     </Stack.Navigator>

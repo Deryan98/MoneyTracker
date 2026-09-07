@@ -10,11 +10,6 @@ export type AccountsNavParams = {
    */
   MovementsHome: undefined;
   CreateAccount: undefined;
-  /** Move money between two of the user's own accounts — see
-   * `src/screens/AccountsScreen/Transfer/Transfer.tsx`'s doc comment for
-   * why it lives in this navigator (no entry for it in the approved
-   * "New movement" prototype). */
-  Transfer: undefined;
   /** Crear/editar categoria empujadas desde la pestana de categorias
    * — ver el comentario del navegador. */
   CreateCategory: undefined;
@@ -31,7 +26,4 @@ export type CreateAccountNavigationProp = NativeStackNavigationProp<
   'CreateAccount'
 >;
 
-export type TransferNavigationProp = NativeStackNavigationProp<
-  AccountsNavParams,
-  'Transfer'
->;
+

@@ -358,32 +358,8 @@
     "adminHeaderSubtitle": "and their movements"
   },
   "transfer": {
-    "title": "Transfer",
-    "back": "Back",
-    "explainer": "Moving money between your accounts doesn't change your net worth.",
-    "loadingAccounts": "Loading accounts",
-    "retryLoadingAccounts": "Retry loading accounts",
-    "loadAccountsError": "Could not load accounts: {{message}}",
-    "needTwoAccounts": "You need at least two active accounts to transfer money.",
-    "createAccount": "Create account",
     "from": "From",
-    "to": "To",
-    "amountLabel": "Amount to transfer",
-    "invalidAmount": "Enter a valid amount greater than $0.00.",
-    "previewTitle": "After transferring",
-    "previewAccessibilityLabel": "After transferring: {{fromName}} would be {{fromBalance}}, {{toName}} would be {{toBalance}}",
-    "confirmAccessibilityLabel": "Confirm transfer",
-    "transferring": "Transferring…",
-    "transfer": "Transfer",
-    "doneTitle": "Done",
-    "doneMessage": "Transfer completed.",
-    "submitError": "Could not complete the transfer: {{message}}",
-    "noOtherAccount": "No other account available.",
-    "pickFromTitle": "Choose the source account",
-    "pickToTitle": "Choose the destination account",
-    "pickerRowAccessibilityLabel": "{{name}}, balance {{balance}}",
-    "selectorAccessibilityLabel": "{{label}}: {{name}}, balance {{balance}}",
-    "selectorAccessibilityHint": "Tap to choose a different account"
+    "to": "To"
   },
   "analysis": {
     "title": "Analysis",

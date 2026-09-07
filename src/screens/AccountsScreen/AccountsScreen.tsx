@@ -211,7 +211,14 @@ const AccountsScreen = () => {
               accessibilityRole="button"
               accessibilityLabel={t('accounts.transferAccessibilityLabel')}
               activeOpacity={0.85}
-              onPress={() => navigation.navigate('Transfer')}
+              // Abre el MISMO formulario que el boton "+", ya en modo
+              // transferencia, en vez de una pantalla propia. Antes eran
+              // dos implementaciones de la misma operacion; ahora el
+              // atajo se conserva —tiene sentido desde donde ves los
+              // saldos— pero el codigo es uno solo.
+              onPress={() =>
+                (navigation as any).navigate('Outcomes', {screen: 'NewTransfer'})
+              }
               style={stateStyles.transferButton}>
               <VectorIcon name="exchange" size={15} color={colors[primary][0]} />
               <Text color={colors[primary][0]} size={14} fontWeight="600">

@@ -358,32 +358,8 @@
     "adminHeaderSubtitle": "y sus movimientos"
   },
   "transfer": {
-    "title": "Transferir",
-    "back": "Volver",
-    "explainer": "Mover dinero entre tus cuentas no cambia tu patrimonio neto.",
-    "loadingAccounts": "Cargando cuentas",
-    "retryLoadingAccounts": "Reintentar carga de cuentas",
-    "loadAccountsError": "No se pudieron cargar las cuentas: {{message}}",
-    "needTwoAccounts": "Necesitas al menos dos cuentas activas para transferir dinero.",
-    "createAccount": "Crear cuenta",
     "from": "Desde",
-    "to": "Hacia",
-    "amountLabel": "Monto a transferir",
-    "invalidAmount": "Ingresa un monto válido mayor a $0.00.",
-    "previewTitle": "Después de transferir",
-    "previewAccessibilityLabel": "Después de transferir: {{fromName}} quedaría en {{fromBalance}}, {{toName}} quedaría en {{toBalance}}",
-    "confirmAccessibilityLabel": "Confirmar transferencia",
-    "transferring": "Transfiriendo…",
-    "transfer": "Transferir",
-    "doneTitle": "Listo",
-    "doneMessage": "Transferencia realizada.",
-    "submitError": "No se pudo completar la transferencia: {{message}}",
-    "noOtherAccount": "No hay otra cuenta disponible.",
-    "pickFromTitle": "Elige la cuenta de origen",
-    "pickToTitle": "Elige la cuenta de destino",
-    "pickerRowAccessibilityLabel": "{{name}}, saldo {{balance}}",
-    "selectorAccessibilityLabel": "{{label}}: {{name}}, saldo {{balance}}",
-    "selectorAccessibilityHint": "Toca para elegir otra cuenta"
+    "to": "Hacia"
   },
   "analysis": {
     "title": "Análisis",
