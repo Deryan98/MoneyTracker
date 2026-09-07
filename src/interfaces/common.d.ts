@@ -18,6 +18,13 @@ declare global {
   }
   interface IBottomTab extends ScreenInterface {
     options?: BottomTabNavigationOptions;
+    /**
+     * Se pasa tal cual a `Tab.Screen`. Lo usa la pestana del boton "+"
+     * para reiniciar su stack en cada pulsacion — ver `router.tsx`.
+     */
+    listeners?: React.ComponentProps<
+      ReturnType<typeof import('@react-navigation/bottom-tabs').createBottomTabNavigator>['Screen']
+    >['listeners'];
   }
 
   interface IMaterialTopTab extends ScreenInterface {

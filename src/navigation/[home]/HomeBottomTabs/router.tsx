@@ -62,6 +62,37 @@ export const useBottomTabsRoutes = (): IBottomTab[] => {
     },
     {
       name: 'Outcomes',
+      /**
+       * El boton "+" SIEMPRE abre un formulario nuevo.
+       *
+       * Esta pestana hospeda `StackNav`, y ese stack registra tanto
+       * `Form` (crear) como `EditTransaction` (editar). Editar un
+       * movimiento desde Balance, Cuentas o Categorias empuja
+       * `EditTransaction` AQUI dentro, y al guardar se vuelve a la
+       * pantalla de origen sin desapilarlo: la pestana se queda
+       * recordando esa ruta. La siguiente pulsacion del "+" reabria la
+       * edicion anterior, con su importe y su categoria ya puestos, en
+       * vez de un formulario en blanco. Reproducido en el emulador:
+       * editar "Despensa · $140.00", guardar, tocar "+" -> "Editar
+       * movimiento" con esos mismos datos.
+       *
+       * Reiniciar en cada pulsacion y no solo tras guardar es
+       * deliberado: tambien deja el stack limpio cuando el usuario
+       * abandona una edicion a medias, que produce el mismo sintoma por
+       * otro camino.
+       */
+      listeners: ({navigation}: {navigation: any}) => ({
+        tabPress: (e: {preventDefault: () => void}) => {
+          // `preventDefault` NO es opcional aqui. Sin el, este listener
+          // corre y ACTO SEGUIDO corre la accion por defecto de la
+          // pestana, que salta a `Outcomes` restaurando la ruta que esa
+          // pestana recordaba y deshaciendo el `navigate` de abajo.
+          // Verificado: con el listener puesto pero sin `preventDefault`,
+          // el fallo se reproducia exactamente igual.
+          e.preventDefault();
+          navigation.navigate('Outcomes', {screen: 'Form'});
+        },
+      }),
       component: StackNav,
       options: {
         title: '',
