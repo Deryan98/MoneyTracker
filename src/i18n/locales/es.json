@@ -512,7 +512,8 @@
     "transferDestinationLabel": "Hacia la cuenta",
     "chooseDestinationAccountFirst": "Elige la cuenta que recibe el dinero.",
     "needsSecondAccountForTransfer": "Para transferir necesitas al menos dos cuentas. Crea otra y vuelve aquí.",
-    "destinationAccountAccessibilityLabel": "Transferir hacia {{name}}, {{kind}}"
+    "destinationAccountAccessibilityLabel": "Transferir hacia {{name}}, {{kind}}",
+    "transferNeedsNoCategory": "Este movimiento se queda entre tus cuentas, así que no necesita categoría."
   },
   "icons": {
     "pickerTitle": "Elige un ícono",

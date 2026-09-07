@@ -217,11 +217,28 @@ export const FormScreen = ({navigation, route}: FormScreenProps) => {
               rejilla. Ver `DestinationAccountField` para por que
               sustituye en vez de acompanar. */}
           {selectedType === 'transfer' && (
-            <DestinationAccountField
-              accounts={destinationAccounts}
-              selected={destinationAccount}
-              onSelect={selectDestinationAccount}
-            />
+            <>
+              <DestinationAccountField
+                accounts={destinationAccounts}
+                selected={destinationAccount}
+                onSelect={selectDestinationAccount}
+              />
+
+              {/* Dice POR QUE no hay categoria, en vez de dejar un hueco.
+                  Un ingreso lleva categoria y una transferencia no, y esa
+                  asimetria no es evidente: sin explicarla, el usuario se
+                  queda buscando una categoria que no debe existir — que
+                  es exactamente el habito que esta funcion viene a
+                  romper. Mismo tratamiento tipografico que
+                  `form.noCategoriesHint`, no un patron nuevo. */}
+              <Spacer space={12} />
+              <Headings
+                headingSize="H6"
+                color={colors[gray][0]}
+                containerStyle={stateStyles.message}>
+                {t('form.transferNeedsNoCategory')}
+              </Headings>
+            </>
           )}
 
           {selectedType !== 'transfer' && categoriesStatus === 'loading' && (
