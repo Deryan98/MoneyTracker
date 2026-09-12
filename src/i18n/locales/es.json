@@ -569,7 +569,12 @@
     "freelance": "Trabajo independiente",
     "rentalIncome": "Alquileres",
     "investments": "Intereses e inversiones",
-    "refunds": "Reembolsos"
+    "refunds": "Reembolsos",
+    "bills": "Facturas",
+    "children": "Hijos",
+    "pantry": "Despensa",
+    "loan": "Préstamo",
+    "business": "Negocio"
   },
   "defaultAccounts": {
     "cash": "Efectivo"

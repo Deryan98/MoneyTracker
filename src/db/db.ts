@@ -8,6 +8,7 @@ import {migration006Statements} from './migrations/006_loanAccountKindAndInteres
 import {migration007Statements} from './migrations/007_appMetaTable';
 import {migration008Statements} from './migrations/008_envelopeCompletion';
 import {migration009Statements} from './migrations/009_seedKeyForCategoriesAndAccounts';
+import {migration010Statements} from './migrations/010_retireLegacyCategoriesAndSeedKeys';
 
 enablePromise(true);
 
@@ -63,6 +64,17 @@ const DATABASE_NAME = 'moneytracker.db';
  *   a proposito: las ADR 0001/0002 habian reservado 9-11 para otro
  *   trabajo sin una sola linea escrita todavia; ver el comentario de
  *   cabecera de la propia migracion.
+ * - Version 10 (`migration010Statements`, see
+ *   `src/db/migrations/010_retireLegacyCategoriesAndSeedKeys.ts`): el
+ *   dueno reviso las categorias en su dispositivo y dio instrucciones
+ *   concretas — anade `categories.retiredAt` (mecanismo que la ADR 0002
+ *   habia disenado para una migracion 12 propia, absorbido aqui), marca
+ *   con `seedKey` cinco filas heredadas de la migracion 3 que se
+ *   CONSERVAN traducidas (`Bills`, `Children`, `Food`, `Loan` x2), retira
+ *   otras cinco (`House`, `Credit card` x2, `Interests`(ingreso),
+ *   `Rent`) y anade `Business`/ingreso para instalaciones ya sembradas.
+ *   Ver ADR 0005, que tambien renumera la ADR 0001 (de 10/11 a 11/12) y
+ *   deja la ADR 0002 `superseded by 0005`.
  * - To ship a schema change later, ADD a new entry with an incremented
  *   `version` and the `CREATE`/`ALTER` statements needed to get from
  *   the previous version to this one. Never edit an already-shipped
@@ -113,6 +125,7 @@ const migrations: Migration[] = [
   {version: 7, statements: migration007Statements},
   {version: 8, statements: migration008Statements},
   {version: 9, statements: migration009Statements},
+  {version: 10, statements: migration010Statements},
 ];
 
 const SCHEMA_VERSION = migrations[migrations.length - 1].version;

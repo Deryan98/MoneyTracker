@@ -140,7 +140,13 @@ export const useBudgetsScreen = () => {
       const db = await getDbConnection();
       const [budgetsResult, categoriesResult, historyResult] = await Promise.all([
         getCategoryBudgets(db, period),
-        getCategoriesByType(db, 'expense'),
+        // `activeOnly: true` — elegir categoría para un límite mensual
+        // NUEVO es el segundo (y último) call site que el contrato de
+        // `retiredAt` exige filtrar (ADR 0002/0005). Solo `type='expense'`
+        // se consulta aquí de todos modos, así que las categorías de
+        // ingreso retiradas (`Credit card`) nunca llegaban a esta
+        // pantalla ni antes de este cambio.
+        getCategoriesByType(db, 'expense', {activeOnly: true}),
         getAllCategoryBudgetsWithSpent(db),
       ]);
       setBudgets(budgetsResult);

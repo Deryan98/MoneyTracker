@@ -1,13 +1,32 @@
 # 0002 — Migración 012: retiro de las categorías sembradas `Credit card` / `Loan`
 
-Status: accepted
+Status: **superseded by 0005**
 Date: 2026-09-11
 
 > **Renumerada (2026-09-11).** Originalmente "migración 011". El encargo de
 > traducción en vivo de la siembra (`seedKey`, ver ADR 0004) tomó el número 009
 > — ya implementado, mientras que este frente y el de la ADR 0001 seguían sin
-> código — así que este frente pasó a 012 y el de la ADR 0001 a 010/011. El
-> resto de este documento ya refleja la numeración nueva.
+> código — así que este frente pasó a 012 y el de la ADR 0001 a 010/011.
+
+> **Superseded (2026-09-11, misma sesión).** El dueño revisó las categorías
+> directamente en el dispositivo y dio instrucciones concretas antes de que
+> esta ADR llegara a tener código: **retirar `Credit card` (sus dos filas),
+> pero CONSERVAR y traducir `Loan`** — no las dos, como proponía este
+> documento. El mecanismo (`categories.retiredAt`, columna aditiva, sin
+> `DELETE`) se ejecutó **sin cambios** de diseño, pero fusionado en la
+> migración 010 junto con el resto de la revisión de categorías del dueño
+> (traducir `Bills`/`Children`/`Food`/`Loan`, retirar además `House`/
+> `Interests`(ingreso)/`Rent`, añadir `Business`) — ver
+> `0005-migracion-010-retiro-y-traduccion-de-categorias-heredadas.md`, que es
+> ahora el documento vigente. El número 012 que esta ADR reservaba quedó
+> libre y lo tomó la ADR 0001 en su segunda renumeración (ver esa ADR).
+>
+> El resto de este documento se deja SIN EDITAR, íntegro, como registro
+> histórico de por qué se diseñó `retiredAt` así — sigue siendo la referencia
+> de diseño de la columna — y de la inconsistencia `Loan`/`Credit card` que
+> aquí se identificó primero y que la ADR 0005 ejecuta de forma distinta a lo
+> aquí propuesto (ver esa ADR, sección "Inconsistencia que se deja anotada,
+> no resuelta", y `docs/architecture/tech-debt.md`).
 
 ## Contexto
 

@@ -51,13 +51,36 @@ export const insertCategory = async (
   return db.executeSql(insertQuery, [category, icon, type]);
 };
 
+/**
+ * `{activeOnly: true}` filtra `retiredAt IS NULL` — `retiredAt`
+ * (migración 10, ver
+ * `src/db/migrations/010_retireLegacyCategoriesAndSeedKeys.ts` y ADR
+ * 0005, que absorbió y reemplazó el plan de la ADR 0002) marca una
+ * categoría que el sistema decidió dejar de OFRECER para selecciones
+ * nuevas — no un archivado del usuario, no un borrado.
+ *
+ * Default `false` a propósito — cero cambio de comportamiento para
+ * cualquier llamador existente que no lo pase explícitamente. Solo dos
+ * call sites deben pasar `true`, por contrato (ver la tabla de la ADR
+ * 0002/0005): `useFormScreen.loadCategories` (grid de categoría al
+ * crear un movimiento nuevo — con la excepción de que un movimiento en
+ * edición debe seguir mostrando su categoría aunque esté retirada, ver
+ * ese hook) y `useBudgetsScreen` (elegir categoría para un límite
+ * mensual nuevo). `useCategoriesScreen`, `AllMovementsScreen` y
+ * `CategoriesAdminScreen` deben seguir viendo TODAS las categorías,
+ * retiradas o no — no pasan esta opción.
+ */
+export type GetCategoriesOptions = {activeOnly?: boolean};
+
 export const getCategories = async (
   db: SQLiteDatabase,
+  options?: GetCategoriesOptions,
 ): Promise<ICategory[]> => {
   const categories: ICategory[] = [];
-  const [resultSet] = await db.executeSql(
-    'SELECT id, category AS name, icon, type, seedKey FROM categories',
-  );
+  const query = options?.activeOnly
+    ? 'SELECT id, category AS name, icon, type, seedKey FROM categories WHERE retiredAt IS NULL'
+    : 'SELECT id, category AS name, icon, type, seedKey FROM categories';
+  const [resultSet] = await db.executeSql(query);
 
   for (let index = 0; index < resultSet.rows.length; index++) {
     categories.push(mapRowToCategory(resultSet.rows.item(index)));
@@ -69,17 +92,19 @@ export const getCategories = async (
  * Same as `getCategories` filtered to a single type. Backs the
  * Expenses/Incomes tabs, which each only ever need one type's
  * categories — uses the `idx_categories_type` index added alongside
- * `categories.type` in migration 2.
+ * `categories.type` in migration 2. See `getCategories` for the
+ * `activeOnly` contract — the same two call sites, no more.
  */
 export const getCategoriesByType = async (
   db: SQLiteDatabase,
   type: ICategory['type'],
+  options?: GetCategoriesOptions,
 ): Promise<ICategory[]> => {
   const categories: ICategory[] = [];
-  const [resultSet] = await db.executeSql(
-    'SELECT id, category AS name, icon, type, seedKey FROM categories WHERE type = ?',
-    [type],
-  );
+  const query = options?.activeOnly
+    ? 'SELECT id, category AS name, icon, type, seedKey FROM categories WHERE type = ? AND retiredAt IS NULL'
+    : 'SELECT id, category AS name, icon, type, seedKey FROM categories WHERE type = ?';
+  const [resultSet] = await db.executeSql(query, [type]);
 
   for (let index = 0; index < resultSet.rows.length; index++) {
     categories.push(mapRowToCategory(resultSet.rows.item(index)));

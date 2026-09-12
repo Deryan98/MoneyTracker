@@ -44,6 +44,57 @@ const LEGACY_INTERESTS_TYPE = 'expense';
 /** La entrada de `DEFAULT_CATEGORIES` que sustituye a ese nombre. */
 const FEES_INTEREST_KEY = 'feesInterest';
 
+/**
+ * Mismo patron que `LEGACY_INTERESTS_NAME` de arriba, generalizado a las
+ * cuatro filas mas (cinco entradas: `Loan` aparece en gasto E ingreso)
+ * que la migracion 003 sembro en ingles fijo y que el dueno decidio
+ * TRADUCIR y CONSERVAR en vez de retirar — ver ADR 0005 y la migracion
+ * `010_retireLegacyCategoriesAndSeedKeys.ts`.
+ *
+ * Por que esto tiene que vivir AQUI y no solo en la migracion 10: la
+ * migracion solo puede arreglar una fila que YA EXISTE cuando ella
+ * corre (instalaciones viejas, dueno incluido). Una instalacion NUEVA
+ * recibe la fila en ingles de la migracion 003 y ESTA funcion en el
+ * MISMO arranque (antes de que `seedDefaultCategoriesOnce` corra), asi
+ * que sin este renombrado el bucle `rows.forEach` de mas abajo (que
+ * evita duplicados comparando por NOMBRE ya traducido, no por clave) no
+ * reconoceria la fila en ingles que la migracion acaba de sembrar y la
+ * insertaria de nuevo, esta vez ya en el idioma activo — la fila
+ * duplicada quedaria para siempre. Exactamente el bug que
+ * `LEGACY_INTERESTS_NAME` ya existia para evitar con `feesInterest`.
+ */
+const LEGACY_TRANSLATED_CATEGORIES: {
+  legacyName: string;
+  type: ICategory['type'];
+  icon: string;
+  /** Clave bajo `defaultCategories.` — ver `defaultCategories.ts`. */
+  seedKey: string;
+  /**
+   * Nombres (en cualquiera de los dos idiomas) que, si YA existen como
+   * categoria del mismo `type`, bloquean este renombrado por completo.
+   * Solo lo lleva `Food`→`pantry`: se confirmo en una base real
+   * (`/tmp/mt-backup.db`) una categoria "Despensa" creada A MANO,
+   * coexistiendo con la sembrada "Supermercado" — si esa MISMA
+   * instalacion ademas conservara la fila `Food` sin borrar, traducirla
+   * a "Despensa" crearia una fila visualmente duplicada. Sin evidencia
+   * equivalente para `Bills`/`Children`/`Loan`, no se les anade el mismo
+   * candado — seria proteger contra un riesgo no observado.
+   */
+  avoidIfNameExists?: string[];
+}[] = [
+  {legacyName: 'Bills', type: 'expense', icon: 'tags', seedKey: 'bills'},
+  {legacyName: 'Children', type: 'expense', icon: 'child', seedKey: 'children'},
+  {
+    legacyName: 'Food',
+    type: 'expense',
+    icon: 'shopping-cart',
+    seedKey: 'pantry',
+    avoidIfNameExists: ['Despensa', 'Pantry'],
+  },
+  {legacyName: 'Loan', type: 'expense', icon: 'university', seedKey: 'loan'},
+  {legacyName: 'Loan', type: 'income', icon: 'university', seedKey: 'loan'},
+];
+
 export interface ISeedDefaultCategoriesResult {
   /** `false` si ya se habia sembrado antes y no se hizo nada. */
   ran: boolean;
@@ -87,6 +138,10 @@ export const seedDefaultCategoriesOnce = async (
     seedKey: category.key,
   }));
   const feesInterestName = i18n.t(`defaultCategories.${FEES_INTEREST_KEY}`);
+  const legacyTranslatedRenames = LEGACY_TRANSLATED_CATEGORIES.map(entry => ({
+    ...entry,
+    translatedName: i18n.t(`defaultCategories.${entry.seedKey}`),
+  }));
 
   await db.transaction(tx => {
     // El renombrado va PRIMERO: asi, cuando le toque el turno a
@@ -101,6 +156,42 @@ export const seedDefaultCategoriesOnce = async (
         [feesInterestName, 'percent', FEES_INTEREST_KEY, LEGACY_INTERESTS_NAME, LEGACY_INTERESTS_TYPE],
       );
     }
+
+    // Mismo renombrado, generalizado a `Bills`/`Children`/`Food`/`Loan`
+    // (x2) — ver `LEGACY_TRANSLATED_CATEGORIES`. Va justo despues del de
+    // `feesInterest` y, por la misma razon, ANTES del bucle generico de
+    // `rows` de mas abajo. Guardado por cardinalidad (`COUNT(*) = 1`,
+    // mismo criterio que exige la migracion 9/10) y, solo para `pantry`,
+    // por el candado `avoidIfNameExists`.
+    legacyTranslatedRenames.forEach(entry => {
+      const avoidNames = entry.avoidIfNameExists ?? [];
+      const avoidClause =
+        avoidNames.length > 0
+          ? `AND NOT EXISTS (
+               SELECT 1 FROM categories
+                WHERE type = ? AND category IN (${avoidNames.map(() => '?').join(', ')})
+             )`
+          : '';
+      tx.executeSql(
+        `UPDATE categories
+            SET category = ?, icon = ?, seedKey = ?
+          WHERE category = ? AND type = ? AND icon = ?
+            AND (SELECT COUNT(*) FROM categories WHERE category = ? AND type = ? AND icon = ?) = 1
+            ${avoidClause};`,
+        [
+          entry.translatedName,
+          entry.icon,
+          entry.seedKey,
+          entry.legacyName,
+          entry.type,
+          entry.icon,
+          entry.legacyName,
+          entry.type,
+          entry.icon,
+          ...(avoidNames.length > 0 ? [entry.type, ...avoidNames] : []),
+        ],
+      );
+    });
 
     // `categories` NO tiene `UNIQUE (category, type)` —comprobado en el
     // esquema real—, asi que el guardia contra duplicados va aqui. Sin

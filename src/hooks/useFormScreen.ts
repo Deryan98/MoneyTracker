@@ -109,7 +109,13 @@ export const useFormScreen = (financeId?: number, initialType?: TransactionType)
     setCategoriesErrorMessage('');
     try {
       const db = await getDbConnection();
-      const result = await getCategories(db);
+      // `activeOnly: true` — este es el grid de "elegir categoría" para
+      // un movimiento NUEVO, uno de los dos call sites que el contrato
+      // de `retiredAt` (ADR 0002/0005) exige filtrar. `loadFinance` más
+      // abajo repone la excepción: si el movimiento en EDICIÓN ya
+      // apunta a una categoría retirada, la vuelve a añadir a esta
+      // misma lista para que siga apareciendo seleccionada.
+      const result = await getCategories(db, {activeOnly: true});
       setCategories(result);
       setCategoriesStatus('success');
     } catch (e: any) {
@@ -255,10 +261,21 @@ export const useFormScreen = (financeId?: number, initialType?: TransactionType)
       );
       if (row.category) {
         setSelectedType(row.category.type === 'income' ? 'income' : 'expense');
-        onChangeSelectedCategory(
-          categories.find(category => category.id === row.category?.id) ??
-            row.category,
+        const existingCategory = categories.find(
+          category => category.id === row.category?.id,
         );
+        onChangeSelectedCategory(existingCategory ?? row.category);
+        if (!existingCategory) {
+          // La categoria de este movimiento no aparecio en `categories`
+          // (cargada con `activeOnly: true`) porque esta retirada — ver
+          // ADR 0002/0005. La excepcion del contrato es explicita:
+          // editar un movimiento que YA la tiene asignada no puede
+          // dejarla fuera del grid, o se veria "sin seleccion" pese a
+          // que el movimiento si tiene categoria. Se añade aqui, una
+          // sola vez, en vez de relajar el filtro de `loadCategories`
+          // para todos los casos.
+          setCategories(prev => [...prev, row.category as ICategory]);
+        }
       }
       const account = accounts.find(item => item.id === row.account.id);
       if (account) {

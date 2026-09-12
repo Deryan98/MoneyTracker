@@ -1,16 +1,24 @@
-# 0001 — Migraciones 010 y 011: cupo y confirmación en `accounts`
+# 0001 — Migraciones 011 y 012: cupo y confirmación en `accounts`
 
 Status: accepted
 Date: 2026-09-11
 
-> **Renumerada (2026-09-11).** Esta ADR y sus migraciones se numeraron
-> originalmente 009/010. El encargo de traducción en vivo de la siembra
-> (`seedKey`, ver ADR 0004) tomó el 009 en su lugar — es trabajo YA
+> **Renumerada dos veces (2026-09-11).** Esta ADR y sus migraciones se
+> numeraron originalmente 009/010. El encargo de traducción en vivo de la
+> siembra (`seedKey`, ver ADR 0004) tomó el 009 en su lugar — es trabajo YA
 > implementado, mientras que el de esta ADR (cupo/confirmación de tarjetas)
-> seguía sin una sola línea de código escrita — así que este frente se corrió
-> a 010/011 y el de la ADR 0002 a 012, para no dejar un hueco en
-> `src/db/db.ts`'s `migrations`. El resto de este documento ya refleja la
-> numeración nueva.
+> seguía sin una sola línea de código escrita — así que este frente pasó a
+> 010/011 y el de la ADR 0002 a 012.
+>
+> **Segunda renumeración, misma fecha.** El encargo de revisión de
+> categorías en el dispositivo (ADR 0005) necesitaba el mecanismo
+> `retiredAt` que la ADR 0002 había reservado para la migración 012 — pero
+> lo necesitaba YA, antes que este frente, que seguía sin código. ADR 0005
+> se quedó con el **010** y absorbió además el alcance completo que
+> describía la ADR 0002 (ahora `superseded by 0005`, sin migración propia).
+> Este frente (cupo/confirmación de tarjetas) se corrió una vez más, a
+> **011/012**. El resto de este documento ya refleja esta numeración, la
+> definitiva mientras ninguna de sus dos migraciones tenga código escrito.
 
 ## Contexto
 
@@ -21,17 +29,18 @@ pide dos columnas nuevas en `accounts`:
 - `initialBalanceConfirmedAt TEXT` nullable — marca de que el dueño ya revisó esa
   cuenta y su saldo positivo es correcto (no un cupo mal cargado).
 
-`PRAGMA user_version` real del dueño = 8. Dos frentes más (siembra traducida y retiro
-de categorías `Loan`/`Credit card`, ver ADR 0002 y 0004) compiten por el mismo rango de
-números porque los tres se shapearon en paralelo sin coordinarse entre sí. Esta ADR fija
-la numeración de este frente; ADR 0002 fija la del frente de categorías.
+`PRAGMA user_version` real del dueño = 8 a la fecha del shaping original. Otros dos
+frentes (siembra traducida vía ADR 0004, ya mergeada como migración 9; y revisión de
+categorías en el dispositivo vía ADR 0005, mergeada como migración 10) compitieron por
+el mismo rango de números porque los tres se shapearon en paralelo sin coordinarse entre
+sí. Esta ADR fija la numeración de este frente — 011 y 012, después de ambos.
 
 ## Decisión
 
 **Dos migraciones, no una — igual que propuso `po-pm` — y numeradas ahora, sin
 ambigüedad:**
 
-- **Migración 010 — `creditLimit`** (S2/T7). Un único `ALTER TABLE ADD COLUMN`,
+- **Migración 011 — `creditLimit`** (S2/T7). Un único `ALTER TABLE ADD COLUMN`,
   patrón idéntico a `008_envelopeCompletion.ts`:
 
   ```sql
@@ -43,7 +52,7 @@ ambigüedad:**
   deben validar con `isFiniteInteger` cuando el valor no es `null`, igual que ya hacen
   con `initialBalance`.
 
-- **Migración 011 — `initialBalanceConfirmedAt`** (S3/T10). Un único
+- **Migración 012 — `initialBalanceConfirmedAt`** (S3/T10). Un único
   `ALTER TABLE ADD COLUMN` más, mismo patrón:
 
   ```sql
@@ -83,26 +92,24 @@ independientes compartan una unidad de despliegue es el acoplamiento que se evit
 
 ## Orden de ejecución y paralelismo
 
-- **010 antes que 011**, siempre — no por dependencia de DDL (ambas son `ALTER TABLE`
+- **011 antes que 012**, siempre — no por dependencia de DDL (ambas son `ALTER TABLE`
   sobre columnas sin relación entre sí, sin `FOREIGN KEY`, sin `CHECK` cruzado), sino
   porque el propio backlog ya declara `T10 depende de T7` y `T11 depende de T10, T8`:
   la UI de S3 (T11) reutiliza el campo `creditLimit` de S2 (T8) como destino del valor
-  viejo. Desarrollar 011 antes de que 010 esté mergeado no ahorra nada y arriesga que
+  viejo. Desarrollar 012 antes de que 011 esté mergeado no ahorra nada y arriesga que
   T11 se escriba contra un campo que todavía no existe en `main`.
-- **Ambas son independientes de la migración 012** (ADR 0002, tabla `categories`) —
-  ninguna toca la misma tabla, ninguna comparte invariante. Pueden desarrollarse en
-  paralelo sin colisión de SQL.
-- **El único punto de colisión real es `src/db/db.ts`**: las tres migraciones
-  (010, 011, 012) agregan una entrada al array `migrations` y mueven la constante
-  `SCHEMA_VERSION`. Si dos ramas tocan ese archivo en paralelo, git puede resolver el
-  conflicto textual, pero **una persona tiene que fusionar en serie y verificar el
-  orden ascendente sin huecos ni números repetidos** antes de mergear. Protocolo:
-  1. 010 se mergea primero a la rama base de esta apuesta.
-  2. 011 se rebasea sobre 010 antes de mergear (su número ya es 011 de por sí, el
+- **Ambas son independientes de la migración 010** (ADR 0005, tabla `categories`,
+  ya mergeada) — ninguna toca la misma tabla, ninguna comparte invariante.
+- **El único punto de colisión real es `src/db/db.ts`**: cada migración nueva agrega
+  una entrada al array `migrations` y mueve la constante `SCHEMA_VERSION`. Si dos ramas
+  tocan ese archivo en paralelo, git puede resolver el conflicto textual, pero **una
+  persona tiene que fusionar en serie y verificar el orden ascendente sin huecos ni
+  números repetidos** antes de mergear. Protocolo:
+  1. 011 se mergea primero a la rama base de esta apuesta (010 ya está en `main`).
+  2. 012 se rebasea sobre 011 antes de mergear (su número ya es 012 de por sí, el
      rebase es solo para resolver el archivo compartido, no para renumerar).
-  3. 012 (ADR 0002) se rebasea al final sobre 011 y se mergea último.
-  4. Quien mergea last confirma `SCHEMA_VERSION === 12` y que `migrations` tiene
-     exactamente una entrada por versión 10, 11 y 12, en ese orden.
+  3. Quien mergea último confirma `SCHEMA_VERSION === 12` y que `migrations` tiene
+     exactamente una entrada por versión 10, 11 y 12, en ese orden, sin huecos.
 
 ## Consecuencias
 
