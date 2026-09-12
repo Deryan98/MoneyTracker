@@ -85,9 +85,9 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdkVersion rootProject.ext.compileSdkVersion
 
-    namespace "com.moneytracker"
+    namespace "com.melo.moneytracker"
     defaultConfig {
-        applicationId "com.moneytracker"
+        applicationId "com.melo.moneytracker"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 3

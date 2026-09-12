@@ -1,4 +1,4 @@
-package com.moneytracker;
+package com.melo.moneytracker;
 
 import android.app.Application
 import com.facebook.react.PackageList
