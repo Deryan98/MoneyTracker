@@ -60,8 +60,13 @@ Formato: impacto + condición de disparo para retomar. No es una lista de "algú
 - **Origen:** ADR `0002-migracion-012-retiro-categorias-tarjeta-prestamo.md` (superseded
   by `0005-migracion-010-retiro-y-traduccion-de-categorias-heredadas.md`, que hereda este
   ítem sin resolverlo).
-- **Impacto:** las siete filas retiradas por la migración 10 (`House`, `Credit card` x2,
-  `Interests` ingreso, `Rent`, `Loan` x2) siguen listadas en `CategoriesAdminScreen` sin ninguna marca que diga "retirada". Un
+- **Actualizado 2026-09-12:** el dueño señaló en su dispositivo que esas filas llenando
+  la pantalla de Categorías ERAN el problema, no la falta de insignia. Ahora
+  `CategoriesAdminScreen` y `useCategoriesScreen` pasan `hideRetiredWithoutMovements`,
+  así que una retirada solo sigue visible si TODAVÍA guarda movimientos. Eso reduce este
+  ítem pero no lo cierra: en ese caso restante sí hace falta la marca, porque el usuario
+  ve una categoría que no puede elegir al crear un movimiento nuevo y nada se lo explica.
+- **Impacto (reducido):** solo las filas retiradas que aún conservan movimientos siguen listadas en `CategoriesAdminScreen` sin ninguna marca que diga "retirada". Un
   usuario que abra esa pantalla no tiene forma de saber por qué esas filas ya no
   aparecen al crear un movimiento nuevo pero sí siguen en la lista de gestión.
 - **Disparador para retomar:** próxima vez que se toque `CategoriesAdminScreen` por

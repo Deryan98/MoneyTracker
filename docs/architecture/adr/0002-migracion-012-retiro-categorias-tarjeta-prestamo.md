@@ -1,6 +1,12 @@
 # 0002 — Migración 012: retiro de las categorías sembradas `Credit card` / `Loan`
 
 Status: **superseded by 0005**
+
+> **Nota 2026-09-12** — el contrato de consulta que define esta ADR ("`CategoriesAdminScreen`
+> y `useCategoriesScreen` NO deben filtrar, para que el historial siga siendo alcanzable")
+> quedó matizado: sí filtran, pero por `hideRetiredWithoutMovements`, no por `activeOnly`.
+> Una fila retirada que aún guarda movimientos sigue visible — que era lo que el contrato
+> protegía de verdad. Una retirada vacía es estorbo y se oculta. Ver `getCategories`.
 Date: 2026-09-11
 
 > **Renumerada (2026-09-11).** Originalmente "migración 011". El encargo de

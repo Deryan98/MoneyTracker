@@ -66,20 +66,51 @@ export const insertCategory = async (
  * crear un movimiento nuevo — con la excepción de que un movimiento en
  * edición debe seguir mostrando su categoría aunque esté retirada, ver
  * ese hook) y `useBudgetsScreen` (elegir categoría para un límite
- * mensual nuevo). `useCategoriesScreen`, `AllMovementsScreen` y
- * `CategoriesAdminScreen` deben seguir viendo TODAS las categorías,
- * retiradas o no — no pasan esta opción.
+ * mensual nuevo). `AllMovementsScreen` no la pasa: un movimiento viejo
+ * tiene que seguir mostrando bajo qué categoría se registró.
+ *
+ * `hideRetiredWithoutMovements` es distinta y NO es un alias de la
+ * anterior. Nació de una observación del dueño mirando la pantalla de
+ * Categorías del menú lateral: las siete filas que retira la migración
+ * 10 seguían ahí, llenando la lista, sin ofrecerse ya al crear nada y
+ * sin ninguna marca que explicase por qué. Eran estorbo puro.
+ *
+ * Pero ocultarlas a secas tiene un coste: si una retirada CONSERVA
+ * movimientos, esa pantalla es la vía para llegar a ellos, y sin ella
+ * el historial queda sin ruta desde aquí. Por eso el filtro no es "está
+ * retirada" sino "está retirada Y ya no guarda nada": una fila retirada
+ * con movimientos sigue visible, porque todavía tiene contenido que
+ * alguien puede necesitar. Es un `EXISTS` en la misma consulta, no una
+ * consulta por categoría — este proyecto ya tiene un problema de N+1
+ * documentado en `useAnalysisScreen` y no conviene sembrar otro.
  */
-export type GetCategoriesOptions = {activeOnly?: boolean};
+export type GetCategoriesOptions = {
+  activeOnly?: boolean;
+  hideRetiredWithoutMovements?: boolean;
+};
+
+/** Predicado compartido por las dos consultas de abajo. */
+const buildRetiredFilter = (options?: GetCategoriesOptions): string => {
+  if (options?.activeOnly) {
+    return 'retiredAt IS NULL';
+  }
+  if (options?.hideRetiredWithoutMovements) {
+    return `(retiredAt IS NULL OR EXISTS (
+        SELECT 1 FROM finances WHERE finances.idCategory = categories.id
+      ))`;
+  }
+  return '';
+};
 
 export const getCategories = async (
   db: SQLiteDatabase,
   options?: GetCategoriesOptions,
 ): Promise<ICategory[]> => {
   const categories: ICategory[] = [];
-  const query = options?.activeOnly
-    ? 'SELECT id, category AS name, icon, type, seedKey FROM categories WHERE retiredAt IS NULL'
-    : 'SELECT id, category AS name, icon, type, seedKey FROM categories';
+  const filter = buildRetiredFilter(options);
+  const query =
+    'SELECT id, category AS name, icon, type, seedKey FROM categories' +
+    (filter ? ` WHERE ${filter}` : '');
   const [resultSet] = await db.executeSql(query);
 
   for (let index = 0; index < resultSet.rows.length; index++) {
@@ -101,9 +132,10 @@ export const getCategoriesByType = async (
   options?: GetCategoriesOptions,
 ): Promise<ICategory[]> => {
   const categories: ICategory[] = [];
-  const query = options?.activeOnly
-    ? 'SELECT id, category AS name, icon, type, seedKey FROM categories WHERE type = ? AND retiredAt IS NULL'
-    : 'SELECT id, category AS name, icon, type, seedKey FROM categories WHERE type = ?';
+  const filter = buildRetiredFilter(options);
+  const query =
+    'SELECT id, category AS name, icon, type, seedKey FROM categories WHERE type = ?' +
+    (filter ? ` AND ${filter}` : '');
   const [resultSet] = await db.executeSql(query, [type]);
 
   for (let index = 0; index < resultSet.rows.length; index++) {
