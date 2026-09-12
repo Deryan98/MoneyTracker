@@ -22,6 +22,7 @@ import {
   NO_ACCOUNT_SELECTED_ID,
   SEE_ALL_ACCOUNTS_CARD_ID,
   sortAccountsByRelevance,
+  getPendingBalanceReviewCount,
   groupFinancesByDate,
   mapAccountsToCatalogCards,
 } from './mappers';
@@ -95,6 +96,11 @@ const AccountsScreen = () => {
   // every render.
   const selectedAccount = accounts.find(a => a.id === selectedAccountId);
 
+  /** S3/T11 — cuantas cuentas de deuda tienen el cupo cargado como
+   * saldo positivo sin revisar, derivado de `accounts` (ya cargado por
+   * `useAccountsScreen`) en vez de una consulta aparte. */
+  const pendingReviewCount = getPendingBalanceReviewCount(accounts);
+
   /**
    * El vacio de la lista tiene que decir la VERDAD, y la verdad depende
    * del periodo.
@@ -159,6 +165,41 @@ const AccountsScreen = () => {
 
       {accountsStatus === 'success' && (
         <>
+
+          {/* S3/T11 — banner NO bloqueante: aparece mientras existan
+              cuentas de deuda con `initialBalance` positivo sin revisar
+              (el patron exacto del bug real, ver la pitch). Nunca
+              impide usar el resto de la pantalla ni de la app — solo
+              ofrece un atajo a `BalanceReview`. `pendingReviewCount` se
+              deriva de `accounts`, ya cargado por este mismo hook —
+              ver `getPendingBalanceReviewCount` para por que esto no
+              dispara una consulta aparte. */}
+          {pendingReviewCount > 0 && (
+            <TouchableOpacity
+              accessibilityRole="button"
+              accessibilityLabel={t('accounts.reviewBannerAction')}
+              activeOpacity={0.85}
+              onPress={() => navigation.navigate('BalanceReview')}
+              style={stateStyles.reviewBanner}>
+              <VectorIcon
+                name="exclamation-circle"
+                size={16}
+                color={colors[primary][0]}
+              />
+              <Text
+                size={13}
+                color={colors[primary][0]}
+                fontWeight="600"
+                style={stateStyles.reviewBannerText}>
+                {t('accounts.reviewBannerTitle', {count: pendingReviewCount})}
+              </Text>
+              <VectorIcon
+                name="chevron-right"
+                size={14}
+                color={colors[primary][0]}
+              />
+            </TouchableOpacity>
+          )}
 
           {/* Label + amount on ONE baseline-aligned row, per the approved
               prototype — was previously stacked (label above, amount
@@ -340,6 +381,22 @@ const stateStyles = StyleSheet.create({
   netWorth: {
     // Cede ancho al boton si la cifra crece, en vez de empujarlo fuera.
     flexShrink: 1,
+  },
+  reviewBanner: {
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    // 44 de alto: mismo suelo de objetivo tactil que `transferButton`.
+    minHeight: 44,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderRadius: 12,
+    backgroundColor: colors[accent][1],
+    marginBottom: 10,
+  },
+  reviewBannerText: {
+    flex: 1,
   },
   netWorthRow: {
     width: '100%',

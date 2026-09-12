@@ -1,4 +1,4 @@
-import {IAccountWithBalance, IFinanceRow} from '@db/queries';
+import {IAccountWithBalance, IFinanceRow, isDebtAccountKind} from '@db/queries';
 import {colors} from '@constants/colors/colors';
 import {
   formatDisplayDate,
@@ -120,6 +120,59 @@ export const mapAccountsToCatalogCards = (
   });
 
   return cards;
+};
+
+/**
+ * Cuantas cuentas ACTIVAS (ya cargadas por `useAccountsScreen` via
+ * `getAccounts`) tienen un `initialBalance` de deuda sin revisar — el
+ * mismo predicado que `getAccountsPendingBalanceReview` aplica en SQL
+ * (S3/T10), reescrito aqui en JS para que el banner de "Revisa el saldo
+ * de N cuentas" (S3/T11) no dispare una segunda consulta: `AccountsScreen`
+ * ya tiene esta misma lista en memoria en cada foco de pantalla.
+ *
+ * Solo el CONTEO — la pantalla de revision (`BalanceReview`) es quien
+ * vuelve a pedir la lista completa via `getAccountsPendingBalanceReview`,
+ * porque necesita las filas frescas en el momento en que el usuario
+ * entra a resolverlas, no una copia que pudo quedar desactualizada
+ * mientras esta pantalla estaba en foco.
+ */
+export const getPendingBalanceReviewCount = (
+  accounts: IAccountWithBalance[],
+): number =>
+  accounts.filter(
+    account =>
+      isDebtAccountKind(account.kind) &&
+      account.initialBalance > 0 &&
+      account.initialBalanceConfirmedAt === null,
+  ).length;
+
+/**
+ * Cuanto de su cupo lleva usado una tarjeta de credito — un entero 0-100
+ * (con tope en 100), o `null` cuando no hay nada informativo que
+ * mostrar. Pura presentacion (S2/T9): vive aqui, no en `@db/queries`,
+ * porque el porcentaje no es un dato que se guarde ni se calcule en SQL,
+ * es una lectura derivada de dos numeros que la query YA devuelve.
+ *
+ * Devuelve `null`, sin dividir, en dos casos que no son "0% usado":
+ * - `creditLimit` es `null` o `0` — no hay cupo capturado contra el que
+ *   comparar, mostrar "0% usado" seria inventar informacion.
+ * - `balance >= 0` — una tarjeta con saldo NO negativo es, por
+ *   definicion de este esquema, una de las cuentas mal cargadas que S3
+ *   todavia no reviso (el cupo esta en `initialBalance`, no la deuda) o
+ *   el caso raro de saldo a favor real. Mostrar un porcentaje de uso
+ *   sobre un dato que ni siquiera se sabe si es correcto no informa,
+ *   confunde — no-go implicito de la pitch, explicito en el AC de T9.
+ */
+export const computeCreditUsage = (
+  balance: number,
+  creditLimit: number | null,
+): number | null => {
+  if (creditLimit === null || creditLimit <= 0 || balance >= 0) {
+    return null;
+  }
+  const used = Math.abs(balance);
+  const percent = Math.round((used / creditLimit) * 100);
+  return Math.min(percent, 100);
 };
 
 /**

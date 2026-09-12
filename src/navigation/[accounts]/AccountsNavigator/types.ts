@@ -10,6 +10,11 @@ export type AccountsNavParams = {
    */
   MovementsHome: undefined;
   CreateAccount: undefined;
+  /** S3/T11 — revision guiada de las cuentas de deuda que nacieron con
+   * el cupo cargado como saldo positivo. Empujada desde el banner de
+   * `AccountsScreen`, la pestana ("Cuentas") de este stack — ver
+   * `docs/product/slices/S3-revision-guiada-de-tarjetas-mal-cargadas.md`. */
+  BalanceReview: undefined;
   /** Crear/editar categoria empujadas desde la pestana de categorias
    * — ver el comentario del navegador. */
   CreateCategory: undefined;

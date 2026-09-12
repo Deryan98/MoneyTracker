@@ -9,6 +9,8 @@ import {migration007Statements} from './migrations/007_appMetaTable';
 import {migration008Statements} from './migrations/008_envelopeCompletion';
 import {migration009Statements} from './migrations/009_seedKeyForCategoriesAndAccounts';
 import {migration010Statements} from './migrations/010_retireLegacyCategoriesAndSeedKeys';
+import {migration011Statements} from './migrations/011_creditLimit';
+import {migration012Statements} from './migrations/012_accountBalanceReview';
 
 enablePromise(true);
 
@@ -75,6 +77,15 @@ const DATABASE_NAME = 'moneytracker.db';
  *   `Rent`) y anade `Business`/ingreso para instalaciones ya sembradas.
  *   Ver ADR 0005, que tambien renumera la ADR 0001 (de 10/11 a 11/12) y
  *   deja la ADR 0002 `superseded by 0005`.
+ * - Version 11 (`migration011Statements`, see
+ *   `src/db/migrations/011_creditLimit.ts`): anade `accounts.creditLimit`
+ *   (cents, nullable) — el cupo de una tarjeta de credito, capturado
+ *   como un dato aparte del saldo inicial. Ver ADR 0001 (S2/T7).
+ * - Version 12 (`migration012Statements`, see
+ *   `src/db/migrations/012_accountBalanceReview.ts`): anade
+ *   `accounts.initialBalanceConfirmedAt` (nullable) — marca que el
+ *   dueno ya reviso una cuenta de deuda con saldo positivo y confirmo
+ *   que es correcto (no un cupo mal cargado). Ver ADR 0001 (S3/T10).
  * - To ship a schema change later, ADD a new entry with an incremented
  *   `version` and the `CREATE`/`ALTER` statements needed to get from
  *   the previous version to this one. Never edit an already-shipped
@@ -126,6 +137,8 @@ const migrations: Migration[] = [
   {version: 8, statements: migration008Statements},
   {version: 9, statements: migration009Statements},
   {version: 10, statements: migration010Statements},
+  {version: 11, statements: migration011Statements},
+  {version: 12, statements: migration012Statements},
 ];
 
 const SCHEMA_VERSION = migrations[migrations.length - 1].version;

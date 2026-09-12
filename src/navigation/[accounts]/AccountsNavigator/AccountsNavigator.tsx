@@ -2,6 +2,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {MovementsTopTabs} from '@navigation/[movements]/MovementsTopTabs';
 import {CreateCategory} from '@screens/[categories]';
 import {CreateAccount} from '@screens/AccountsScreen/CreateAccount';
+import {BalanceReview} from '@screens/AccountsScreen/BalanceReview';
 import {AccountsNavParams} from './types';
 
 const Stack = createNativeStackNavigator<AccountsNavParams>();
@@ -60,6 +61,9 @@ export const AccountsNavigator = () => {
           dos rutas muertas. El alta se queda porque la tarjeta
           "Agregar cuenta" de la lista horizontal la sigue empujando. */}
       <Stack.Screen name="CreateAccount" component={CreateAccount} />
+      {/* S3/T11 — el banner de "Revisa el saldo de N cuentas" empuja
+          aqui desde `AccountsScreen`. */}
+      <Stack.Screen name="BalanceReview" component={BalanceReview} />
 
       <Stack.Screen name="CreateCategory" component={CreateCategory} />
       <Stack.Screen name="EditCategory" component={CreateCategory} />

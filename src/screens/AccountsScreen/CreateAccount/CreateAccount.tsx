@@ -76,8 +76,12 @@ export const CreateAccount = ({navigation, route}: CreateAccountProps) => {
     balanceSign,
     onChangeBalanceSign,
     allowsNegativeBalance,
+    creditLimitText,
+    onChangeCreditLimitText,
+    showsCreditLimitField,
     nameError,
     amountError,
+    creditLimitError,
     formError,
     canSave,
     saveAccount,
@@ -196,6 +200,23 @@ export const CreateAccount = ({navigation, route}: CreateAccountProps) => {
               keyboardType="decimal-pad"
               error={amountError}
             />
+            {/* Solo en tarjeta de credito (S2/T8): el cupo es un dato
+                aparte del saldo inicial, opcional, y nunca negativo —
+                por eso no reutiliza `allowsNegativeBalance`. Vive DEBAJO
+                del saldo inicial, no lo reemplaza (ver la pitch). */}
+            {showsCreditLimitField && (
+              <>
+                <Spacer space={20} />
+                <InputField
+                  inputText={creditLimitText}
+                  onChangeInputText={onChangeCreditLimitText}
+                  placeholder={t('accounts.creditLimitPlaceholder')}
+                  accessibilityLabel={t('accounts.creditLimitAccessibilityLabel')}
+                  keyboardType="decimal-pad"
+                  error={creditLimitError}
+                />
+              </>
+            )}
             <SymbolList selectedIcon={selectedIcon} onPressItem={handlePressItem} />
             <Spacer space={20} />
             {formError !== '' && (

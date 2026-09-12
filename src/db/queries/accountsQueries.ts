@@ -96,6 +96,17 @@ export interface IAccount {
    * la sembrada por la migracion 004 ("Efectivo"); `null` si el usuario
    * la creo o la renombro — ver `updateAccount`. */
   seedKey: string | null;
+  /** Cents. El CUPO de una tarjeta de credito — dato informativo, nunca
+   * usado para calcular el saldo. `null` = no capturado. Semanticamente
+   * solo tiene sentido para `kind === 'credit_card'`, pero el esquema no
+   * lo obliga (ver `011_creditLimit.ts`). */
+  creditLimit: number | null;
+  /** ISO-8601, o `null` si esta cuenta de deuda con `initialBalance`
+   * positivo todavia no fue revisada por el dueno (ver
+   * `getAccountsPendingBalanceReview` y `012_accountBalanceReview.ts`).
+   * Sin significado para una cuenta que nunca tuvo `initialBalance`
+   * positivo. */
+  initialBalanceConfirmedAt: string | null;
 }
 
 /**
@@ -115,6 +126,9 @@ export interface IInsertAccountInput {
   kind: AccountKind;
   /** Cents. Defaults to 0. */
   initialBalance?: number;
+  /** Cents. `null`/omitted = sin cupo capturado. Solo tiene sentido
+   * semantico para `kind === 'credit_card'`, ver `IAccount.creditLimit`. */
+  creditLimit?: number | null;
   /** ISO-8601. Defaults to `new Date().toISOString()` if omitted. */
   createdAt?: string;
   /** ISO-8601. Defaults to `new Date().toISOString()` if omitted. */
@@ -130,6 +144,10 @@ export interface IUpdateAccountInput {
    * account with the wrong opening balance"), not a hidden side channel
    * for recording a transaction; movements still belong in `finances`. */
   initialBalance?: number;
+  /** Cents, or `null` to clear a previously-captured cupo.
+   * `undefined` (the default, not passed) leaves it untouched — same
+   * partial-update convention as every other field here. */
+  creditLimit?: number | null;
 }
 
 export interface IGetAccountsOptions {
@@ -147,6 +165,8 @@ const mapRowToAccountWithBalance = (row: any): IAccountWithBalance => ({
   createdAt: row.createdAt,
   updatedAt: row.updatedAt,
   seedKey: row.seedKey ?? null,
+  creditLimit: row.creditLimit ?? null,
+  initialBalanceConfirmedAt: row.initialBalanceConfirmedAt ?? null,
   balance: row.balance,
 });
 
@@ -171,6 +191,8 @@ const ACCOUNTS_WITH_BALANCE_SELECT = `
     a.createdAt AS createdAt,
     a.updatedAt AS updatedAt,
     a.seedKey AS seedKey,
+    a.creditLimit AS creditLimit,
+    a.initialBalanceConfirmedAt AS initialBalanceConfirmedAt,
     a.initialBalance + COALESCE(f.total, 0) AS balance
   FROM accounts a
   LEFT JOIN (
@@ -188,6 +210,11 @@ const ACCOUNTS_WITH_BALANCE_SELECT = `
  *   `CHECK` is safe here, unlike `categories.type`).
  * - `Error('initialBalance must be an integer number of cents')` if
  *   `initialBalance` is passed and is not a safe integer.
+ * - `Error('creditLimit must be an integer number of cents')` if
+ *   `creditLimit` is passed as something other than `null`/`undefined`
+ *   and is not a safe integer — same guard as `initialBalance`, applied
+ *   only when a value is actually supplied (`null` always passes: it
+ *   means "no cupo captured", not zero).
  *
  * Returns the new row's `id` (from `insertId`), not the full row.
  */
@@ -202,14 +229,26 @@ export const insertAccount = async (
   if (!isFiniteInteger(initialBalance)) {
     throw new Error('initialBalance must be an integer number of cents');
   }
+  const creditLimit = input.creditLimit ?? null;
+  if (creditLimit !== null && !isFiniteInteger(creditLimit)) {
+    throw new Error('creditLimit must be an integer number of cents');
+  }
   const now = new Date().toISOString();
   const createdAt = input.createdAt ?? now;
   const updatedAt = input.updatedAt ?? now;
 
   const [result] = await db.executeSql(
-    `INSERT INTO accounts (name, icon, kind, initialBalance, createdAt, updatedAt)
-      VALUES (?, ?, ?, ?, ?, ?)`,
-    [input.name, input.icon, input.kind, initialBalance, createdAt, updatedAt],
+    `INSERT INTO accounts (name, icon, kind, initialBalance, creditLimit, createdAt, updatedAt)
+      VALUES (?, ?, ?, ?, ?, ?, ?)`,
+    [
+      input.name,
+      input.icon,
+      input.kind,
+      initialBalance,
+      creditLimit,
+      createdAt,
+      updatedAt,
+    ],
   );
   return {id: result.insertId};
 };
@@ -242,7 +281,7 @@ export const updateAccount = async (
   input: IUpdateAccountInput,
 ): Promise<void> => {
   const sets: string[] = [];
-  const params: (string | number)[] = [];
+  const params: (string | number | null)[] = [];
 
   if (input.name !== undefined) {
     const [current] = await db.executeSql(
@@ -280,6 +319,13 @@ export const updateAccount = async (
     }
     sets.push('initialBalance = ?');
     params.push(input.initialBalance);
+  }
+  if (input.creditLimit !== undefined) {
+    if (input.creditLimit !== null && !isFiniteInteger(input.creditLimit)) {
+      throw new Error('creditLimit must be an integer number of cents');
+    }
+    sets.push('creditLimit = ?');
+    params.push(input.creditLimit);
   }
 
   if (sets.length === 0) {
@@ -461,4 +507,77 @@ export const getNetWorth = async (db: SQLiteDatabase): Promise<number> => {
       WHERE a.archivedAt IS NULL;`,
   );
   return resultSet.rows.item(0).netWorth;
+};
+
+/**
+ * Cuentas de deuda (`credit_card`/`loan`) cuyo `initialBalance` sigue
+ * siendo POSITIVO y que el dueno nunca confirmo — el patron exacto del
+ * bug real: el cupo de la tarjeta tecleado en el campo del saldo, en
+ * vez de la deuda en negativo. Ver
+ * `docs/product/pitches/saldo-inicial-correcto-en-tarjetas-de-credito.md`
+ * (S3/T10) y la ADR 0001.
+ *
+ * Los tres filtros, y por que ninguno sobra:
+ * - `kind IN ('credit_card', 'loan')` (via `DEBT_ACCOUNT_KINDS`) — el
+ *   selector de signo, y por tanto este bug, solo existe para cuentas de
+ *   deuda. Una cuenta `cash`/`bank`/`receivable` con saldo positivo es
+ *   su estado NORMAL, no una senal de nada.
+ * - `archivedAt IS NULL` — una cuenta archivada ya no se administra
+ *   activamente; no tiene sentido pedirle al dueno que revise algo que
+ *   el mismo dejo de usar.
+ * - `initialBalanceConfirmedAt IS NULL` — una vez que el dueno responde
+ *   (por cualquiera de las dos acciones de la pantalla de revision) esta
+ *   fila deja de aparecer para siempre, aunque su `initialBalance` siga
+ *   siendo positivo (el caso "saldo a favor real, ya confirmado").
+ *
+ * Contra la base real del dueno (`user_version` 8 mas estas dos
+ * migraciones) esto devuelve EXACTAMENTE las cuentas 6, 7 y 8 — no la 3
+ * (ya negativa), no la 2/4 (`loan` ya negativo), ninguna `cash`/`bank`.
+ */
+export const getAccountsPendingBalanceReview = async (
+  db: SQLiteDatabase,
+): Promise<IAccountWithBalance[]> => {
+  const placeholders = DEBT_ACCOUNT_KINDS.map(() => '?').join(', ');
+  const [resultSet] = await db.executeSql(
+    `${ACCOUNTS_WITH_BALANCE_SELECT}
+      WHERE a.kind IN (${placeholders})
+        AND a.archivedAt IS NULL
+        AND a.initialBalance > 0
+        AND a.initialBalanceConfirmedAt IS NULL
+      ORDER BY a.name ASC;`,
+    [...DEBT_ACCOUNT_KINDS],
+  );
+
+  const accounts: IAccountWithBalance[] = [];
+  for (let index = 0; index < resultSet.rows.length; index++) {
+    accounts.push(mapRowToAccountWithBalance(resultSet.rows.item(index)));
+  }
+  return accounts;
+};
+
+/**
+ * Confirma que el `initialBalance` positivo de una cuenta de deuda es
+ * correcto de verdad (el caso raro: una devolucion en una tarjeta), sin
+ * tocar ningun monto — estampa `initialBalanceConfirmedAt` y nada mas.
+ *
+ * Idempotente por el mismo motivo que `archiveAccount`/`unarchiveAccount`:
+ * la guarda `WHERE initialBalanceConfirmedAt IS NULL` hace que una
+ * segunda llamada sea un no-op (cero filas afectadas), no un error, y
+ * evita pisar la fecha de una confirmacion ya hecha.
+ *
+ * No es una rama de `updateAccount` porque no comparte su forma:
+ * `updateAccount` es un SET generico de campos EDITABLES por el
+ * formulario; esto es una transicion de estado con su propia guarda,
+ * igual que `archiveAccount` tiene la suya en vez de vivir dentro de
+ * `IUpdateAccountInput`.
+ */
+export const confirmAccountBalanceCorrect = async (
+  db: SQLiteDatabase,
+  id: number,
+): Promise<void> => {
+  const now = new Date().toISOString();
+  await db.executeSql(
+    'UPDATE accounts SET initialBalanceConfirmedAt = ?, updatedAt = ? WHERE id = ? AND initialBalanceConfirmedAt IS NULL',
+    [now, now, id],
+  );
 };
