@@ -1,0 +1,571 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<title>MoneyTracker — Propuestas de logo / icono</title>
+<style>
+  :root {
+    --indigo: #010062;   /* primary[0] */
+    --lavender: #9C9AC8; /* primary[1] */
+    --lime-0: #C7FF70;   /* accent[0] */
+    --lime-1: #8CC63F;   /* accent[1] */
+    --lime-2: #5CA41B;   /* accent[2] */
+    --lime-3: #2E4A0C;   /* accent[3] */
+    --surface: #FAFAFA;  /* surface[0] */
+    --gray-dark: #333333;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, Helvetica, Arial, sans-serif;
+    background: #EFEFF4;
+    color: var(--gray-dark);
+    margin: 0;
+    padding: 32px 24px 96px;
+  }
+  h1 { font-size: 22px; margin-bottom: 4px; }
+  .intro { max-width: 780px; color: #555; font-size: 14px; line-height: 1.5; margin-bottom: 32px; }
+  .intro code { background: #e2e2ea; padding: 1px 5px; border-radius: 4px; }
+  .direction {
+    background: white;
+    border-radius: 12px;
+    padding: 24px 28px 28px;
+    margin-bottom: 28px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  }
+  .direction h2 { margin: 0 0 2px; font-size: 18px; }
+  .direction .tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--lime-3);
+    background: var(--lime-0);
+    padding: 2px 8px;
+    border-radius: 999px;
+    margin-bottom: 10px;
+  }
+  .direction p.concept { font-size: 15px; font-weight: 600; margin: 6px 0 4px; }
+  .direction p.why { font-size: 13.5px; color: #444; line-height: 1.5; max-width: 720px; margin: 0 0 4px; }
+  .direction p.at48 { font-size: 13px; color: #666; line-height: 1.5; max-width: 720px; margin: 0 0 18px; }
+  .row { display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start; margin-bottom: 18px; }
+  .swatch {
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
+  }
+  .swatch .cap { font-size: 11px; color: #777; text-align: center; max-width: 120px; }
+  .box {
+    width: 96px; height: 96px;
+    display: flex; align-items: center; justify-content: center;
+    border: 1px solid #ddd;
+  }
+  .box.dark { background: var(--indigo); }
+  .box.light { background: var(--surface); }
+  .mask-circle { border-radius: 50%; }
+  .mask-squircle { border-radius: 30px; }
+  .mask-square { border-radius: 21px; }
+  .safezone {
+    position: relative;
+  }
+  .safezone::after {
+    content: '';
+    position: absolute;
+    inset: 16.3%; /* 66% central safe zone */
+    border: 1px dashed rgba(255,255,255,0.35);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+  .lockup-box {
+    background: var(--indigo);
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-radius: 10px;
+  }
+  .wordmark { font-size: 18px; font-weight: 700; color: white; white-space: nowrap; }
+  .wordmark .tracker { color: var(--lime-0); }
+  .tiny-row { display: flex; gap: 18px; align-items: center; }
+  .tiny-row .box { border: 1px solid #ccc; }
+  .legend {
+    margin-top: 40px;
+    background: white;
+    border-radius: 12px;
+    padding: 20px 28px;
+    font-size: 13px;
+  }
+  .legend h2 { font-size: 16px; }
+  .legend table { border-collapse: collapse; width: 100%; max-width: 640px; }
+  .legend td, .legend th { text-align: left; padding: 4px 10px 4px 0; }
+  .swab { display: inline-block; width: 14px; height: 14px; border-radius: 3px; vertical-align: middle; margin-right: 6px; border: 1px solid rgba(0,0,0,0.15); }
+  .recommend {
+    background: #101036;
+    color: white;
+    border-radius: 12px;
+    padding: 24px 28px;
+    margin-top: 28px;
+  }
+  .recommend h2 { color: var(--lime-0); margin-top: 0; }
+  .recommend p { font-size: 14px; line-height: 1.6; max-width: 780px; }
+  .recommend ul { font-size: 14px; line-height: 1.6; }
+</style>
+</head>
+<body>
+
+<h1>MoneyTracker — Propuestas de logo / icono</h1>
+<p class="intro">
+  Cuatro direcciones, todas construidas exclusivamente con los tokens ya definidos en
+  <code>src/constants/colors/colors.ts</code> (<code>primary[0] #010062</code>,
+  <code>primary[1] #9C9AC8</code>, <code>accent[0..3]</code>). Cero degradados, cero brillos,
+  máximo 2–3 tonos por marca — la razón se explica en cada dirección. Cada una se muestra:
+  la marca sola sobre claro/oscuro, el icono de launcher recortado en círculo / squircle /
+  cuadrado redondeado (con la zona segura del 66% marcada), y el lockup con el wordmark
+  "MoneyTracker" tal como aparecería en la cabecera del drawer. Al final de cada fila hay una
+  prueba real a 48px y 24px — sin trucos, son los mismos SVG escalados.
+</p>
+
+<!-- ================= A: EL SOBRE ================= -->
+<div class="direction">
+  <span class="tag">Explora el sobre en serio</span>
+  <h2>A · El Sobre</h2>
+  <p class="concept">Concepto: un sobre plano de dos formas — el cuerpo y la solapa — nada más.</p>
+  <p class="why">
+    Por qué encaja con ESTA app y no con cualquiera: "sobre" no es una metáfora genérica de
+    finanzas, es el nombre real de la mecánica distintiva de MoneyTracker — la tabla
+    <code>envelopes</code>, la pantalla <code>[budgets]</code>, el flujo de apartar dinero
+    hacia una meta. Ninguna de las ocho apps "Money Tracker" de Play usa esta metáfora como
+    marca. A diferencia de la referencia del dueño, aquí el sobre ES el icono completo: no hay
+    billetes, ni swoosh, ni flecha compitiendo por la atención — un solo objeto, dos formas,
+    dos colores.
+  </p>
+  <p class="at48">
+    A 48px: el cuerpo es un rectángulo redondeado sólido (lima <code>accent[0]</code>) y la
+    solapa es un triángulo (lima oscuro <code>accent[3]</code>) — dos manchas de color con un
+    quiebre diagonal limpio, sin líneas finas que colapsen. El "sello" circular es decorativo
+    (agujero del color de fondo, no un tercer tono) y se pierde con gusto por debajo de 32px sin
+    que el sobre deje de leerse como sobre.
+  </p>
+
+  <div class="row">
+    <div class="swatch">
+      <svg width="96" height="96" viewBox="0 0 48 48">
+        <rect x="6" y="13" width="36" height="24" rx="4" fill="var(--lime-0)"/>
+        <path d="M10,13 L24,26 L38,13 Z" fill="var(--lime-3)"/>
+        <circle cx="24" cy="17" r="2.6" fill="var(--surface)"/>
+      </svg>
+      <div class="cap">Marca sola — sobre claro</div>
+    </div>
+    <div class="swatch">
+      <svg width="96" height="96" viewBox="0 0 48 48" style="background:var(--indigo);border-radius:8px">
+        <rect x="6" y="13" width="36" height="24" rx="4" fill="var(--lime-0)"/>
+        <path d="M10,13 L24,26 L38,13 Z" fill="var(--lime-3)"/>
+        <circle cx="24" cy="17" r="2.6" fill="var(--indigo)"/>
+      </svg>
+      <div class="cap">Marca sola — sobre índigo (drawer)</div>
+    </div>
+
+    <div class="swatch safezone">
+      <div class="box dark mask-circle">
+        <svg width="64" height="64" viewBox="0 0 48 48">
+          <rect x="6" y="13" width="36" height="24" rx="4" fill="var(--lime-0)"/>
+          <path d="M10,13 L24,26 L38,13 Z" fill="var(--lime-3)"/>
+          <circle cx="24" cy="17" r="2.6" fill="var(--indigo)"/>
+        </svg>
+      </div>
+      <div class="cap">Launcher — recorte circular</div>
+    </div>
+    <div class="swatch">
+      <div class="box dark mask-squircle">
+        <svg width="64" height="64" viewBox="0 0 48 48">
+          <rect x="6" y="13" width="36" height="24" rx="4" fill="var(--lime-0)"/>
+          <path d="M10,13 L24,26 L38,13 Z" fill="var(--lime-3)"/>
+          <circle cx="24" cy="17" r="2.6" fill="var(--indigo)"/>
+        </svg>
+      </div>
+      <div class="cap">Launcher — squircle</div>
+    </div>
+    <div class="swatch">
+      <div class="box dark mask-square">
+        <svg width="64" height="64" viewBox="0 0 48 48">
+          <rect x="6" y="13" width="36" height="24" rx="4" fill="var(--lime-0)"/>
+          <path d="M10,13 L24,26 L38,13 Z" fill="var(--lime-3)"/>
+          <circle cx="24" cy="17" r="2.6" fill="var(--indigo)"/>
+        </svg>
+      </div>
+      <div class="cap">Launcher — cuadrado redondeado</div>
+    </div>
+
+    <div class="swatch">
+      <div class="lockup-box">
+        <svg width="30" height="30" viewBox="0 0 48 48">
+          <rect x="6" y="13" width="36" height="24" rx="4" fill="var(--lime-0)"/>
+          <path d="M10,13 L24,26 L38,13 Z" fill="var(--lime-3)"/>
+          <circle cx="24" cy="17" r="2.6" fill="var(--indigo)"/>
+        </svg>
+        <div class="wordmark">Money<span class="tracker">Tracker</span></div>
+      </div>
+      <div class="cap">Lockup — cabecera drawer</div>
+    </div>
+  </div>
+
+  <div class="tiny-row">
+    <div class="swatch">
+      <div class="box dark mask-square" style="width:48px;height:48px;padding:0">
+        <svg width="48" height="48" viewBox="0 0 48 48">
+          <rect x="6" y="13" width="36" height="24" rx="4" fill="var(--lime-0)"/>
+          <path d="M10,13 L24,26 L38,13 Z" fill="var(--lime-3)"/>
+        </svg>
+      </div>
+      <div class="cap">Prueba real 48px</div>
+    </div>
+    <div class="swatch">
+      <div class="box dark mask-square" style="width:24px;height:24px;padding:0">
+        <svg width="24" height="24" viewBox="0 0 48 48">
+          <rect x="6" y="13" width="36" height="24" rx="4" fill="var(--lime-0)"/>
+          <path d="M10,13 L24,26 L38,13 Z" fill="var(--lime-3)"/>
+        </svg>
+      </div>
+      <div class="cap">Prueba real 24px</div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= B: BARRAS ASCENDENTES ================= -->
+<div class="direction">
+  <span class="tag">Refina el placeholder actual</span>
+  <h2>B · Barras Ascendentes</h2>
+  <p class="concept">Concepto: tres barras que suben, del tono más apagado al más vivo.</p>
+  <p class="why">
+    Por qué encaja: es literalmente el mismo patrón visual que ya usan las barras de progreso
+    de sobres y presupuestos en la app hoy — no es un ícono de "crecimiento" genérico prestado
+    de un banco de stock, es la reutilización de un elemento que el usuario ya reconoce dentro
+    de MoneyTracker. Es también la evolución directa del placeholder de
+    <code>Logo.tsx</code> (mismo criterio ascendente: <code>primary[1]</code> →
+    <code>accent[1]</code> → <code>accent[0]</code>), así que no se tira trabajo, se
+    depura.
+  </p>
+  <p class="at48">
+    A 48px: son tres rectángulos sólidos con puntas redondeadas, sin detalle interno — el tipo
+    de forma que sobrevive a cualquier tamaño porque no depende de ningún trazo fino. Es la
+    dirección más "a prueba de balas" de las cuatro para el ícono del launcher, pero la menos
+    distintiva: cualquier app de analítica podría usar barras ascendentes.
+  </p>
+
+  <div class="row">
+    <div class="swatch">
+      <svg width="96" height="96" viewBox="0 0 48 48">
+        <rect x="9" y="26" width="8" height="12" rx="4" fill="var(--lavender)"/>
+        <rect x="20" y="18" width="8" height="20" rx="4" fill="var(--lime-1)"/>
+        <rect x="31" y="10" width="8" height="28" rx="4" fill="var(--lime-0)"/>
+      </svg>
+      <div class="cap">Marca sola — sobre claro</div>
+    </div>
+    <div class="swatch">
+      <svg width="96" height="96" viewBox="0 0 48 48" style="background:var(--indigo);border-radius:8px">
+        <rect x="9" y="26" width="8" height="12" rx="4" fill="var(--lavender)"/>
+        <rect x="20" y="18" width="8" height="20" rx="4" fill="var(--lime-1)"/>
+        <rect x="31" y="10" width="8" height="28" rx="4" fill="var(--lime-0)"/>
+      </svg>
+      <div class="cap">Marca sola — sobre índigo</div>
+    </div>
+
+    <div class="swatch safezone">
+      <div class="box dark mask-circle">
+        <svg width="64" height="64" viewBox="0 0 48 48">
+          <rect x="9" y="26" width="8" height="12" rx="4" fill="var(--lavender)"/>
+          <rect x="20" y="18" width="8" height="20" rx="4" fill="var(--lime-1)"/>
+          <rect x="31" y="10" width="8" height="28" rx="4" fill="var(--lime-0)"/>
+        </svg>
+      </div>
+      <div class="cap">Launcher — circular</div>
+    </div>
+    <div class="swatch">
+      <div class="box dark mask-squircle">
+        <svg width="64" height="64" viewBox="0 0 48 48">
+          <rect x="9" y="26" width="8" height="12" rx="4" fill="var(--lavender)"/>
+          <rect x="20" y="18" width="8" height="20" rx="4" fill="var(--lime-1)"/>
+          <rect x="31" y="10" width="8" height="28" rx="4" fill="var(--lime-0)"/>
+        </svg>
+      </div>
+      <div class="cap">Launcher — squircle</div>
+    </div>
+    <div class="swatch">
+      <div class="box dark mask-square">
+        <svg width="64" height="64" viewBox="0 0 48 48">
+          <rect x="9" y="26" width="8" height="12" rx="4" fill="var(--lavender)"/>
+          <rect x="20" y="18" width="8" height="20" rx="4" fill="var(--lime-1)"/>
+          <rect x="31" y="10" width="8" height="28" rx="4" fill="var(--lime-0)"/>
+        </svg>
+      </div>
+      <div class="cap">Launcher — cuadrado redondeado</div>
+    </div>
+
+    <div class="swatch">
+      <div class="lockup-box">
+        <svg width="30" height="30" viewBox="0 0 48 48">
+          <rect x="9" y="26" width="8" height="12" rx="4" fill="var(--lavender)"/>
+          <rect x="20" y="18" width="8" height="20" rx="4" fill="var(--lime-1)"/>
+          <rect x="31" y="10" width="8" height="28" rx="4" fill="var(--lime-0)"/>
+        </svg>
+        <div class="wordmark">Money<span class="tracker">Tracker</span></div>
+      </div>
+      <div class="cap">Lockup — cabecera drawer</div>
+    </div>
+  </div>
+
+  <div class="tiny-row">
+    <div class="swatch">
+      <div class="box dark mask-square" style="width:48px;height:48px;padding:0">
+        <svg width="48" height="48" viewBox="0 0 48 48">
+          <rect x="9" y="26" width="8" height="12" rx="4" fill="var(--lavender)"/>
+          <rect x="20" y="18" width="8" height="20" rx="4" fill="var(--lime-1)"/>
+          <rect x="31" y="10" width="8" height="28" rx="4" fill="var(--lime-0)"/>
+        </svg>
+      </div>
+      <div class="cap">Prueba real 48px</div>
+    </div>
+    <div class="swatch">
+      <div class="box dark mask-square" style="width:24px;height:24px;padding:0">
+        <svg width="24" height="24" viewBox="0 0 48 48">
+          <rect x="9" y="26" width="8" height="12" rx="4" fill="var(--lavender)"/>
+          <rect x="20" y="18" width="8" height="20" rx="4" fill="var(--lime-1)"/>
+          <rect x="31" y="10" width="8" height="28" rx="4" fill="var(--lime-0)"/>
+        </svg>
+      </div>
+      <div class="cap">Prueba real 24px</div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= C: MONOGRAMA M ================= -->
+<div class="direction">
+  <span class="tag">Marca propia, no metáfora</span>
+  <h2>C · Monograma "M"</h2>
+  <p class="concept">Concepto: una M geométrica sólida dentro de una moneda, cuyos picos leen doblemente como una tendencia ascendente.</p>
+  <p class="why">
+    Por qué encaja: en vez de competir por la mejor metáfora de "dinero" (billete, alcancía,
+    sobre, gráfico — las cuatro ya gastadas por la competencia), esta dirección es una
+    letra propia. Es registrable como marca, no depende de que el usuario interprete un
+    símbolo, y una M bien dibujada dobla como picos de un gráfico ascendente sin necesitar un
+    cuarto elemento. Es la apuesta "atemporal": no envejece con la moda 3D como la referencia,
+    ni se puede confundir con un ícono de sistema.
+  </p>
+  <p class="at48">
+    A 48px: es una sola forma sólida (relleno, no trazo) dentro de un círculo — de las cuatro,
+    la que mejor sobrevive un recorte agresivo porque el glifo ya nace pensado para una moneda.
+    A 24px sigue leyéndose como "M", aunque a partir de ahí ya no se distingue el doble sentido
+    de picos de gráfico — sigue siendo, sin más, una M, que es un resultado aceptable.
+  </p>
+
+  <div class="row">
+    <div class="swatch">
+      <svg width="96" height="96" viewBox="0 0 48 48">
+        <circle cx="24" cy="24" r="19" fill="var(--indigo)"/>
+        <path d="M14,34 L14,14 L19,14 L24,24 L29,14 L34,14 L34,34 L29,34 L29,22 L24,30 L19,22 L19,34 Z" fill="var(--lime-0)"/>
+      </svg>
+      <div class="cap">Marca sola — sobre claro</div>
+    </div>
+    <div class="swatch">
+      <svg width="96" height="96" viewBox="0 0 48 48">
+        <circle cx="24" cy="24" r="19" fill="var(--lime-0)"/>
+        <path d="M14,34 L14,14 L19,14 L24,24 L29,14 L34,14 L34,34 L29,34 L29,22 L24,30 L19,22 L19,34 Z" fill="var(--indigo)"/>
+      </svg>
+      <div class="cap">Marca sola — invertida (moneda lima)</div>
+    </div>
+
+    <div class="swatch safezone">
+      <div class="box dark mask-circle">
+        <svg width="64" height="64" viewBox="0 0 48 48">
+          <path d="M14,34 L14,14 L19,14 L24,24 L29,14 L34,14 L34,34 L29,34 L29,22 L24,30 L19,22 L19,34 Z" fill="var(--lime-0)"/>
+        </svg>
+      </div>
+      <div class="cap">Launcher — circular</div>
+    </div>
+    <div class="swatch">
+      <div class="box dark mask-squircle">
+        <svg width="64" height="64" viewBox="0 0 48 48">
+          <path d="M14,34 L14,14 L19,14 L24,24 L29,14 L34,14 L34,34 L29,34 L29,22 L24,30 L19,22 L19,34 Z" fill="var(--lime-0)"/>
+        </svg>
+      </div>
+      <div class="cap">Launcher — squircle</div>
+    </div>
+    <div class="swatch">
+      <div class="box dark mask-square">
+        <svg width="64" height="64" viewBox="0 0 48 48">
+          <path d="M14,34 L14,14 L19,14 L24,24 L29,14 L34,14 L34,34 L29,34 L29,22 L24,30 L19,22 L19,34 Z" fill="var(--lime-0)"/>
+        </svg>
+      </div>
+      <div class="cap">Launcher — cuadrado redondeado</div>
+    </div>
+
+    <div class="swatch">
+      <div class="lockup-box">
+        <svg width="30" height="30" viewBox="0 0 48 48">
+          <circle cx="24" cy="24" r="19" fill="var(--lime-0)"/>
+          <path d="M14,34 L14,14 L19,14 L24,24 L29,14 L34,14 L34,34 L29,34 L29,22 L24,30 L19,22 L19,34 Z" fill="var(--indigo)"/>
+        </svg>
+        <div class="wordmark">Money<span class="tracker">Tracker</span></div>
+      </div>
+      <div class="cap">Lockup — cabecera drawer</div>
+    </div>
+  </div>
+
+  <div class="tiny-row">
+    <div class="swatch">
+      <div class="box dark mask-square" style="width:48px;height:48px;padding:0">
+        <svg width="48" height="48" viewBox="0 0 48 48">
+          <path d="M14,34 L14,14 L19,14 L24,24 L29,14 L34,14 L34,34 L29,34 L29,22 L24,30 L19,22 L19,34 Z" fill="var(--lime-0)"/>
+        </svg>
+      </div>
+      <div class="cap">Prueba real 48px</div>
+    </div>
+    <div class="swatch">
+      <div class="box dark mask-square" style="width:24px;height:24px;padding:0">
+        <svg width="24" height="24" viewBox="0 0 48 48">
+          <path d="M14,34 L14,14 L19,14 L24,24 L29,14 L34,14 L34,34 L29,34 L29,22 L24,30 L19,22 L19,34 Z" fill="var(--lime-0)"/>
+        </svg>
+      </div>
+      <div class="cap">Prueba real 24px</div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= D: LA HOJA ================= -->
+<div class="direction">
+  <span class="tag">Ruptura deliberada del cliché</span>
+  <h2>D · La Hoja</h2>
+  <p class="concept">Concepto: una hoja/brote — el dinero apartado en sobres "crece" como una planta.</p>
+  <p class="why">
+    Por qué encaja: es la única dirección de las cuatro que no dibuja dinero literal — nada de
+    billetes, monedas ni gráficos. La lima de la paleta ya es, por casualidad de marca, un color
+    de crecimiento; esta dirección lo aprovecha en vez de pelearlo contra un fondo índigo
+    "corporativo". Es la más arriesgada: en un mercado (El Salvador / LatAm) donde el usuario
+    espera ver un símbolo de dinero reconocible de un vistazo, una hoja exige una fracción de
+    segundo más de lectura la primera vez. A cambio, es la que menos se parece a cualquier
+    competidor, con o sin nombre "Money Tracker".
+  </p>
+  <p class="at48">
+    A 48px: una sola silueta rellena, sin líneas finas obligatorias — la vena central es
+    decorativa y se cae con gusto por debajo de 32px. El riesgo real no es de legibilidad, es de
+    reconocimiento inmediato del rubro (finanzas) sin el apoyo del nombre al lado.
+  </p>
+
+  <div class="row">
+    <div class="swatch">
+      <svg width="96" height="96" viewBox="0 0 48 48">
+        <path d="M24,9 C33,14 34,27 24,39 C14,27 15,14 24,9 Z" fill="var(--lime-0)" transform="rotate(18 24 24)"/>
+        <path d="M24,12 C22,20 22,30 24,36" fill="none" stroke="var(--lime-3)" stroke-width="1.6" transform="rotate(18 24 24)"/>
+      </svg>
+      <div class="cap">Marca sola — sobre claro</div>
+    </div>
+    <div class="swatch">
+      <svg width="96" height="96" viewBox="0 0 48 48" style="background:var(--indigo);border-radius:8px">
+        <path d="M24,9 C33,14 34,27 24,39 C14,27 15,14 24,9 Z" fill="var(--lime-0)" transform="rotate(18 24 24)"/>
+        <path d="M24,12 C22,20 22,30 24,36" fill="none" stroke="var(--lime-3)" stroke-width="1.6" transform="rotate(18 24 24)"/>
+      </svg>
+      <div class="cap">Marca sola — sobre índigo</div>
+    </div>
+
+    <div class="swatch safezone">
+      <div class="box dark mask-circle">
+        <svg width="64" height="64" viewBox="0 0 48 48">
+          <path d="M24,9 C33,14 34,27 24,39 C14,27 15,14 24,9 Z" fill="var(--lime-0)" transform="rotate(18 24 24)"/>
+          <path d="M24,12 C22,20 22,30 24,36" fill="none" stroke="var(--lime-3)" stroke-width="1.6" transform="rotate(18 24 24)"/>
+        </svg>
+      </div>
+      <div class="cap">Launcher — circular</div>
+    </div>
+    <div class="swatch">
+      <div class="box dark mask-squircle">
+        <svg width="64" height="64" viewBox="0 0 48 48">
+          <path d="M24,9 C33,14 34,27 24,39 C14,27 15,14 24,9 Z" fill="var(--lime-0)" transform="rotate(18 24 24)"/>
+          <path d="M24,12 C22,20 22,30 24,36" fill="none" stroke="var(--lime-3)" stroke-width="1.6" transform="rotate(18 24 24)"/>
+        </svg>
+      </div>
+      <div class="cap">Launcher — squircle</div>
+    </div>
+    <div class="swatch">
+      <div class="box dark mask-square">
+        <svg width="64" height="64" viewBox="0 0 48 48">
+          <path d="M24,9 C33,14 34,27 24,39 C14,27 15,14 24,9 Z" fill="var(--lime-0)" transform="rotate(18 24 24)"/>
+          <path d="M24,12 C22,20 22,30 24,36" fill="none" stroke="var(--lime-3)" stroke-width="1.6" transform="rotate(18 24 24)"/>
+        </svg>
+      </div>
+      <div class="cap">Launcher — cuadrado redondeado</div>
+    </div>
+
+    <div class="swatch">
+      <div class="lockup-box">
+        <svg width="30" height="30" viewBox="0 0 48 48">
+          <path d="M24,9 C33,14 34,27 24,39 C14,27 15,14 24,9 Z" fill="var(--lime-0)" transform="rotate(18 24 24)"/>
+          <path d="M24,12 C22,20 22,30 24,36" fill="none" stroke="var(--lime-3)" stroke-width="1.6" transform="rotate(18 24 24)"/>
+        </svg>
+        <div class="wordmark">Money<span class="tracker">Tracker</span></div>
+      </div>
+      <div class="cap">Lockup — cabecera drawer</div>
+    </div>
+  </div>
+
+  <div class="tiny-row">
+    <div class="swatch">
+      <div class="box dark mask-square" style="width:48px;height:48px;padding:0">
+        <svg width="48" height="48" viewBox="0 0 48 48">
+          <path d="M24,9 C33,14 34,27 24,39 C14,27 15,14 24,9 Z" fill="var(--lime-0)" transform="rotate(18 24 24)"/>
+        </svg>
+      </div>
+      <div class="cap">Prueba real 48px</div>
+    </div>
+    <div class="swatch">
+      <div class="box dark mask-square" style="width:24px;height:24px;padding:0">
+        <svg width="24" height="24" viewBox="0 0 48 48">
+          <path d="M24,9 C33,14 34,27 24,39 C14,27 15,14 24,9 Z" fill="var(--lime-0)" transform="rotate(18 24 24)"/>
+        </svg>
+      </div>
+      <div class="cap">Prueba real 24px</div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= RECOMENDACIÓN ================= -->
+<div class="recommend">
+  <h2>Recomendación: A · El Sobre</h2>
+  <p>
+    Por tres razones, en orden de peso: (1) es el único de los cuatro que representa la
+    mecánica de producto real de MoneyTracker — no una metáfora de finanzas en general, sino la
+    función <code>envelopes</code> que ya existe en el schema y en la UI, así que el icono
+    enseña algo verdadero sobre la app en vez de decorarla; (2) es la que mejor valida la
+    intuición del dueño sin heredar los problemas de la referencia: mismo objeto, cero
+    elementos adicionales, paleta real, plano; (3) a nivel puramente técnico es, junto con el
+    monograma, la más robusta bajo recorte circular/squircle — es simétrica, centrada, y no
+    tiene ningún trazo fino que dependa de sobrevivir un anti-aliasing agresivo a 48px.
+  </p>
+  <p>
+    El monograma "M" (C) queda como alternativa fuerte si en algún momento se quiere una marca
+    registrable independiente del nombre completo (por ejemplo, un splash screen o un favicon
+    de una futura versión web) — es la única dirección que no depende del concepto "finanzas"
+    para funcionar. Las barras (B) son la opción de menor riesgo si el objetivo fuera "pulir
+    ya lo que hay" sin abrir una discusión de marca nueva. La hoja (D) se deja documentada como
+    la ruptura deliberada, no como recomendación: es la más distintiva pero es la única que
+    exige que el usuario ya conozca el nombre "MoneyTracker" para entender por qué una hoja
+    representa dinero.
+  </p>
+  <ul>
+    <li>Colores finales usados en A: <code>accent[0] #C7FF70</code> (cuerpo), <code>accent[3] #2E4A0C</code> (solapa), fondo <code>primary[0] #010062</code>.</li>
+    <li>El "sello" circular es opcional y usa el color de fondo (agujero, no un tercer tono) — puede omitirse por completo sin perder el concepto.</li>
+  </ul>
+</div>
+
+<div class="legend">
+  <h2>Tokens usados (todas las direcciones)</h2>
+  <table>
+    <tr><th></th><th>Token</th><th>Hex</th><th>Uso</th></tr>
+    <tr><td><span class="swab" style="background:var(--indigo)"></span></td><td><code>primary[0]</code></td><td>#010062</td><td>Fondo del icono / drawer</td></tr>
+    <tr><td><span class="swab" style="background:var(--lavender)"></span></td><td><code>primary[1]</code></td><td>#9C9AC8</td><td>Barra corta (B) — único tono legible sobre índigo</td></tr>
+    <tr><td><span class="swab" style="background:var(--lime-0)"></span></td><td><code>accent[0]</code></td><td>#C7FF70</td><td>Color principal de marca sobre índigo</td></tr>
+    <tr><td><span class="swab" style="background:var(--lime-1)"></span></td><td><code>accent[1]</code></td><td>#8CC63F</td><td>Barra media (B)</td></tr>
+    <tr><td><span class="swab" style="background:var(--lime-2)"></span></td><td><code>accent[2]</code></td><td>#5CA41B</td><td>No usado en las marcas — insuficiente contraste sobre accent[0] para detalle</td></tr>
+    <tr><td><span class="swab" style="background:var(--lime-3)"></span></td><td><code>accent[3]</code></td><td>#2E4A0C</td><td>Detalle/solapa/vena sobre fondo lima (A, D)</td></tr>
+  </table>
+</div>
+
+</body>
+</html>
