@@ -17,7 +17,7 @@
  *     contador: mas simple que tres contadores independientes y nunca
  *     puede colisionar entre entornos si algun dia conviven en el
  *     mismo track de Play.
- *   - versionName sube de "patch" por defecto (1.0.2 -> 1.0.3). Se
+ *   - versionName sube de "patch" por defecto (1.0.0 -> 1.0.1). Se
  *     puede pedir --bump=minor o --bump=major. --bump=none deja el
  *     versionName intacto y sube solo versionCode (utilidad: recompilar
  *     el mismo versionName con un build numerico distinto).
