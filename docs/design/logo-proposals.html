@@ -129,6 +129,58 @@
 <!-- shared symbol defs, reused by <use> across the whole doc -->
 <svg style="position:absolute;width:0;height:0" aria-hidden="true">
   <defs>
+    <!-- FINAL elegida por el dueno: sobre + 3 billetes + sello. Sin cinta,
+         sin flecha, sin barras. Bajada 3 unidades: el contenido ocupaba
+         y 4-38 en un lienzo de 48 y quedaba alto en el marco. -->
+    <g id="sym-final">
+      <g transform="translate(0,3)">
+        <rect x="12" y="6" width="15" height="14" rx="2" fill="var(--lime-1)" transform="rotate(-14 19.5 13)"/>
+        <rect x="15" y="8" width="16" height="14" rx="2" fill="var(--lime-2)" transform="rotate(-5 23 15)"/>
+        <rect x="18" y="11" width="16" height="13" rx="2" fill="var(--lime-0)" transform="rotate(6 26 17.5)"/>
+        <circle cx="26" cy="17" r="3.2" fill="var(--indigo)"/>
+        <rect x="7" y="19" width="34" height="19" rx="3" fill="var(--lavender)"/>
+        <path d="M7,19 L24,30 L41,19 Z" fill="var(--indigo)"/>
+      </g>
+    </g>
+
+    <!-- Salidas tras quitar cola oscura y punta de flecha (peticion del dueno) -->
+    <g id="sym-cut-a">
+      <rect x="12" y="6" width="15" height="14" rx="2" fill="var(--lime-1)" transform="rotate(-14 19.5 13)"/>
+      <rect x="15" y="8" width="16" height="14" rx="2" fill="var(--lime-2)" transform="rotate(-5 23 15)"/>
+      <rect x="18" y="11" width="16" height="13" rx="2" fill="var(--lime-0)" transform="rotate(6 26 17.5)"/>
+      <circle cx="26" cy="17" r="3.2" fill="var(--indigo)"/>
+      <rect x="7" y="19" width="34" height="19" rx="3" fill="var(--lavender)"/>
+      <path d="M7,19 L24,30 L41,19 Z" fill="var(--indigo)"/>
+      <path d="M8,36 C16,34 26,26 34,18" stroke="var(--lime-2)" stroke-width="6" stroke-linecap="round" fill="none"/>
+      <path d="M9,34 C17,32 26,25 33,19" stroke="var(--lime-0)" stroke-width="2.2" stroke-linecap="round" fill="none"/>
+      <rect x="30" y="30" width="2.5" height="5" fill="var(--lime-1)"/>
+      <rect x="34" y="27" width="2.5" height="8" fill="var(--lime-0)"/>
+      <rect x="38" y="24" width="2.5" height="11" fill="var(--lime-3)"/>
+    </g>
+    <g id="sym-cut-b">
+      <rect x="12" y="6" width="15" height="14" rx="2" fill="var(--lime-1)" transform="rotate(-14 19.5 13)"/>
+      <rect x="15" y="8" width="16" height="14" rx="2" fill="var(--lime-2)" transform="rotate(-5 23 15)"/>
+      <rect x="18" y="11" width="16" height="13" rx="2" fill="var(--lime-0)" transform="rotate(6 26 17.5)"/>
+      <circle cx="26" cy="17" r="3.2" fill="var(--indigo)"/>
+      <rect x="7" y="19" width="34" height="19" rx="3" fill="var(--lavender)"/>
+      <path d="M7,19 L24,30 L41,19 Z" fill="var(--indigo)"/>
+      <rect x="30" y="30" width="2.5" height="5" fill="var(--lime-1)"/>
+      <rect x="34" y="27" width="2.5" height="8" fill="var(--lime-0)"/>
+      <rect x="38" y="24" width="2.5" height="11" fill="var(--lime-3)"/>
+    </g>
+    <g id="sym-cut-c">
+      <rect x="12" y="6" width="15" height="14" rx="2" fill="var(--lime-1)" transform="rotate(-14 19.5 13)"/>
+      <rect x="15" y="8" width="16" height="14" rx="2" fill="var(--lime-2)" transform="rotate(-5 23 15)"/>
+      <rect x="18" y="11" width="16" height="13" rx="2" fill="var(--lime-0)" transform="rotate(6 26 17.5)"/>
+      <circle cx="26" cy="17" r="3.2" fill="var(--indigo)"/>
+      <rect x="7" y="19" width="34" height="19" rx="3" fill="var(--lavender)"/>
+      <path d="M7,19 L24,30 L41,19 Z" fill="var(--indigo)"/>
+      <path d="M9,36 C15,35 21,32 26,28" stroke="var(--lime-2)" stroke-width="5" stroke-linecap="round" fill="none"/>
+      <rect x="30" y="30" width="2.5" height="5" fill="var(--lime-1)"/>
+      <rect x="34" y="27" width="2.5" height="8" fill="var(--lime-0)"/>
+      <rect x="38" y="24" width="2.5" height="11" fill="var(--lime-3)"/>
+    </g>
+
     <!-- MÍNIMA: la dirección A original (envelope + flap, sin contenido) -->
     <g id="sym-min">
       <rect x="6" y="13" width="36" height="24" rx="4" fill="var(--lime-0)"/>
@@ -151,10 +203,8 @@
       <circle cx="26" cy="17" r="3.2" fill="var(--indigo)"/>
       <rect x="7" y="19" width="34" height="19" rx="3" fill="var(--lavender)"/>
       <path d="M7,19 L24,30 L41,19 Z" fill="var(--indigo)"/>
-      <path d="M8,36 C5,33 5,29 8,27" stroke="var(--lime-3)" stroke-width="4" stroke-linecap="round" fill="none"/>
       <path d="M8,36 C16,34 26,26 34,18" stroke="var(--lime-2)" stroke-width="6" stroke-linecap="round" fill="none"/>
       <path d="M9,34 C17,32 26,25 33,19" stroke="var(--lime-0)" stroke-width="2.2" stroke-linecap="round" fill="none"/>
-      <polygon points="35,10 43,13 37,19" fill="var(--lime-0)"/>
       <rect x="30" y="30" width="2.5" height="5" fill="var(--lime-1)"/>
       <rect x="34" y="27" width="2.5" height="8" fill="var(--lime-0)"/>
       <rect x="38" y="24" width="2.5" height="11" fill="var(--lime-3)"/>
@@ -163,6 +213,58 @@
 </svg>
 
 <h1>MoneyTracker — Propuestas de logo / icono</h1>
+<h2 class="section-title">✅ FINAL — elegida por el dueño</h2>
+<div class="direction">
+  <span class="tag">Aprobada</span>
+  <h2>El Sobre con contenido</h2>
+  <p class="concept">Sobre + tres billetes escalonados + sello. Sin cinta, sin flecha, sin barras.</p>
+  <p class="why">Partiendo de <b>Máxima</b>, el dueño retiró la cola verde oscuro y la punta de
+  flecha; al quedar la cinta sin destino se retiró entera, y después también las mini-barras.
+  Lo que sobrevive es el objeto y su contenido: el sobre abierto con el dinero asomando, que es
+  la mecánica real de la app (<code>envelopes</code>) y la intuición original de la referencia.</p>
+  <p class="at48">Bajada 3 unidades respecto al primer corte: el contenido ocupaba de y≈4 a y=38
+  en un lienzo de 48 y quedaba alto en el marco, algo que se nota en el recorte circular. Seis
+  formas, cuatro tokens, cero degradados. Legible hasta 24px.</p>
+  <div class="ladder"><div class="cell"><div class="sizebox"><svg width="128" height="128" viewBox="0 0 48 48"><use href="#sym-final"/></svg></div><div class="px-label">128px</div></div><div class="cell"><div class="sizebox"><svg width="96" height="96" viewBox="0 0 48 48"><use href="#sym-final"/></svg></div><div class="px-label">96px</div></div><div class="cell"><div class="sizebox"><svg width="64" height="64" viewBox="0 0 48 48"><use href="#sym-final"/></svg></div><div class="px-label">64px</div></div><div class="cell"><div class="sizebox"><svg width="48" height="48" viewBox="0 0 48 48"><use href="#sym-final"/></svg></div><div class="px-label">48px</div></div><div class="cell"><div class="sizebox"><svg width="32" height="32" viewBox="0 0 48 48"><use href="#sym-final"/></svg></div><div class="px-label">32px</div></div><div class="cell"><div class="sizebox"><svg width="24" height="24" viewBox="0 0 48 48"><use href="#sym-final"/></svg></div><div class="px-label">24px</div></div></div>
+  <div class="row" style="margin-top:16px"><div class="swatch safezone"><div class="box dark mask-circle"><svg width="64" height="64" viewBox="0 0 48 48"><use href="#sym-final"/></svg></div><div class="cap">Launcher — circular</div></div><div class="swatch"><div class="box dark mask-squircle"><svg width="64" height="64" viewBox="0 0 48 48"><use href="#sym-final"/></svg></div><div class="cap">Launcher — squircle</div></div><div class="swatch"><div class="box dark mask-square"><svg width="64" height="64" viewBox="0 0 48 48"><use href="#sym-final"/></svg></div><div class="cap">Launcher — cuadrado redondeado</div></div>
+    <div class="swatch"><div class="lockup-box">
+      <svg width="30" height="30" viewBox="0 0 48 48"><use href="#sym-final"/></svg>
+      <div class="wordmark">Money<span class="tracker">Tracker</span></div>
+    </div><div class="cap">Lockup — cabecera drawer</div></div>
+  </div>
+  <table class="fidelity-table">
+    <tr><th>Elemento</th><th>Token</th><th>Papel</th></tr>
+    <tr><td>Billete trasero</td><td><code>accent[1]</code> #8CC63F</td><td>profundidad, el más apagado</td></tr>
+    <tr><td>Billete medio</td><td><code>accent[2]</code> #5CA41B</td><td>escalón intermedio</td></tr>
+    <tr><td>Billete delantero</td><td><code>accent[0]</code> #C7FF70</td><td>el que lleva la atención</td></tr>
+    <tr><td>Cuerpo del sobre</td><td><code>primary[1]</code> #9C9AC8</td><td>único tono legible sobre el índigo</td></tr>
+    <tr><td>Pliegue y sello</td><td><em>color del fondo</em></td><td>son agujeros, NO un valor fijo</td></tr>
+  </table>
+</div>
+
+<h2 class="section-title">Cómo se llegó aquí — DECISIÓN PENDIENTE — Máxima sin la cola oscura ni la punta de flecha</h2>
+<div class="direction">
+  <span class="tag warn">Mirar antes de cerrar</span>
+  <p class="why">El dueño eligió <b>Máxima</b> y pidió quitar dos piezas: la cola verde oscuro
+  del swoosh y la punta de flecha. Hecho — pero quitar la punta deja a la cinta <b>sin final</b>:
+  termina en un cabezal redondo que se lee como un gancho, y por debajo de 32px pelea con los
+  billetes. La cinta existía para llevar la flecha. Tres salidas, mismas escaleras reales:</p>
+
+  <p class="concept">A — exactamente lo pedido: cinta sin punta</p>
+  <div class="ladder"><div class="cell"><div class="sizebox"><svg width="128" height="128" viewBox="0 0 48 48"><use href="#sym-cut-a"/></svg></div><div class="px-label">128px</div></div><div class="cell"><div class="sizebox"><svg width="96" height="96" viewBox="0 0 48 48"><use href="#sym-cut-a"/></svg></div><div class="px-label">96px</div></div><div class="cell"><div class="sizebox"><svg width="64" height="64" viewBox="0 0 48 48"><use href="#sym-cut-a"/></svg></div><div class="px-label">64px</div></div><div class="cell"><div class="sizebox"><svg width="48" height="48" viewBox="0 0 48 48"><use href="#sym-cut-a"/></svg></div><div class="px-label">48px</div></div><div class="cell"><div class="sizebox"><svg width="32" height="32" viewBox="0 0 48 48"><use href="#sym-cut-a"/></svg></div><div class="px-label">32px</div></div><div class="cell"><div class="sizebox"><svg width="24" height="24" viewBox="0 0 48 48"><use href="#sym-cut-a"/></svg></div><div class="px-label">24px</div></div></div>
+  <p class="at48">La cinta cruza el sobre y no resuelve. A 32 y 24px el conjunto se enreda.</p>
+
+  <p class="concept">B — sin cinta: sobre + billetes + barras <b>(recomendada)</b></p>
+  <div class="ladder"><div class="cell"><div class="sizebox"><svg width="128" height="128" viewBox="0 0 48 48"><use href="#sym-cut-b"/></svg></div><div class="px-label">128px</div></div><div class="cell"><div class="sizebox"><svg width="96" height="96" viewBox="0 0 48 48"><use href="#sym-cut-b"/></svg></div><div class="px-label">96px</div></div><div class="cell"><div class="sizebox"><svg width="64" height="64" viewBox="0 0 48 48"><use href="#sym-cut-b"/></svg></div><div class="px-label">64px</div></div><div class="cell"><div class="sizebox"><svg width="48" height="48" viewBox="0 0 48 48"><use href="#sym-cut-b"/></svg></div><div class="px-label">48px</div></div><div class="cell"><div class="sizebox"><svg width="32" height="32" viewBox="0 0 48 48"><use href="#sym-cut-b"/></svg></div><div class="px-label">32px</div></div><div class="cell"><div class="sizebox"><svg width="24" height="24" viewBox="0 0 48 48"><use href="#sym-cut-b"/></svg></div><div class="px-label">24px</div></div></div>
+  <p class="at48">Legible hasta 24px. Es literalmente lo que se pidió de origen: sobre abierto
+  con contenido asomando. Quitada la flecha, la cinta ya no tiene para qué estar.</p>
+
+  <p class="concept">C — cinta corta, como subrayado</p>
+  <div class="ladder"><div class="cell"><div class="sizebox"><svg width="128" height="128" viewBox="0 0 48 48"><use href="#sym-cut-c"/></svg></div><div class="px-label">128px</div></div><div class="cell"><div class="sizebox"><svg width="96" height="96" viewBox="0 0 48 48"><use href="#sym-cut-c"/></svg></div><div class="px-label">96px</div></div><div class="cell"><div class="sizebox"><svg width="64" height="64" viewBox="0 0 48 48"><use href="#sym-cut-c"/></svg></div><div class="px-label">64px</div></div><div class="cell"><div class="sizebox"><svg width="48" height="48" viewBox="0 0 48 48"><use href="#sym-cut-c"/></svg></div><div class="px-label">48px</div></div><div class="cell"><div class="sizebox"><svg width="32" height="32" viewBox="0 0 48 48"><use href="#sym-cut-c"/></svg></div><div class="px-label">32px</div></div><div class="cell"><div class="sizebox"><svg width="24" height="24" viewBox="0 0 48 48"><use href="#sym-cut-c"/></svg></div><div class="px-label">24px</div></div></div>
+  <p class="at48">Aporta poco y ensucia la base del sobre.</p>
+</div>
+
+
 <p class="intro">
   El dueño eligió la dirección <b>A · El Sobre</b> pero pide acercarse más a su referencia
   (<code>image-cache/…/4.png</code>, mismo archivo que <code>3.png</code>): sobre abierto con

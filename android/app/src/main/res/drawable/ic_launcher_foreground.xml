@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Capa de primer plano. La marca esta disenada en un lienzo de 48; aqui se
+     escala a 72 (x1.5) y se centra en el viewport de 108 con un margen de 18
+     por lado. Esos 72 son exactamente la ZONA SEGURA del 66% que el launcher
+     garantiza no recortar, sea cual sea la mascara (circulo, squircle o
+     cuadrado) que aplique la skin del fabricante.
+
+     El translateY de 3 es del propio diseno: el conjunto ocupaba de y~4 a
+     y=38 en el lienzo de 48 y quedaba alto en el marco.
+
+     El pliegue y el sello se pintan del color del FONDO (indigo), no son un
+     tono de la paleta: son agujeros por los que se ve la capa de abajo. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp" android:height="108dp"
+    android:viewportWidth="108" android:viewportHeight="108">
+  <group android:scaleX="1.5" android:scaleY="1.5"
+         android:translateX="18" android:translateY="18">
+    <group android:translateY="3">
+      <group android:rotation="-14" android:pivotX="19.5" android:pivotY="13">
+        <path android:pathData="M14,6 H25 A2,2 0 0 1 27,8 V18 A2,2 0 0 1 25,20 H14 A2,2 0 0 1 12,18 V8 A2,2 0 0 1 14,6 Z" android:fillColor="#FF8CC63F"/>
+      </group>
+      <group android:rotation="-5" android:pivotX="23" android:pivotY="15">
+        <path android:pathData="M17,8 H29 A2,2 0 0 1 31,10 V20 A2,2 0 0 1 29,22 H17 A2,2 0 0 1 15,20 V10 A2,2 0 0 1 17,8 Z" android:fillColor="#FF5CA41B"/>
+      </group>
+      <group android:rotation="6" android:pivotX="26" android:pivotY="17.5">
+        <path android:pathData="M20,11 H32 A2,2 0 0 1 34,13 V22 A2,2 0 0 1 32,24 H20 A2,2 0 0 1 18,22 V13 A2,2 0 0 1 20,11 Z" android:fillColor="#FFC7FF70"/>
+      </group>
+      <path android:pathData="M22.8,17 a3.2,3.2 0 1 0 6.4,0 a3.2,3.2 0 1 0 -6.4,0 Z" android:fillColor="#FF010062"/>
+      <path android:pathData="M10,19 H38 A3,3 0 0 1 41,22 V35 A3,3 0 0 1 38,38 H10 A3,3 0 0 1 7,35 V22 A3,3 0 0 1 10,19 Z" android:fillColor="#FF9C9AC8"/>
+      <path android:pathData="M7,19 L24,30 L41,19 Z" android:fillColor="#FF010062"/>
+    </group>
+  </group>
+</vector>

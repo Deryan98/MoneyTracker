@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Capa de fondo del adaptive icon. Un solo path relleno en lugar de un PNG:
+     sin densidades que mantener y el color sale del mismo indigo primary[0]
+     que usa el drawer y la barra de tabs. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp" android:height="108dp"
+    android:viewportWidth="108" android:viewportHeight="108">
+  <path android:pathData="M0,0 H108 V108 H0 Z" android:fillColor="#FF010062"/>
+</vector>
