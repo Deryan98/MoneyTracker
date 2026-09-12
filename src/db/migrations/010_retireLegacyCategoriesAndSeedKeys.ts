@@ -162,17 +162,7 @@ export const migration010Statements: string[] = [
         SELECT 1 FROM categories WHERE type = 'expense' AND category IN ('Despensa', 'Pantry')
       );`,
 
-  `UPDATE categories
-      SET seedKey = 'loan'
-    WHERE seedKey IS NULL
-      AND category = 'Loan' AND type = 'expense' AND icon = 'university'
-      AND (SELECT COUNT(*) FROM categories WHERE category = 'Loan' AND type = 'expense' AND icon = 'university') = 1;`,
 
-  `UPDATE categories
-      SET seedKey = 'loan'
-    WHERE seedKey IS NULL
-      AND category = 'Loan' AND type = 'income' AND icon = 'university'
-      AND (SELECT COUNT(*) FROM categories WHERE category = 'Loan' AND type = 'income' AND icon = 'university') = 1;`,
 
   // --- Retiradas ---
   `UPDATE categories
@@ -192,6 +182,30 @@ export const migration010Statements: string[] = [
     WHERE retiredAt IS NULL
       AND category = 'Credit card' AND type = 'income' AND icon = 'credit-card-alt'
       AND (SELECT COUNT(*) FROM categories WHERE category = 'Credit card' AND type = 'income' AND icon = 'credit-card-alt') = 1;`,
+
+  // `Loan` se retira por el MISMO motivo que `Credit card`: desde la
+  // migracion 6 es un TIPO DE CUENTA (`loan`), y tener ademas la categoria
+  // hace contar el mismo dinero dos veces. En una primera vuelta el dueno
+  // pidio traducirla y conservarla; al senalarle la inconsistencia con
+  // `Credit card` decidio retirar las dos. Sin `seedKey`, igual que el
+  // resto de retiradas: conserva su literal en la pantalla de categorias.
+  `UPDATE categories
+      SET retiredAt = '2026-09-11T00:00:00.000Z'
+    WHERE retiredAt IS NULL
+      AND category = 'Loan' AND type = 'expense' AND icon = 'university'
+      AND (SELECT COUNT(*) FROM categories WHERE category = 'Loan' AND type = 'expense' AND icon = 'university') = 1;`,
+
+  // `Loan` se retira por el MISMO motivo que `Credit card`: desde la
+  // migracion 6 es un TIPO DE CUENTA (`loan`), y tener ademas la categoria
+  // hace contar el mismo dinero dos veces. En una primera vuelta el dueno
+  // pidio traducirla y conservarla; al senalarle la inconsistencia con
+  // `Credit card` decidio retirar las dos. Sin `seedKey`, igual que el
+  // resto de retiradas: conserva su literal en la pantalla de categorias.
+  `UPDATE categories
+      SET retiredAt = '2026-09-11T00:00:00.000Z'
+    WHERE retiredAt IS NULL
+      AND category = 'Loan' AND type = 'income' AND icon = 'university'
+      AND (SELECT COUNT(*) FROM categories WHERE category = 'Loan' AND type = 'income' AND icon = 'university') = 1;`,
 
   `UPDATE categories
       SET retiredAt = '2026-09-11T00:00:00.000Z'

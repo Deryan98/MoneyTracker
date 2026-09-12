@@ -91,8 +91,6 @@ const LEGACY_TRANSLATED_CATEGORIES: {
     seedKey: 'pantry',
     avoidIfNameExists: ['Despensa', 'Pantry'],
   },
-  {legacyName: 'Loan', type: 'expense', icon: 'university', seedKey: 'loan'},
-  {legacyName: 'Loan', type: 'income', icon: 'university', seedKey: 'loan'},
 ];
 
 export interface ISeedDefaultCategoriesResult {

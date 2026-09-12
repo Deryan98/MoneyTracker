@@ -20,12 +20,12 @@ Formato: impacto + condición de disparo para retomar. No es una lista de "algú
   ingreso) sin que el dueño la hubiera confirmado todavía. Al revisar las categorías
   directamente en su dispositivo, el dueño dio una instrucción **distinta y más
   concreta** para tres de ellas: **`Bills`→"Facturas"`, `Children`→"Hijos"`,
-  `Food`→"Despensa"` (más `Loan`, en sus dos tipos, →"Préstamo"`) se CONSERVAN,
+  `Food`→"Despensa"` se CONSERVAN,
   traducidas vía `seedKey`** — no se fusionan con ninguna categoría curada existente,
   siguen siendo conceptos propios (ver `src/data/defaultCategories.ts` para por qué
-  `pantry`/Despensa es un concepto distinto de `groceries`/Supermercado). Solo
-  `House`/`Credit card`(x2)/`Interests`(ingreso)/`Rent` se retiran (`retiredAt`, sin
-  tocar `finances`) — cinco filas, no seis. `Salary` sigue confirmada sin duplicado y
+  `pantry`/Despensa es un concepto distinto de `groceries`/Supermercado). Se retiran
+  `House`/`Credit card`(x2)/`Interests`(ingreso)/`Rent`/`Loan`(x2) (`retiredAt`, sin
+  tocar `finances`) — siete filas. `Salary` sigue confirmada sin duplicado y
   fuera de alcance. Implementado en la migración 10
   (`src/db/migrations/010_retireLegacyCategoriesAndSeedKeys.ts`) — ver ADR 0005
   (`0005-migracion-010-retiro-y-traduccion-de-categorias-heredadas.md`), que reemplaza
@@ -60,37 +60,32 @@ Formato: impacto + condición de disparo para retomar. No es una lista de "algú
 - **Origen:** ADR `0002-migracion-012-retiro-categorias-tarjeta-prestamo.md` (superseded
   by `0005-migracion-010-retiro-y-traduccion-de-categorias-heredadas.md`, que hereda este
   ítem sin resolverlo).
-- **Impacto:** las cinco filas retiradas por la migración 10 (`House`, `Credit card` x2,
-  `Interests` ingreso, `Rent`) — no solo `Loan`/`Credit card` como decía la versión
-  original de este ítem, porque `Loan` ya NO se retira (ver el ítem nuevo más abajo) —
-  siguen listadas en `CategoriesAdminScreen` sin ninguna marca que diga "retirada". Un
+- **Impacto:** las siete filas retiradas por la migración 10 (`House`, `Credit card` x2,
+  `Interests` ingreso, `Rent`, `Loan` x2) siguen listadas en `CategoriesAdminScreen` sin ninguna marca que diga "retirada". Un
   usuario que abra esa pantalla no tiene forma de saber por qué esas filas ya no
   aparecen al crear un movimiento nuevo pero sí siguen en la lista de gestión.
 - **Disparador para retomar:** próxima vez que se toque `CategoriesAdminScreen` por
   cualquier otro motivo, o si el dueño reporta confusión con estas filas.
 
-## `Loan` sigue siendo categoría Y tipo de cuenta, `Credit card` ya no
+## ~~`Loan` sigue siendo categoría Y tipo de cuenta~~ — CERRADO
 
-- **Origen:** ADR `0005-migracion-010-retiro-y-traduccion-de-categorias-heredadas.md`,
-  sección "Inconsistencia que se deja anotada, no resuelta".
-- **Impacto:** desde la migración 006, `Loan` y `Credit card` son EXACTAMENTE el mismo
-  caso arquitectónico — un `accounts.kind` (`loan`, `credit_card`) que también existe
-  como categoría de `finances`, contando el mismo dinero dos veces si el usuario paga
-  la tarjeta o el préstamo categorizándolo como gasto en vez de registrarlo como
-  transferencia entre cuentas (el mecanismo que ya soporta
-  `docs/product/pitches/transferencia-en-formulario-de-movimiento.md`). La migración 10
-  retira `Credit card` (sus dos filas) pero **conserva y traduce** `Loan` — por
-  instrucción explícita del dueño al revisar sus categorías en el dispositivo, no por
-  ningún criterio técnico que las distinga.
-- **Por qué no se resolvió ahora:** es una decisión de producto, no de arquitectura —
-  `senior-dba` ejecutó la instrucción del dueño tal cual la dio; reinterpretarla
-  (retirar `Loan` también, "por consistencia") sin que él lo pida sería exactamente el
-  tipo de suposición sobre la intención del usuario que este proyecto ya rechazó una vez
-  (pitch de tarjetas de crédito, decisión (c)).
-- **Disparador para retomar:** la próxima vez que el dueño revise sus categorías, o si
-  se detecta en su base real un movimiento de préstamo categorizado como gasto que
-  debería haber sido una transferencia (mismo doble conteo que ya se corrigió para
-  tarjetas).
+- **Estado:** resuelto el 2026-09-12. Este ítem existió menos de un día.
+- **Qué pasó:** la primera instrucción del dueño fue traducir `Loan` a "Préstamo" y
+  conservarla, mientras retiraba `Credit card`. Se ejecutó tal cual y se anotó aquí el
+  reparo: desde la migración 006 ambas son EXACTAMENTE el mismo caso — un
+  `accounts.kind` (`loan`, `credit_card`) que además existe como categoría, lo que hace
+  contar el mismo dinero dos veces. Al planteárselo, el dueño respondió "quita loan
+  también, es el mismo error".
+- **Resolución:** `Loan` se retira en sus dos tipos, igual que `Credit card`, sin
+  `seedKey` — conserva su literal en la pantalla de categorías como el resto de
+  retiradas. La clave `defaultCategories.loan` sale de los JSON de i18n y de
+  `DEFAULT_CATEGORIES`. **`accounts.kindLabels.loan` NO se toca**: esa es la etiqueta
+  del tipo de cuenta, que es justamente el concepto correcto y el que se conserva.
+- **Por qué se editó la migración 010 en vez de añadir una 011:** la 010 no había salido
+  de la rama ni llegado a ninguna instalación real. La regla de no tocar migraciones
+  publicadas protege a los dispositivos que ya la corrieron; aquí no había ninguno salvo
+  un emulador de pruebas que se borró. Añadir una migración para deshacer lo que la
+  anterior acababa de hacer, sin publicar, solo habría dejado rastro arqueológico.
 
 ## `Food`→"Despensa" puede colisionar con una categoría "Despensa" creada a mano
 

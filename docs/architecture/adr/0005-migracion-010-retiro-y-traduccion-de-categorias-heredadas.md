@@ -1,6 +1,12 @@
 # 0005 — Migración 010: retiro y traducción de categorías heredadas de la migración 003
 
 Status: accepted
+
+> **Enmienda 2026-09-12** — `Loan` pasa de "traducida y conservada" a RETIRADA,
+> en sus dos tipos. Al señalarle que `Loan` y `Credit card` son el mismo error
+> arquitectónico (ambos son `accounts.kind` desde la migración 006), el dueño decidió
+> retirar las dos. La migración 010 se editó en el sitio porque aún no había salido de
+> la rama. Quedan 3 traducciones (`Bills`, `Children`, `Food`) y 7 retiradas.
 Date: 2026-09-11
 
 ## Contexto

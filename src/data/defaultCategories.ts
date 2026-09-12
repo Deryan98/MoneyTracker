@@ -94,7 +94,6 @@ export const DEFAULT_CATEGORIES: DefaultCategory[] = [
   // idiomas ("Prestamo"/"Loan") y el `type` de cada entrada ya las
   // distingue para la siembra/backfill — una segunda clave solo
   // duplicaria el mismo string sin anadir significado.
-  {key: 'loan', icon: 'university', type: 'expense'},
 
   // --- Ingresos ---
   {key: 'salary', icon: 'money', type: 'income'},
@@ -105,7 +104,6 @@ export const DEFAULT_CATEGORIES: DefaultCategory[] = [
   // inflan lo que de verdad se gana.
   {key: 'refunds', icon: 'exchange', type: 'income'},
   // Contraparte de ingreso de 'loan' arriba — ver ese comentario.
-  {key: 'loan', icon: 'university', type: 'income'},
   // Categoria nueva pedida por el dueno tras revisar el dispositivo.
   // Icono 'building' (FontAwesome 4.7, verificado contra su glyphmap):
   // no reutiliza 'briefcase', que ya es `freelance` — un negocio propio
