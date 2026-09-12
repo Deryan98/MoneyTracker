@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Image} from 'react-native';
+import {View} from 'react-native';
 import {
   DrawerContentComponentProps,
   DrawerContentScrollView,
@@ -7,10 +7,10 @@ import {
 } from '@react-navigation/drawer';
 import {accent, colors} from '@constants/colors/colors';
 import {StyleSheet} from 'react-native';
-import {heightDP} from '@utils/responsive';
 import {useTranslation} from 'react-i18next';
 import {Text as RSText} from '@components/atoms/text/Text';
 import {LanguageSwitch} from '@components/atoms/LanguageSwitch';
+import {Logo} from '@components/atoms/Logo';
 
 const CustomDrawer = (props: DrawerContentComponentProps) => {
   const {t} = useTranslation();
@@ -19,17 +19,7 @@ const CustomDrawer = (props: DrawerContentComponentProps) => {
       <DrawerContentScrollView
         {...props}
         contentContainerStyle={{backgroundColor: 'transparent'}}>
-        <Image
-          source={{
-            uri: 'https://firebasestorage.googleapis.com/v0/b/apphive-inc.appspot.com/o/usersmedia%2Fv3cF2tYZaJtYVXGZfJAjTp?alt=media&token=5b4ce29c-e5f8-4444-b07b-3866cfe2a96a',
-          }}
-          style={{
-            height: heightDP(20),
-            width: heightDP(25),
-            // borderRadius: 40,
-            // marginBottom: 10,
-          }}
-        />
+        <Logo />
         <View style={{flex: 1, backgroundColor: 'transparent', paddingTop: 10}}>
           <DrawerItemList {...props} />
         </View>
