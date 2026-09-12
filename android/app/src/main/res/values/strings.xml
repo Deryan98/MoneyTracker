@@ -1,3 +1,7 @@
 <resources>
-    <string name="app_name">MoneyTracker</string>
+    <!-- app_name ya NO se declara aqui: lo genera cada product flavor
+         via `resValue` en android/app/build.gradle (MoneyTracker /
+         MoneyTracker QA / MoneyTracker Dev), para que los tres se
+         distingan en el launcher. Declararlo tambien aqui chocaria con
+         el recurso generado ("string/app_name is already defined"). -->
 </resources>

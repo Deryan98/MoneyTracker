@@ -3,11 +3,17 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "android": "npx react-native run-android",
+    "android": "npx react-native run-android --mode devDebug",
     "ios": "npx react-native run-ios",
     "lint": "eslint .",
     "start": "npx react-native start",
-    "test": "jest"
+    "test": "jest",
+    "version:show": "node -e \"console.log(require('./scripts/bump-version').readVersion())\"",
+    "build:dev:apk": "node scripts/build-android.js dev apk",
+    "build:qa:apk": "node scripts/build-android.js qa apk",
+    "build:qa:aab": "node scripts/build-android.js qa aab",
+    "build:prod:apk": "node scripts/build-android.js prod apk",
+    "build:prod:aab": "node scripts/build-android.js prod aab"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.4.2",
