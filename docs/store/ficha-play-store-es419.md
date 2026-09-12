@@ -111,11 +111,25 @@ Están tomadas con datos de demostración, no con datos reales de nadie.
 
 ---
 
+## Gráficos
+
+En `docs/store/graficos/`, generados con la misma geometría SVG del icono de la app,
+así que tienda y launcher muestran exactamente la misma marca.
+
+| Archivo | Medidas | Uso |
+|---|---|---|
+| `icono-512.png` | 512 × 512 | Icono de la ficha. A sangre, sin esquinas redondeadas propias: Play aplica su máscara. El sobre ocupa ~62% del cuadro, que es lo habitual. |
+| `grafico-destacado-1024x500.png` | 1024 × 500 | Banner de la ficha. Obligatorio. |
+
+Sobre el gráfico destacado: **Play recorta los bordes** en algunas superficies y en
+otras superpone el nombre de la app, así que todo lo legible vive en el 60% izquierdo
+con 118 px de margen. El sobre grande de la derecha es textura al 7% de opacidad —
+si se recorta, no se pierde nada.
+
+---
+
 ## Lo que falta y solo tú puedes poner
 
-- **Gráfico destacado** (1024 × 500 px) — obligatorio para la ficha. No lo generé:
-  conviene hacerlo con la marca definitiva.
-- **Icono de la tienda** (512 × 512 px) — se exporta del mismo sobre del adaptive icon.
 - **Correo de contacto del desarrollador** — obligatorio, y el mismo que pongas en la
   política de privacidad.
 - **URL de la política de privacidad** — la de Google Sites, una vez publicada.
