@@ -131,5 +131,21 @@ declare global {
   interface ICategory extends IIcon {
     name: string;
     type: 'income' | 'expense';
+    /**
+     * Clave bajo `defaultCategories.` en los JSON de i18n si esta fila
+     * es una de las categorias SEMBRADAS (por una migracion o por
+     * `seedDefaultCategoriesOnce`); `null` si el usuario la creo (o
+     * renombro una sembrada — ver `updateCategory`, que borra la clave
+     * en cuanto el nombre cambia de verdad).
+     *
+     * `name` YA viene resuelto contra el idioma activo cuando esta
+     * columna tiene valor — ver `resolveSeedName` en
+     * `src/db/queries/seedName.ts` y ADR 0004. No hace falta (ni se
+     * debe) volver a mirar `seedKey` para pintar el nombre; se expone
+     * sobre todo para que la capa de presentacion pueda distinguir en
+     * el futuro una fila sembrada de una propia si alguna pantalla lo
+     * necesitara (p. ej. una insignia "sugerida").
+     */
+    seedKey: string | null;
   }
 }

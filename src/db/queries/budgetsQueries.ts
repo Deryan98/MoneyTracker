@@ -1,6 +1,7 @@
 import {SQLiteDatabase} from 'react-native-sqlite-storage';
 import {isFiniteInteger} from './numberGuards';
 import {getLocalTimeModifier, isValidPeriod, periodToRange} from './period';
+import {resolveSeedName} from './seedName';
 
 /**
  * Límites mensuales de gasto por categoría — `category_budgets`. Schema/
@@ -67,9 +68,10 @@ const mapRowToBudgetWithSpent = (row: any): ICategoryBudgetWithSpent => ({
   updatedAt: row.updatedAt,
   category: {
     id: row.categoryId,
-    name: row.categoryName,
+    name: resolveSeedName(row.categoryName, row.categorySeedKey ?? null, 'defaultCategories'),
     icon: row.categoryIcon,
     type: row.categoryType,
+    seedKey: row.categorySeedKey ?? null,
   },
   spent: row.spent,
   remaining: row.limitAmount - row.spent,
@@ -191,6 +193,7 @@ export const getCategoryBudgets = async (
         c.category AS categoryName,
         c.icon AS categoryIcon,
         c.type AS categoryType,
+        c.seedKey AS categorySeedKey,
         -COALESCE(f.total, 0) AS spent
       FROM category_budgets cb
       JOIN categories c ON c.id = cb.idCategory
@@ -243,6 +246,7 @@ export const getCategoryBudget = async (
         c.category AS categoryName,
         c.icon AS categoryIcon,
         c.type AS categoryType,
+        c.seedKey AS categorySeedKey,
         -COALESCE(f.total, 0) AS spent
       FROM category_budgets cb
       JOIN categories c ON c.id = cb.idCategory
@@ -339,6 +343,7 @@ export const getAllCategoryBudgetsWithSpent = async (
         c.category AS categoryName,
         c.icon AS categoryIcon,
         c.type AS categoryType,
+        c.seedKey AS categorySeedKey,
         -COALESCE(SUM(f.amount), 0) AS spent
       FROM category_budgets cb
       JOIN categories c ON c.id = cb.idCategory
@@ -358,9 +363,10 @@ export const getAllCategoryBudgetsWithSpent = async (
       period: row.period,
       category: {
         id: row.categoryId,
-        name: row.categoryName,
+        name: resolveSeedName(row.categoryName, row.categorySeedKey ?? null, 'defaultCategories'),
         icon: row.categoryIcon,
         type: row.categoryType,
+        seedKey: row.categorySeedKey ?? null,
       },
       limitAmount: row.limitAmount,
       spent: row.spent,

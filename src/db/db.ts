@@ -7,6 +7,7 @@ import {migration005Statements} from './migrations/005_envelopesAndCategoryBudge
 import {migration006Statements} from './migrations/006_loanAccountKindAndInterestCategory';
 import {migration007Statements} from './migrations/007_appMetaTable';
 import {migration008Statements} from './migrations/008_envelopeCompletion';
+import {migration009Statements} from './migrations/009_seedKeyForCategoriesAndAccounts';
 
 enablePromise(true);
 
@@ -53,6 +54,15 @@ const DATABASE_NAME = 'moneytracker.db';
  *   GASTO "Interests", que faltaba (la de la migracion 3 es de
  *   ingreso). Ambos para poder registrar un financiamiento separando
  *   amortizacion de capital y coste financiero.
+ * - Version 9 (`migration009Statements`, see
+ *   `src/db/migrations/009_seedKeyForCategoriesAndAccounts.ts`): anade
+ *   `categories.seedKey`/`accounts.seedKey` y marca las filas sembradas
+ *   que ya existen, para que su nombre se traduzca EN VIVO contra el
+ *   idioma activo (`src/db/queries/seedName.ts`) en vez de quedar fijo
+ *   en el idioma en que se sembraron — ver ADR 0004. Numerada 9 (no 12)
+ *   a proposito: las ADR 0001/0002 habian reservado 9-11 para otro
+ *   trabajo sin una sola linea escrita todavia; ver el comentario de
+ *   cabecera de la propia migracion.
  * - To ship a schema change later, ADD a new entry with an incremented
  *   `version` and the `CREATE`/`ALTER` statements needed to get from
  *   the previous version to this one. Never edit an already-shipped
@@ -102,6 +112,7 @@ const migrations: Migration[] = [
   },
   {version: 7, statements: migration007Statements},
   {version: 8, statements: migration008Statements},
+  {version: 9, statements: migration009Statements},
 ];
 
 const SCHEMA_VERSION = migrations[migrations.length - 1].version;

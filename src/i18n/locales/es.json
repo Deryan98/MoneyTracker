@@ -571,6 +571,9 @@
     "investments": "Intereses e inversiones",
     "refunds": "Reembolsos"
   },
+  "defaultAccounts": {
+    "cash": "Efectivo"
+  },
   "entityPicker": {
     "categoriesTitle": "Listado de Categorías y sus Movimientos",
     "accountsTitle": "Listado de Cuentas y sus Movimientos",

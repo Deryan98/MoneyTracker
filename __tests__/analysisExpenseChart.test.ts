@@ -9,7 +9,7 @@ import {toExpenseChartData, OTHERS_SECTOR_ID, buildExpenseInsight} from '@screen
 import {buildDonutData} from '@components/organisms/Charts/DonutChart';
 
 const row = (id: number, name: string, spent: number) => ({
-  category: {id, name, icon: 'tag', type: 'expense' as const},
+  category: {id, name, icon: 'tag', type: 'expense' as const, seedKey: null},
   spent,
 });
 

@@ -1,6 +1,7 @@
 import {SQLiteDatabase} from 'react-native-sqlite-storage';
 import {isFiniteInteger} from './numberGuards';
 import {AccountKind} from './accountsQueries';
+import {resolveSeedName} from './seedName';
 
 /**
  * Minimal account identity, resolved via JOIN for every finance row —
@@ -10,9 +11,14 @@ import {AccountKind} from './accountsQueries';
  */
 export interface IFinanceAccountRef {
   id: number;
+  /** Already resolved for display — see `resolveSeedName`/ADR 0004,
+   * same convention as `IAccount.name`. */
   name: string;
   icon: string;
   kind: AccountKind;
+  /** `null` if this account was created by the user (or renamed a
+   * seeded one) — see `IAccount.seedKey`. */
+  seedKey: string | null;
 }
 
 /**
@@ -315,14 +321,17 @@ export const getFinances = async (
       accounts.name AS accountName,
       accounts.icon AS accountIcon,
       accounts.kind AS accountKind,
+      accounts.seedKey AS accountSeedKey,
       categories.id AS categoryId,
       categories.category AS categoryName,
       categories.icon AS categoryIcon,
       categories.type AS categoryType,
+      categories.seedKey AS categorySeedKey,
       counterpartAccount.id AS counterpartAccountId,
       counterpartAccount.name AS counterpartAccountName,
       counterpartAccount.icon AS counterpartAccountIcon,
-      counterpartAccount.kind AS counterpartAccountKind
+      counterpartAccount.kind AS counterpartAccountKind,
+      counterpartAccount.seedKey AS counterpartAccountSeedKey
     FROM finances
     JOIN accounts ON accounts.id = finances.idAccount
     LEFT JOIN categories ON categories.id = finances.idCategory
@@ -347,27 +356,34 @@ export const getFinances = async (
       transferGroupId: row.transferGroupId ?? null,
       account: {
         id: row.accountId,
-        name: row.accountName,
+        name: resolveSeedName(row.accountName, row.accountSeedKey ?? null, 'defaultAccounts'),
         icon: row.accountIcon,
         kind: row.accountKind,
+        seedKey: row.accountSeedKey ?? null,
       },
       category:
         row.categoryId == null
           ? null
           : {
               id: row.categoryId,
-              name: row.categoryName,
+              name: resolveSeedName(row.categoryName, row.categorySeedKey ?? null, 'defaultCategories'),
               icon: row.categoryIcon,
               type: row.categoryType,
+              seedKey: row.categorySeedKey ?? null,
             },
       transferCounterpartAccount:
         row.counterpartAccountId == null
           ? null
           : {
               id: row.counterpartAccountId,
-              name: row.counterpartAccountName,
+              name: resolveSeedName(
+                row.counterpartAccountName,
+                row.counterpartAccountSeedKey ?? null,
+                'defaultAccounts',
+              ),
               icon: row.counterpartAccountIcon,
               kind: row.counterpartAccountKind,
+              seedKey: row.counterpartAccountSeedKey ?? null,
             },
     });
   }
@@ -447,14 +463,17 @@ export const getFinanceById = async (
         accounts.name AS accountName,
         accounts.icon AS accountIcon,
         accounts.kind AS accountKind,
+        accounts.seedKey AS accountSeedKey,
         categories.id AS categoryId,
         categories.category AS categoryName,
         categories.icon AS categoryIcon,
         categories.type AS categoryType,
+        categories.seedKey AS categorySeedKey,
         counterpartAccount.id AS counterpartAccountId,
         counterpartAccount.name AS counterpartAccountName,
         counterpartAccount.icon AS counterpartAccountIcon,
-        counterpartAccount.kind AS counterpartAccountKind
+        counterpartAccount.kind AS counterpartAccountKind,
+        counterpartAccount.seedKey AS counterpartAccountSeedKey
       FROM finances
       JOIN accounts ON accounts.id = finances.idAccount
       LEFT JOIN categories ON categories.id = finances.idCategory
@@ -476,27 +495,34 @@ export const getFinanceById = async (
     transferGroupId: row.transferGroupId ?? null,
     account: {
       id: row.accountId,
-      name: row.accountName,
+      name: resolveSeedName(row.accountName, row.accountSeedKey ?? null, 'defaultAccounts'),
       icon: row.accountIcon,
       kind: row.accountKind,
+      seedKey: row.accountSeedKey ?? null,
     },
     category:
       row.categoryId === null
         ? null
         : {
             id: row.categoryId,
-            name: row.categoryName,
+            name: resolveSeedName(row.categoryName, row.categorySeedKey ?? null, 'defaultCategories'),
             icon: row.categoryIcon,
             type: row.categoryType,
+            seedKey: row.categorySeedKey ?? null,
           },
     transferCounterpartAccount:
       row.counterpartAccountId === null
         ? null
         : {
             id: row.counterpartAccountId,
-            name: row.counterpartAccountName,
+            name: resolveSeedName(
+              row.counterpartAccountName,
+              row.counterpartAccountSeedKey ?? null,
+              'defaultAccounts',
+            ),
             icon: row.counterpartAccountIcon,
             kind: row.counterpartAccountKind,
+            seedKey: row.counterpartAccountSeedKey ?? null,
           },
   };
 };

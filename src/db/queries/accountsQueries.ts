@@ -1,5 +1,6 @@
 import {SQLiteDatabase} from 'react-native-sqlite-storage';
 import {isFiniteInteger} from './numberGuards';
+import {resolveSeedName} from './seedName';
 
 /**
  * `accounts` columns are `id` / `name` / `icon` / `kind` /
@@ -77,6 +78,10 @@ const isValidAccountKind = (kind: string): kind is AccountKind =>
  */
 export interface IAccount {
   id: number;
+  /** Already resolved for display — see `resolveSeedName` and ADR 0004
+   * (`docs/architecture/adr/0004-seedkey-y-traduccion-en-vivo-de-la-siembra.md`).
+   * `seedKey` below tells you WHY it may differ from the raw
+   * `accounts.name` column, but you never need to re-derive it. */
   name: string;
   icon: string;
   kind: AccountKind;
@@ -87,6 +92,10 @@ export interface IAccount {
   archivedAt: string | null;
   createdAt: string;
   updatedAt: string;
+  /** Clave bajo `defaultAccounts.` en los JSON de i18n si esta fila es
+   * la sembrada por la migracion 004 ("Efectivo"); `null` si el usuario
+   * la creo o la renombro — ver `updateAccount`. */
+  seedKey: string | null;
 }
 
 /**
@@ -130,13 +139,14 @@ export interface IGetAccountsOptions {
 
 const mapRowToAccountWithBalance = (row: any): IAccountWithBalance => ({
   id: row.id,
-  name: row.name,
+  name: resolveSeedName(row.name, row.seedKey ?? null, 'defaultAccounts'),
   icon: row.icon,
   kind: row.kind,
   initialBalance: row.initialBalance,
   archivedAt: row.archivedAt ?? null,
   createdAt: row.createdAt,
   updatedAt: row.updatedAt,
+  seedKey: row.seedKey ?? null,
   balance: row.balance,
 });
 
@@ -160,6 +170,7 @@ const ACCOUNTS_WITH_BALANCE_SELECT = `
     a.archivedAt AS archivedAt,
     a.createdAt AS createdAt,
     a.updatedAt AS updatedAt,
+    a.seedKey AS seedKey,
     a.initialBalance + COALESCE(f.total, 0) AS balance
   FROM accounts a
   LEFT JOIN (
@@ -213,6 +224,15 @@ export const insertAccount = async (
  * names, never from caller input — only the VALUES are parameterized —
  * so this cannot become a SQL-injection vector despite being "dynamic".
  *
+ * --- `seedKey` se borra SOLO si `name` cambia DE VERDAD ---
+ *
+ * Misma logica, mismo motivo, que `updateCategory` documenta en detalle
+ * — ver ADR 0004. Si `input.name` no se pasa, `seedKey` ni se toca (el
+ * usuario no edito el nombre). Si se pasa, se compara contra el nombre
+ * YA RESUELTO de la fila actual (`resolveSeedName`, el mismo valor que
+ * el formulario mostro al cargar) — nunca contra la columna cruda,
+ * porque esta puede estar en un idioma distinto al activo ahora mismo.
+ *
  * Throws the same `kind`/`initialBalance` validation errors as
  * `insertAccount` if those fields are passed and invalid.
  */
@@ -225,6 +245,21 @@ export const updateAccount = async (
   const params: (string | number)[] = [];
 
   if (input.name !== undefined) {
+    const [current] = await db.executeSql(
+      'SELECT name, seedKey FROM accounts WHERE id = ?',
+      [id],
+    );
+    if (current.rows.length > 0) {
+      const currentRow = current.rows.item(0);
+      const currentDisplayName = resolveSeedName(
+        currentRow.name,
+        currentRow.seedKey ?? null,
+        'defaultAccounts',
+      );
+      const isEffectiveRename = input.name !== currentDisplayName;
+      sets.push('seedKey = CASE WHEN ? THEN NULL ELSE seedKey END');
+      params.push(isEffectiveRename ? 1 : 0);
+    }
     sets.push('name = ?');
     params.push(input.name);
   }

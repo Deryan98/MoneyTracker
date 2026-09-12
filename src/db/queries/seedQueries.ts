@@ -14,6 +14,14 @@ import i18n from '@i18n';
  * Debe llamarse DESPUES de `hydrateStoredLanguage()`: si se llama antes,
  * i18next todavia esta en el idioma del dispositivo y se sembraria en
  * uno distinto al que el usuario eligio la vez anterior.
+ *
+ * Desde la migracion 9 (`categories.seedKey`, ver ADR 0004), esta
+ * funcion tambien escribe la CLAVE de cada fila que siembra — no solo su
+ * nombre ya resuelto — para que `resolveSeedName`
+ * (`src/db/queries/seedName.ts`) pueda traducirla en vivo en cada
+ * lectura futura, en vez de quedar fija en el idioma de este momento. El
+ * nombre resuelto se guarda IGUAL que antes, como fallback si la clave
+ * alguna vez desapareciera de los JSON de i18n.
  */
 
 /** Clave en `app_meta` (ver la migracion 007). */
@@ -76,17 +84,21 @@ export const seedDefaultCategoriesOnce = async (
     name: i18n.t(`defaultCategories.${category.key}`),
     icon: category.icon,
     type: category.type,
+    seedKey: category.key,
   }));
   const feesInterestName = i18n.t(`defaultCategories.${FEES_INTEREST_KEY}`);
 
   await db.transaction(tx => {
     // El renombrado va PRIMERO: asi, cuando le toque el turno a
     // `feesInterest` mas abajo, su `WHERE NOT EXISTS` ya encuentra la
-    // fila renombrada y no inserta una segunda.
+    // fila renombrada y no inserta una segunda. Tambien se le pone
+    // `seedKey` aqui: a partir de este momento es una fila sembrada mas,
+    // que debe seguir el idioma activo en cada lectura igual que
+    // cualquiera de las 22 — no solo un nombre traducido una vez.
     if (hasLegacyInterests) {
       tx.executeSql(
-        'UPDATE categories SET category = ?, icon = ? WHERE category = ? AND type = ?;',
-        [feesInterestName, 'percent', LEGACY_INTERESTS_NAME, LEGACY_INTERESTS_TYPE],
+        'UPDATE categories SET category = ?, icon = ?, seedKey = ? WHERE category = ? AND type = ?;',
+        [feesInterestName, 'percent', FEES_INTEREST_KEY, LEGACY_INTERESTS_NAME, LEGACY_INTERESTS_TYPE],
       );
     }
 
@@ -95,12 +107,12 @@ export const seedDefaultCategoriesOnce = async (
     // el, una instalacion que ya tenga "Combustible" acabaria con dos.
     rows.forEach(row => {
       tx.executeSql(
-        `INSERT INTO categories (category, icon, type)
-           SELECT ?, ?, ?
+        `INSERT INTO categories (category, icon, type, seedKey)
+           SELECT ?, ?, ?, ?
            WHERE NOT EXISTS (
              SELECT 1 FROM categories WHERE category = ? AND type = ?
            );`,
-        [row.name, row.icon, row.type, row.name, row.type],
+        [row.name, row.icon, row.type, row.seedKey, row.name, row.type],
       );
     });
 

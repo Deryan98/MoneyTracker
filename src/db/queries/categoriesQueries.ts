@@ -1,20 +1,35 @@
 import {SQLiteDatabase} from 'react-native-sqlite-storage';
+import {resolveSeedName} from './seedName';
 
 /**
  * `categories` columns are `id` / `category` / `icon` / `type` (the
  * `type` column was added in migration `user_version` 2 — see
- * `src/db/migrations/002_categoryTypeAndFinanceCleanup.ts`). The name
+ * `src/db/migrations/002_categoryTypeAndFinanceCleanup.ts`) / `seedKey`
+ * (migration 9, see
+ * `src/db/migrations/009_seedKeyForCategoriesAndAccounts.ts`). The name
  * column is `category`, not `name`, so it does not structurally match
- * the global `ICategory` interface (`{id, icon, name, type}`) declared
- * in `src/interfaces/common.d.ts` as-is.
+ * the global `ICategory` interface (`{id, icon, name, type, seedKey}`)
+ * declared in `src/interfaces/common.d.ts` as-is.
  *
- * Rather than leaving that mismatch for every call site to work around
- * (as the previous slice's `ICategoryRow` did), the SELECT below aliases
- * `category AS name` so the row shape returned to callers IS `ICategory`
- * — no separate row type, no mapping step at the call site. This is the
- * final contract: `getCategories` returns `ICategory[]` directly.
+ * Every read below goes through `mapRowToCategory`, which does two
+ * things at once: aliases `category` to `name` (no separate row type,
+ * no mapping step at the call site — `getCategories` returns
+ * `ICategory[]` directly) AND resolves `name` through
+ * `resolveSeedName` — see that function's doc and ADR 0004
+ * (`docs/architecture/adr/0004-seedkey-y-traduccion-en-vivo-de-la-siembra.md`)
+ * for why this is the ONE place that decision is made, instead of every
+ * screen/mapper that reads `category.name` learning to look at
+ * `seedKey` itself.
  */
 export const CATEGORY_TYPES = ['income', 'expense'] as const;
+
+const mapRowToCategory = (row: any): ICategory => ({
+  id: row.id,
+  name: resolveSeedName(row.name, row.seedKey ?? null, 'defaultCategories'),
+  icon: row.icon,
+  type: row.type,
+  seedKey: row.seedKey ?? null,
+});
 
 const isValidCategoryType = (type: string): type is ICategory['type'] =>
   (CATEGORY_TYPES as readonly string[]).includes(type);
@@ -41,11 +56,11 @@ export const getCategories = async (
 ): Promise<ICategory[]> => {
   const categories: ICategory[] = [];
   const [resultSet] = await db.executeSql(
-    'SELECT id, category AS name, icon, type FROM categories',
+    'SELECT id, category AS name, icon, type, seedKey FROM categories',
   );
 
   for (let index = 0; index < resultSet.rows.length; index++) {
-    categories.push(resultSet.rows.item(index));
+    categories.push(mapRowToCategory(resultSet.rows.item(index)));
   }
   return categories;
 };
@@ -62,12 +77,12 @@ export const getCategoriesByType = async (
 ): Promise<ICategory[]> => {
   const categories: ICategory[] = [];
   const [resultSet] = await db.executeSql(
-    'SELECT id, category AS name, icon, type FROM categories WHERE type = ?',
+    'SELECT id, category AS name, icon, type, seedKey FROM categories WHERE type = ?',
     [type],
   );
 
   for (let index = 0; index < resultSet.rows.length; index++) {
-    categories.push(resultSet.rows.item(index));
+    categories.push(mapRowToCategory(resultSet.rows.item(index)));
   }
   return categories;
 };
@@ -81,10 +96,10 @@ export const getCategoryById = async (
   id: number,
 ): Promise<ICategory | null> => {
   const [resultSet] = await db.executeSql(
-    'SELECT id, category AS name, icon, type FROM categories WHERE id = ?',
+    'SELECT id, category AS name, icon, type, seedKey FROM categories WHERE id = ?',
     [id],
   );
-  return resultSet.rows.length === 0 ? null : resultSet.rows.item(0);
+  return resultSet.rows.length === 0 ? null : mapRowToCategory(resultSet.rows.item(0));
 };
 
 /**
@@ -123,11 +138,33 @@ export const getCategoryUsage = async (
  * historial— asi que la operacion se rechaza y la pantalla propone crear
  * otra categoria.
  *
+ * --- `seedKey` se borra SOLO si el nombre cambia DE VERDAD ---
+ *
+ * Guardar (sin tocar el nombre) una categoria sembrada NO debe romper su
+ * vinculo con la traduccion en vivo — ver ADR 0004. El riesgo concreto:
+ * el formulario precarga el campo con el nombre YA RESUELTO (`ICategory.
+ * name`, ver `mapRowToCategory`/`resolveSeedName`), que puede ser
+ * distinto de lo que hay crudo en la columna `category` si la fila se
+ * sembro en un idioma y el usuario abre el formulario habiendo cambiado
+ * de idioma despues. Comparar el nombre nuevo contra la columna CRUDA
+ * marcaria eso como "renombre" aunque el usuario no haya tocado el
+ * campo. Por eso la comparacion es contra `resolveSeedName(currentRow.
+ * category, currentRow.seedKey, ...)` — el mismo valor resuelto que el
+ * formulario mostro al cargar — nunca contra el texto crudo.
+ *
+ * Si son iguales, `seedKey` se conserva tal cual (columna `CASE WHEN`
+ * evaluada dentro del propio `UPDATE`, contra el valor ANTES de la
+ * escritura — SQLite calcula el lado derecho de cada asignacion con la
+ * fila vieja); si son distintos, se pone a `NULL`: la fila pasa a ser
+ * del usuario, exactamente como si la hubiera creado el mismo.
+ *
  * Lanza:
  * - `Error('Invalid category type: ...')` con un tipo fuera de
  *   `CATEGORY_TYPES`.
  * - `Error('Cannot change the type of a category with movements')` en el
  *   caso de arriba.
+ * - `Error('Category <id> does not exist')` si el id no resuelve a
+ *   ninguna fila.
  */
 export const updateCategory = async (
   db: SQLiteDatabase,
@@ -139,22 +176,33 @@ export const updateCategory = async (
   }
 
   const [current] = await db.executeSql(
-    'SELECT type FROM categories WHERE id = ?',
+    'SELECT type, category, seedKey FROM categories WHERE id = ?',
     [id],
   );
   if (current.rows.length === 0) {
     throw new Error(`Category ${id} does not exist`);
   }
-  if (current.rows.item(0).type !== type) {
+  const currentRow = current.rows.item(0);
+  if (currentRow.type !== type) {
     const {movements} = await getCategoryUsage(db, id);
     if (movements > 0) {
       throw new Error('Cannot change the type of a category with movements');
     }
   }
 
+  const currentDisplayName = resolveSeedName(
+    currentRow.category,
+    currentRow.seedKey ?? null,
+    'defaultCategories',
+  );
+  const isEffectiveRename = name !== currentDisplayName;
+
   await db.executeSql(
-    'UPDATE categories SET category = ?, icon = ?, type = ? WHERE id = ?',
-    [name, icon, type, id],
+    `UPDATE categories
+        SET category = ?, icon = ?, type = ?,
+            seedKey = CASE WHEN ? THEN NULL ELSE seedKey END
+      WHERE id = ?`,
+    [name, icon, type, isEffectiveRename ? 1 : 0, id],
   );
 };
 

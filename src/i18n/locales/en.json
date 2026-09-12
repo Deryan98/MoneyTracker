@@ -571,6 +571,9 @@
     "investments": "Interest & investments",
     "refunds": "Refunds"
   },
+  "defaultAccounts": {
+    "cash": "Cash"
+  },
   "entityPicker": {
     "categoriesTitle": "Categories and their movements",
     "accountsTitle": "Accounts and their movements",
