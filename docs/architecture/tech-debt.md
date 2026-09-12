@@ -23,6 +23,20 @@ Formato: impacto + condición de disparo para retomar. No es una lista de "algú
   sobre el mapeo de `Food`/`Bills`, o cuando se decida agregar una categoría de crianza
   a `DEFAULT_CATEGORIES` (que le daría destino a `Children`). Hasta entonces, se dejan
   como están.
+- **Actualización (esta sesión):** `po-pm` tomó la decisión — no se fusiona ninguna
+  (fusionar exigiría adivinar si `Food` significaba `groceries` o `diningOut`, mismo
+  tipo de suposición ya rechazada en la pitch de tarjetas de crédito), se **retira**
+  `House`/`Food`/`Bills`/`Children` con el mismo mecanismo `retiredAt` de la
+  ADR 0002, sin tocar `finances`. `senior-qa` verificó además en emulador que `Rent`
+  e `Interests` (ambas `income`, también heredadas de la migración 003 y sin
+  `seedKey` según el propio backfill de la ADR 0004) están duplicadas de la misma
+  forma — se suman al mismo retiro, seis filas en total. `Salary` se confirmó SIN
+  duplicado en instalación en inglés (la migración 009 ya la marcó con
+  `seedKey='salary'`) y queda fuera. Ver
+  `docs/product/pitches/depurar-categorias-heredadas-duplicadas.md`. `Children` queda
+  retirada SIN reemplazo — el segundo disparador ("agregar una categoría de
+  crianza") sigue abierto, ahora también anotado en `docs/product/roadmap.md`. Este
+  ítem de tech-debt se cierra cuando la migración de esa pitch (T13) se mergea.
 
 ## `LEGACY_INTERESTS_NAME` rename sin guarda de cardinalidad
 

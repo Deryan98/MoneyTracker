@@ -19,6 +19,18 @@
    extensión natural de la apuesta 1 una vez que `creditLimit` exista; nombrada como
    rabbit hole explícito de esa pitch para no inflar su apetite. Se shapea aparte si
    el dueño la pide tras ver el indicador de % usado en producción.
+4. **Depurar categorías heredadas duplicadas** (shapeada, no iniciada) — un APK
+   limpio recién instalado muestra `House`/`Food`/`Bills`/`Children` (gasto) y
+   `Rent`/`Interests` (ingreso) — todas de la migración 003, inglés fijo — junto a
+   sus equivalentes curadas traducidas; empeoró de visible a evidente con la
+   traducción en vivo (`052a771`/ADR 0004), porque ahora la mitad de la lista traduce
+   y la otra mitad no. `senior-qa` verificó en emulador que `Salary` NO está
+   duplicada (queda fuera). Ver
+   `docs/product/pitches/depurar-categorias-heredadas-duplicadas.md`. Small Batch, se
+   retiran (nunca se fusionan ni se reasignan) 6 filas mediante el mismo mecanismo
+   `retiredAt` que ya diseñó, sin código todavía, la ADR 0002 para `Loan`/`Credit
+   card` — pregunta abierta a `senior-software-architect` sobre si ambos frentes
+   comparten una sola migración.
 
 ## Qué NO estamos haciendo este ciclo, deliberadamente
 
@@ -36,6 +48,16 @@
   sobre `accounts.initialBalance` — dos problemas distintos, no se mezclan).
 - Nada relacionado con exportar/respaldar/cifrar la base de datos (riesgo conocido y
   documentado en `CLAUDE.md`, pero no es parte de este ciclo).
+- Ninguna fusión/renombrado de categoría heredada a una curada (`Food`→`Groceries`,
+  etc.) — la apuesta 4 RETIRA, nunca fusiona; fusionar exigiría adivinar qué quiso
+  decir el usuario con `Food`/`Bills` (y reasignar `finances`/`category_budgets` para
+  `Interests`(ingreso), que comparte icono con `investments`), que es precisamente lo
+  que ya se rechazó una vez (ADR 0003, superseded).
+- Ninguna categoría curada de crianza/hijos todavía — `Children` se retira sin
+  reemplazo en la apuesta 4; se shapea aparte si el dueño la pide.
+- Ningún retiro de `Salary` — `senior-qa` confirmó que no duplica en instalación en
+  inglés (T16, cerrada). La variante en español queda como nota, no como decisión
+  pendiente de bloqueo.
 
 ## Señal que nos haría cambiar de opinión
 
@@ -48,3 +70,9 @@
 - Si tras la apuesta de transferencias el dueño sigue creando categorías-sitio (o
   sigue prefiriendo la pantalla `Transfer` vieja si no se retiró del todo) — señal de
   que el problema no era solo "dónde vive el botón", sino el vocabulario mismo.
+- Si una instalación que arranca en ESPAÑOL confirma que `Salary` sí queda duplicada
+  (no verificado — T16 solo probó inglés) — se retira con la misma receta de la
+  apuesta 4, sin necesidad de re-shapear nada.
+- Si el dueño reporta que le falta una categoría para gastos de hijos/crianza tras
+  quedar `Children` retirada sin reemplazo — sube la candidata de categoría de
+  crianza de "nice to have" a shapeada.

@@ -34,6 +34,37 @@ Pitch: `docs/product/pitches/saldo-inicial-correcto-en-tarjetas-de-credito.md`
 | T11 | S3 | Banner + flujo de revisión guiada por cuenta | fe-senior-react | P1 | T10, T8 | Por hacer |
 | T12 | S3 | Diálogo de cambio de patrimonio neto (una sola vez) | fe-senior-react | P1 | T11 | Por hacer |
 
+## Bet nuevo (shapeado, no iniciado): Depurar categorías heredadas duplicadas
+
+Pitch: `docs/product/pitches/depurar-categorias-heredadas-duplicadas.md`
+
+Origen: verificación en emulador con un APK de release recién instalado — la lista de
+Categorías muestra `House`/`Food`/`Bills`/`Children` (migración 003, en inglés fijo)
+al lado de sus equivalentes curadas traducidas. Empeoró visiblemente con el merge de
+traducción en vivo (`052a771`, `seedKey`/ADR 0004): ahora la mitad de la lista traduce
+y la otra mitad no. Dispara y resuelve el ítem de `docs/architecture/tech-debt.md`
+("Categorías heredadas de la migración 003 sin fusión").
+
+**Alcance ampliado tras un segundo pase de verificación de `senior-qa`** (instalación
+limpia en inglés, cambiada a español): `Rent` e `Interests` (ambas `income`) también
+duplican con sus equivalentes curadas — entran al alcance de T13, que pasa de 4 a 6
+filas. `Salary` se confirmó SIN duplicado (instalación en inglés) y queda fuera. Ver
+el detalle en la pitch y en el cierre de T16 (`docs/product/slices/
+S1-tracer-retiro-de-categorias-heredadas.md`).
+
+**Depende de una decisión de arquitectura pendiente (no bloquea el shaping, sí el
+inicio de T13):** si esta migración se funde con el mecanismo todavía sin código de
+la ADR 0002 (retiro de `Loan`/`Credit card`) o va aparte — ver la pregunta de
+arquitectura al final de la pitch.
+
+| ID | Slice | Tarea | Owner | Prioridad | Depende de | Estado |
+|----|-------|-------|-------|-----------|------------|--------|
+| T13 | S1 | Migración: retirar House/Food/Bills/Children/Rent/Interests(ingreso) | senior-be | P1 | Feasibility de senior-software-architect | Por hacer |
+| T14 | S1 | `activeOnly` en la capa de consultas de categorías | senior-be | P1 | T13 | Por hacer |
+| T15 | S1 | Excepción de edición + filtro en Presupuestos | fe-senior-react | P1 | T14 | Por hacer |
+| T16 | S1 | Verificación QA: ¿duplican Salary/Rent/Interests(ingreso)? | senior-qa | P2 | — | **Cerrada** — evidencia entregada, ver pitch |
+| T17 | S2 | Insignia "Retirada" en `CategoriesAdminScreen` | fe-senior-react | P2 | T13, T14 | Por hacer |
+
 ## Decisiones abiertas — apuesta activa (tarjetas de crédito)
 
 Ninguna bloquea el inicio del trabajo (ver "Decisiones que tomé yo" en la pitch).
@@ -49,8 +80,24 @@ Solo queda pendiente de `senior-software-architect`:
 1. **Destino de la pantalla `Transfer`/botón "Transferir"** — aparenta resuelta por
    `a9ff428`, confirmar con `senior-qa`.
 2. **Copy de la asimetría Ingreso/Transferencia** — aparenta resuelta por `e5e707c`.
-3. **Categorías-sitio existentes y la categoría sembrada "Credit card"** — sigue sin
-   tocarse, deliberadamente.
+3. **Categorías-sitio existentes y la categoría sembrada "Credit card"** — la parte de
+   "Credit card"/"Loan" tiene mecanismo decidido en la ADR 0002 (sin código aún, ver
+   bet nuevo de arriba, que propone fundirlo); las "categorías-sitio" creadas a mano
+   por el usuario siguen sin tocarse, deliberadamente, y no son parte de este bet
+   nuevo (ese bet solo retira filas SEMBRADAS, nunca creadas por el usuario).
+
+## Decisiones abiertas — bet nuevo (categorías heredadas duplicadas)
+
+Pendientes de `senior-software-architect`, ninguna bloquea el shaping ya hecho:
+
+1. ¿La migración de `T13` se funde con la de la ADR 0002 (Loan/Credit card, sin
+   código todavía) o va aparte? Ver pregunta de arquitectura en la pitch.
+2. Número exacto de migración resultante.
+
+T16 ya está cerrada — `senior-qa` entregó la evidencia directamente (ver pitch). Nota
+abierta, no bloqueante, para un futuro pase: la variante de `Salary` en una
+instalación que arranca en ESPAÑOL no se verificó (ver roadmap, "señal que nos haría
+cambiar de opinión").
 
 ## Nice to have (fuera de ambas apuestas, no descartado)
 
@@ -61,3 +108,10 @@ Solo queda pendiente de `senior-software-architect`:
   apuesta activa — son dos problemas distintos, ver la pitch activa, "No-gos").
 - Alertas/avisos de proximidad al límite de crédito una vez capturado (candidata
   futura, nombrada como rabbit hole en la pitch activa).
+- Categoría curada de crianza/hijos en `DEFAULT_CATEGORIES` — le daría un destino a
+  `Children`, hoy retirada sin reemplazo por el bet de categorías heredadas. Se
+  shapea aparte si el dueño reporta que le hace falta.
+- Verificar si `Salary` (migración 003) duplica en una instalación que arranca en
+  ESPAÑOL (no verificado; en inglés se confirmó que NO duplica — ver T16 cerrada). Si
+  aparece duplicada, se retira con la misma receta ya usada para las 6 filas de este
+  bet, no requiere una decisión nueva.
