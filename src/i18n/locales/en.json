@@ -55,6 +55,8 @@
     "retryLoadingTransactions": "Retry loading transactions",
     "loadingMoreTransactions": "Loading more transactions",
     "noTransactionsYet": "No transactions yet for this account.",
+    "noMovementsInPeriod": "No movements in {{period}}.",
+    "balanceFromOtherPeriods": "The balance shown comes from movements in other periods.",
     "archive": "Archive",
     "archiveTitle": "Archive this account?",
     "archiveMessage": "\"{{name}}\" will stop appearing in your accounts list. Nothing is deleted — its transaction history is kept, and you can review it under \"Archived accounts\".",
@@ -108,6 +110,11 @@
     "balanceSignOwed": "I owe it",
     "balanceSignPositive": "In my favor",
     "debtBalanceHint": "On a card or a loan, what you owe is stored as a negative balance so it subtracts from your net worth.",
+    "creditLimitLabel": "Credit limit",
+    "creditLimitPlaceholder": "Credit limit (optional, e.g. 2000.00)",
+    "creditLimitAccessibilityLabel": "Credit limit",
+    "creditLimitInvalid": "Enter a valid credit limit (or leave it empty if you don't know it)",
+    "creditLimitUsedLabel": "{{percent}}% used of {{limit}}",
     "tabLabel": "Accounts",
     "adminTitle": "Manage accounts",
     "adminMessage": "Create, edit or archive your accounts. To see an account’s transactions, go to Movements › Accounts.",
@@ -122,7 +129,21 @@
     "archiveAccountTitle": "Archive this account?",
     "archiveAccountMessage": "“{{name}}” will disappear from your lists and stop counting toward your net worth. Its movements are NOT deleted: they stay in the history with their amount and date. You can restore it any time from “Archived accounts”.",
     "archiveAccountErrorMessage": "The account could not be archived. Please try again.",
-    "archivedAccountsAccessibilityLabel": "See archived accounts"
+    "archivedAccountsAccessibilityLabel": "See archived accounts",
+    "reviewBannerTitle": "Review the balance of {{count}} accounts",
+    "reviewBannerAction": "Review accounts with an unconfirmed balance",
+    "reviewScreenTitle": "Balance review",
+    "reviewScreenMessage": "These accounts have a positive balance that hasn't been confirmed. If you typed your card's credit limit instead of what you owe, fix it here; if you really do have a balance in your favor, confirm it.",
+    "reviewLoading": "Loading accounts to review",
+    "reviewLoadError": "Could not load the accounts to review: {{message}}",
+    "reviewEmptyState": "You have no accounts pending review.",
+    "reviewWasLimitAction": "This was my credit limit",
+    "reviewConfirmCorrectAction": "This balance in my favor is correct",
+    "reviewConfirmAmountAction": "Confirm",
+    "reviewAmountOwedLabel": "How much do you actually owe today?",
+    "reviewAmountOwedRequired": "Enter how much you actually owe (it can't be empty or 0)",
+    "netWorthChangedTitle": "Your net worth changed",
+    "netWorthChangedMessage": "It went from {{before}} to {{after}}. The change comes from correcting one or more cards that had their credit limit stored as if it were money in your favor, instead of the real debt."
   },
   "budgets": {
     "title": "Budgets",
@@ -145,7 +166,7 @@
     "setNewLimit": "Set a new monthly limit",
     "setLimit": "Set a limit",
     "limitRowAccessibilityHint": "Opens this category's limit to edit it",
-    "assignMoney": "Assign money",
+    "assignMoney": "Add money",
     "withdrawMoney": "Withdraw money",
     "archive": "Archive",
     "archiveEnvelopeTitle": "Archive this envelope?",
@@ -154,8 +175,7 @@
     "assignErrorMessage": "Could not assign this amount. Please try again.",
     "withdrawErrorMessage": "Could not withdraw this amount. Please try again.",
     "headsUp": "Heads up",
-    "overAllocatedMessage": "You've now assigned more than you currently have. Available to assign: {{amount}}.",
-    "envelopeOverdrawnMessage": "This envelope's balance is now negative: {{amount}}. You've withdrawn more than was apartado.",
+    "overAllocatedMessage": "You have committed more to goals than you hold in cash and bank. You are over by {{amount}}.",
     "limitSaveErrorMessage": "Could not save this limit. Please try again.",
     "chooseCategory": "Choose a category",
     "invalidLimit": "Enter a valid limit greater than $0.00",
@@ -164,7 +184,7 @@
     "everyCategoryHasLimit": "Every expense category already has a limit set this month.",
     "monthlyLimitPlaceholder": "Monthly limit, e.g. 300.00",
     "monthlyLimitAccessibilityLabel": "Monthly limit",
-    "assignToTitle": "Assign to {{name}}",
+    "assignToTitle": "Add to {{name}}",
     "withdrawFromTitle": "Withdraw from {{name}}",
     "availableToAssignContext": "{{amount}} available to assign",
     "currentBalanceContext": "Current balance: {{amount}}",
@@ -189,11 +209,9 @@
     "retryLoadingEnvelope": "Retry loading envelope",
     "overBy": "You went over by {{amount}}",
     "progress": {
-      "paidLeft": "{{pct}}% paid · {{amount}} left",
-      "paidOff": "Paid off",
-      "paidOffOverpaid": "Paid off · {{amount}} overpaid",
       "savedNoGoal": "{{amount}} saved · no goal set",
-      "pctOfGoal": "{{pct}}% of {{amount}}"
+      "pctOfGoal": "{{pct}}% of {{amount}}",
+      "goalExceeded": "Goal exceeded by {{amount}}"
     },
     "envelopeForm": {
       "notFound": "This envelope could not be found.",
@@ -245,7 +263,8 @@
     "rolloverApply": "Use these limits",
     "rolloverAdjust": "Apply and adjust them",
     "rolloverDismiss": "Dismiss the limit suggestion",
-    "rolloverErrorMessage": "Could not create the limits. Please try again."
+    "rolloverErrorMessage": "Could not create the limits. Please try again.",
+    "withdrawTooMuchMessage": "You can't withdraw more than the goal holds. Available: {{amount}}."
   },
   "achievements": {
     "title": "Achievements",
@@ -358,32 +377,8 @@
     "adminHeaderSubtitle": "and their movements"
   },
   "transfer": {
-    "title": "Transfer",
-    "back": "Back",
-    "explainer": "Moving money between your accounts doesn't change your net worth.",
-    "loadingAccounts": "Loading accounts",
-    "retryLoadingAccounts": "Retry loading accounts",
-    "loadAccountsError": "Could not load accounts: {{message}}",
-    "needTwoAccounts": "You need at least two active accounts to transfer money.",
-    "createAccount": "Create account",
     "from": "From",
-    "to": "To",
-    "amountLabel": "Amount to transfer",
-    "invalidAmount": "Enter a valid amount greater than $0.00.",
-    "previewTitle": "After transferring",
-    "previewAccessibilityLabel": "After transferring: {{fromName}} would be {{fromBalance}}, {{toName}} would be {{toBalance}}",
-    "confirmAccessibilityLabel": "Confirm transfer",
-    "transferring": "Transferring…",
-    "transfer": "Transfer",
-    "doneTitle": "Done",
-    "doneMessage": "Transfer completed.",
-    "submitError": "Could not complete the transfer: {{message}}",
-    "noOtherAccount": "No other account available.",
-    "pickFromTitle": "Choose the source account",
-    "pickToTitle": "Choose the destination account",
-    "pickerRowAccessibilityLabel": "{{name}}, balance {{balance}}",
-    "selectorAccessibilityLabel": "{{label}}: {{name}}, balance {{balance}}",
-    "selectorAccessibilityHint": "Tap to choose a different account"
+    "to": "To"
   },
   "analysis": {
     "title": "Analysis",
@@ -507,7 +502,13 @@
     "deleteTransferMessage": "The whole {{amount}} transfer between {{from}} and {{to}} will be deleted. BOTH halves go: half a transfer would leave money debited that nobody received.",
     "deleteTransactionError": "The transaction could not be deleted. Please try again.",
     "transferNotEditableTitle": "Transfers cannot be edited",
-    "transferNotEditable": "A transfer is two mirrored movements, and changing only one would invent money. Delete it and create it again from Transfer."
+    "transferNotEditable": "A transfer is two mirrored movements, and changing only one would invent money. Delete it and create it again from Transfer.",
+    "segmentTransfer": "Transfer",
+    "transferDestinationLabel": "To account",
+    "chooseDestinationAccountFirst": "Choose the account that receives the money.",
+    "needsSecondAccountForTransfer": "You need at least two accounts to transfer. Create another one and come back.",
+    "destinationAccountAccessibilityLabel": "Transfer to {{name}}, {{kind}}",
+    "transferNeedsNoCategory": "This movement stays between your own accounts, so it needs no category."
   },
   "icons": {
     "pickerTitle": "Choose an icon",
@@ -587,7 +588,14 @@
     "freelance": "Freelance",
     "rentalIncome": "Rental income",
     "investments": "Interest & investments",
-    "refunds": "Refunds"
+    "refunds": "Refunds",
+    "bills": "Bills",
+    "children": "Children",
+    "pantry": "Pantry",
+    "business": "Business"
+  },
+  "defaultAccounts": {
+    "cash": "Cash"
   },
   "entityPicker": {
     "categoriesTitle": "Categories and their movements",

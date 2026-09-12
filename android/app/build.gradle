@@ -29,7 +29,11 @@ react {
     //   The list of variants to that are debuggable. For those we're going to
     //   skip the bundling of the JS bundle and the assets. By default is just 'debug'.
     //   If you add flavors like lite, prod, etc. you'll have to list your debuggableVariants.
-    // debuggableVariants = ["liteDebug", "prodDebug"]
+    // Con flavors, el default ("debug") ya no basta: el nombre de variante
+    // real pasa a ser "devDebug"/"qaDebug"/"prodDebug". Sin esto, el
+    // plugin no reconoceria ninguna como debuggable y las tres
+    // intentarian empaquetar el bundle JS incluso en Debug.
+    debuggableVariants = ["devDebug", "qaDebug", "prodDebug"]
 
     /* Bundling */
     //   A list containing the node command and its flags. Default is just 'node'.
@@ -79,19 +83,74 @@ def enableProguardInReleaseBuilds = false
  */
 def jscFlavor = 'org.webkit:android-jsc:+'
 
+/**
+ * versionCode/versionName ya no viven hardcodeados aqui: salen de
+ * `android/version.properties`, un fichero versionado que
+ * `scripts/build-android.js` (invocado por los `yarn build:*` de
+ * package.json) lee y reescribe antes de cada compilacion de APK/AAB.
+ * Un `./gradlew assembleXRelease` manual sin pasar por ese script
+ * sigue funcionando: simplemente usa la ultima version que haya en el
+ * fichero, sin subirla.
+ *
+ * Se lee con `Properties` (no JSON) para no anadir una dependencia de
+ * parseo nueva al build de Gradle; el script de Node lo parsea con una
+ * regex igual de trivial sobre el mismo formato `CLAVE=valor`.
+ */
+def versionPropsFile = rootProject.file('version.properties')
+if (!versionPropsFile.exists()) {
+    throw new GradleException(
+        "Falta android/version.properties. No deberia haberse borrado: " +
+        "esta versionado. Restauralo desde git o corre scripts/build-android.js."
+    )
+}
+def versionProps = new Properties()
+versionProps.load(new FileInputStream(versionPropsFile))
+def appVersionCode = versionProps.getProperty('VERSION_CODE').toInteger()
+def appVersionName = versionProps.getProperty('VERSION_NAME')
+
 android {
     ndkVersion rootProject.ext.ndkVersion
 
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdkVersion rootProject.ext.compileSdkVersion
 
-    namespace "com.moneytracker"
+    namespace "com.melo.moneytracker"
     defaultConfig {
-        applicationId "com.moneytracker"
+        applicationId "com.melo.moneytracker"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        versionCode appVersionCode
+        versionName appVersionName
+    }
+
+    // Un solo eje de variacion: el entorno. Los tres flavors solo
+    // difieren en applicationId (para poder instalar los tres a la vez
+    // en el mismo telefono) y en el nombre visible en el launcher. No
+    // hay configuracion de runtime que diferenciar (sin backend, sin
+    // URLs de API) — ver CLAUDE.md, "no inventes configuracion que no
+    // existe".
+    flavorDimensions += "env"
+    productFlavors {
+        dev {
+            dimension "env"
+            // Produccion es "com.melo.moneytracker" a secas: es el id ya
+            // publicado, permanente, y no lleva sufijo. dev/qa si, para
+            // convivir instalados junto a produccion en el mismo
+            // dispositivo.
+            applicationIdSuffix ".dev"
+            versionNameSuffix "-dev"
+            resValue "string", "app_name", "MoneyTracker Dev"
+        }
+        qa {
+            dimension "env"
+            applicationIdSuffix ".qa"
+            versionNameSuffix "-qa"
+            resValue "string", "app_name", "MoneyTracker QA"
+        }
+        prod {
+            dimension "env"
+            resValue "string", "app_name", "MoneyTracker"
+        }
     }
 
     signingConfigs {

@@ -106,7 +106,12 @@ export const useCategoriesScreen = (financeType: FinanceType) => {
     setCategoriesErrorMessage('');
     try {
       const db = await getDbConnection();
-      const categoriesResult = await getCategoriesByType(db, categoryType);
+      const categoriesResult = await getCategoriesByType(db, categoryType, {
+        // Mismo criterio que `CategoriesAdminScreen`: una retirada sin
+        // movimientos no aporta nada aqui; una con movimientos si, porque
+        // esta pantalla es la via para llegar a ellos.
+        hideRetiredWithoutMovements: true,
+      });
 
       let totals: Map<number, number>;
       if (categoryType === 'expense') {

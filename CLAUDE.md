@@ -220,7 +220,7 @@ For months after the RN 0.77 upgrade, `tsc`, ESLint and Jest were all green whil
 **Verify on the Android emulator before claiming anything works.** `adb exec-out screencap -p > shot.png` for a look, `adb shell uiautomator dump` when you need to know whether a specific element is focused, enabled or on-screen. Pulling the database is often faster than reading through the UI:
 
 ```bash
-adb shell run-as com.moneytracker cat databases/moneytracker.db > /tmp/mt.db
+adb shell run-as com.melo.moneytracker cat databases/moneytracker.db > /tmp/mt.db
 sqlite3 /tmp/mt.db "PRAGMA user_version; SELECT * FROM accounts;"
 ```
 

@@ -22,11 +22,12 @@ import {
   NO_ACCOUNT_SELECTED_ID,
   SEE_ALL_ACCOUNTS_CARD_ID,
   sortAccountsByRelevance,
-  formatCurrentMonthLabel,
+  getPendingBalanceReviewCount,
   groupFinancesByDate,
   mapAccountsToCatalogCards,
 } from './mappers';
 import {useTranslation} from 'react-i18next';
+import {usePeriod} from '@context/PeriodContext';
 
 const AccountsScreen = () => {
   /**
@@ -95,6 +96,42 @@ const AccountsScreen = () => {
   // every render.
   const selectedAccount = accounts.find(a => a.id === selectedAccountId);
 
+  /** S3/T11 — cuantas cuentas de deuda tienen el cupo cargado como
+   * saldo positivo sin revisar, derivado de `accounts` (ya cargado por
+   * `useAccountsScreen`) en vez de una consulta aparte. */
+  const pendingReviewCount = getPendingBalanceReviewCount(accounts);
+
+  /**
+   * El vacio de la lista tiene que decir la VERDAD, y la verdad depende
+   * del periodo.
+   *
+   * Decia "Aun no hay transacciones para esta cuenta" siempre. Con
+   * Efectivo —saldo -$250 por un movimiento del 1 de agosto— y el
+   * periodo en septiembre, la pantalla mostraba el saldo al lado de esa
+   * frase y se leia como si la app se hubiera perdido el dinero. El
+   * saldo NO se filtra por fecha (es lo que hay en la cuenta, no lo que
+   * se movio en una ventana; ver `getAccounts`) mientras que la lista SI,
+   * asi que las dos cifras responden preguntas distintas y ninguna lo
+   * decia.
+   *
+   * La segunda frase solo aparece cuando la cuenta tiene movimientos
+   * fuera del tramo, y eso se deduce sin consultar nada: el saldo se
+   * calcula como `initialBalance + SUM(movimientos)`, asi que si difiere
+   * del inicial es que hay movimientos en alguna parte.
+   */
+  const {resolved} = usePeriod();
+  const emptyMessage =
+    selectedAccount === undefined
+      ? undefined
+      : [
+          t('accounts.noMovementsInPeriod', {period: resolved.label}),
+          selectedAccount.balance !== selectedAccount.initialBalance
+            ? t('accounts.balanceFromOtherPeriods')
+            : null,
+        ]
+          .filter(Boolean)
+          .join(' ');
+
   return (
     <>
       {/* Sin `headerTitle`: el encabezado de esta pantalla lo pinta
@@ -128,6 +165,41 @@ const AccountsScreen = () => {
 
       {accountsStatus === 'success' && (
         <>
+
+          {/* S3/T11 — banner NO bloqueante: aparece mientras existan
+              cuentas de deuda con `initialBalance` positivo sin revisar
+              (el patron exacto del bug real, ver la pitch). Nunca
+              impide usar el resto de la pantalla ni de la app — solo
+              ofrece un atajo a `BalanceReview`. `pendingReviewCount` se
+              deriva de `accounts`, ya cargado por este mismo hook —
+              ver `getPendingBalanceReviewCount` para por que esto no
+              dispara una consulta aparte. */}
+          {pendingReviewCount > 0 && (
+            <TouchableOpacity
+              accessibilityRole="button"
+              accessibilityLabel={t('accounts.reviewBannerAction')}
+              activeOpacity={0.85}
+              onPress={() => navigation.navigate('BalanceReview')}
+              style={stateStyles.reviewBanner}>
+              <VectorIcon
+                name="exclamation-circle"
+                size={16}
+                color={colors[primary][0]}
+              />
+              <Text
+                size={13}
+                color={colors[primary][0]}
+                fontWeight="600"
+                style={stateStyles.reviewBannerText}>
+                {t('accounts.reviewBannerTitle', {count: pendingReviewCount})}
+              </Text>
+              <VectorIcon
+                name="chevron-right"
+                size={14}
+                color={colors[primary][0]}
+              />
+            </TouchableOpacity>
+          )}
 
           {/* Label + amount on ONE baseline-aligned row, per the approved
               prototype — was previously stacked (label above, amount
@@ -180,7 +252,14 @@ const AccountsScreen = () => {
               accessibilityRole="button"
               accessibilityLabel={t('accounts.transferAccessibilityLabel')}
               activeOpacity={0.85}
-              onPress={() => navigation.navigate('Transfer')}
+              // Abre el MISMO formulario que el boton "+", ya en modo
+              // transferencia, en vez de una pantalla propia. Antes eran
+              // dos implementaciones de la misma operacion; ahora el
+              // atajo se conserva —tiene sentido desde donde ves los
+              // saldos— pero el codigo es uno solo.
+              onPress={() =>
+                (navigation as any).navigate('Outcomes', {screen: 'NewTransfer'})
+              }
               style={stateStyles.transferButton}>
               <VectorIcon name="exchange" size={15} color={colors[primary][0]} />
               <Text color={colors[primary][0]} size={14} fontWeight="600">
@@ -209,8 +288,12 @@ const AccountsScreen = () => {
             onPressItem={onPressCatalogItem}
             transactSections={groupFinancesByDate(financeItems)}
             transactHeaderTitle={selectedAccount?.name ?? ''}
-            transactHeaderSubtitle={formatCurrentMonthLabel()}
+            // El periodo SELECCIONADO, no el mes en curso: con el
+            // selector puesto en agosto este subtitulo seguia diciendo
+            // "Septiembre" sobre una lista de agosto.
+            transactHeaderSubtitle={resolved.label}
             financesStatus={financesStatus}
+            emptyMessage={emptyMessage}
             financesErrorMessage={financesErrorMessage}
             onRetryFinances={reloadFinances}
             isLoadingMoreFinances={isLoadingMore}
@@ -298,6 +381,22 @@ const stateStyles = StyleSheet.create({
   netWorth: {
     // Cede ancho al boton si la cifra crece, en vez de empujarlo fuera.
     flexShrink: 1,
+  },
+  reviewBanner: {
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    // 44 de alto: mismo suelo de objetivo tactil que `transferButton`.
+    minHeight: 44,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderRadius: 12,
+    backgroundColor: colors[accent][1],
+    marginBottom: 10,
+  },
+  reviewBannerText: {
+    flex: 1,
   },
   netWorthRow: {
     width: '100%',

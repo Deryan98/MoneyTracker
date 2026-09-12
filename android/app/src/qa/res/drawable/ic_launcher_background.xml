@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Override de flavor: mismo fondo solido que src/main, pero en el
+     naranja `tertiary[0]` de la paleta (`src/constants/colors/colors.ts`)
+     en vez del indigo de produccion, para que el icono de QA se
+     distinga a simple vista en el launcher (y del rojo de dev). No es
+     un color inventado: es un token que ya existe en la app. Ver
+     ic_launcher_foreground.xml de este mismo flavor — sus dos
+     "agujeros" tienen que llevar exactamente este mismo hex. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp" android:height="108dp"
+    android:viewportWidth="108" android:viewportHeight="108">
+  <path android:pathData="M0,0 H108 V108 H0 Z" android:fillColor="#FFDC5F00"/>
+</vector>

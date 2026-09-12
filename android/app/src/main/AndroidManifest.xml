@@ -1,6 +1,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <uses-permission android:name="android.permission.INTERNET" />
+    <!-- INTERNET vivia aqui unicamente por la imagen del drawer, que se
+         cargaba desde una URL de Firebase. Esa marca ahora se dibuja en
+         local (`@components/atoms/Logo`), asi que la app de release no
+         hace ninguna peticion de red y no necesita el permiso. Sigue
+         declarado en el manifest de `debug`, donde Metro si lo usa. -->
 
     <application
       android:name=".MainApplication"

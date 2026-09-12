@@ -85,7 +85,10 @@ export const CategoriesAdminScreen = () => {
     setErrorMessage('');
     try {
       const db = await getDbConnection();
-      setCategories(await getCategories(db));
+      // Las retiradas por la migracion 10 solo siguen aqui si TODAVIA
+      // guardan movimientos; si no, son estorbo — ver el contrato en
+      // `getCategories`.
+      setCategories(await getCategories(db, {hideRetiredWithoutMovements: true}));
       setStatus('success');
     } catch (e: any) {
       setErrorMessage(

@@ -309,26 +309,32 @@ const BudgetsScreen = ({navigation}: BudgetsScreenProps) => {
             'warning',
             t('budgets.headsUp'),
             t('budgets.overAllocatedMessage', {
-              amount: formatCentsToCurrency(result.availableToAssign),
+              // `availableToAssign` viene NEGATIVO cuando hay exceso, y
+              // el mensaje ya dice "te has pasado por": sin el valor
+              // absoluto se leeria "te has pasado por -$6,650.00".
+              amount: formatCentsToCurrency(Math.abs(result.availableToAssign)),
             }),
           );
         }
       } else {
-        const result = await withdrawFromEnvelopeById(envelope.id, amount);
-        if (!result) {
-          showNotice('danger', t('common.error'), t('budgets.withdrawErrorMessage'));
+        const outcome = await withdrawFromEnvelopeById(envelope.id, amount);
+        if (!outcome.ok) {
+          // Retirar de mas se BLOQUEA (ver `withdrawFromEnvelope`), asi
+          // que la hoja se queda abierta con el importe escrito: el
+          // usuario solo tiene que corregir la cifra. Cerrarla le
+          // obligaria a volver a empezar por un error de un digito.
+          showNotice(
+            'danger',
+            t('common.error'),
+            outcome.reason === 'overdraw'
+              ? t('budgets.withdrawTooMuchMessage', {
+                  amount: formatCentsToCurrency(outcome.available),
+                })
+              : t('budgets.withdrawErrorMessage'),
+          );
           return;
         }
         closeAssignWithdrawSheet();
-        if (result.envelopeOverdrawn) {
-          showNotice(
-            'warning',
-            t('budgets.headsUp'),
-            t('budgets.envelopeOverdrawnMessage', {
-              amount: formatCentsToCurrency(result.balance),
-            }),
-          );
-        }
       }
     } finally {
       setIsSubmittingMovement(false);

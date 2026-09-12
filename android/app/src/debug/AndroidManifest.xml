@@ -2,6 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- Solo para desarrollo: Metro sirve el bundle por HTTP. El
+         manifest de `main` ya no pide INTERNET (ver su comentario). -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:usesCleartextTraffic="true"
         tools:targetApi="28"

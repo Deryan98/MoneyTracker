@@ -10,13 +10,14 @@ export const HomeBottomTabs = () => {
   return (
     <Tab.Navigator screenOptions={bottomTabNavScreenOptions()}>
       {bottomTabsRoutes.map(
-        ({name, component, initialParams, options}, index) => (
+        ({name, component, initialParams, options, listeners}, index) => (
           <Tab.Screen
             key={name + index}
             name={name}
             component={component}
             initialParams={initialParams}
             options={options}
+            listeners={listeners}
           />
         ),
       )}

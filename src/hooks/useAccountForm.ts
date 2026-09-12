@@ -17,7 +17,7 @@ export type AccountFormLoadStatus = 'idle' | 'loading' | 'success' | 'error';
  * los que no cuelgan de ningun input —falta de icono, fallo al
  * guardar— y la pantalla los pinta junto al boton de guardar.
  */
-export type AccountFormErrorField = 'name' | 'amount' | 'form';
+export type AccountFormErrorField = 'name' | 'amount' | 'creditLimit' | 'form';
 type AccountFormError = {field: AccountFormErrorField; message: string};
 
 /**
@@ -76,6 +76,14 @@ export const useAccountForm = (accountId?: number) => {
     'positive',
   );
 
+  /** El CUPO de una tarjeta de credito — solo visible/editable cuando
+   * `selectedKind === 'credit_card'` (S2/T8). Vacio = "no capturado" =
+   * `null` al guardar, NUNCA 0: el usuario que no anota su limite no
+   * debe ver un 0% de uso inventado (ver `computeCreditUsage`). Es una
+   * MAGNITUD sin signo, igual que `initialBalanceText` — un cupo nunca
+   * es negativo, asi que se parsea siempre con `allowNegative: false`. */
+  const [creditLimitText, setCreditLimitText] = useState<string>('');
+
   // Un solo error a la vez, ETIQUETADO con el campo al que pertenece.
   // Antes era un `string` suelto que la pantalla pintaba siempre bajo el
   // input del nombre, asi que "Saldo inicial no valido" aparecia debajo
@@ -115,6 +123,15 @@ export const useAccountForm = (accountId?: number) => {
       setSelectedKind(account.kind);
       setInitialBalanceText(centsToEditableAmountText(account.initialBalance));
       setBalanceSign(account.initialBalance < 0 ? 'negative' : 'positive');
+      // `creditLimit` es siempre una magnitud positiva (o `null`) — no
+      // reutiliza `centsToEditableAmountText`'s `Math.abs` por
+      // necesidad (nunca es negativo), solo por consistencia de
+      // formato con el resto de campos monetarios editables.
+      setCreditLimitText(
+        account.creditLimit === null
+          ? ''
+          : centsToEditableAmountText(account.creditLimit),
+      );
       setLoadStatus('success');
     } catch (e: any) {
       setLoadErrorMessage(
@@ -141,11 +158,34 @@ export const useAccountForm = (accountId?: number) => {
 
   const onChangeSelectedKind = (kind: AccountKind) => {
     setSelectedKind(kind);
+    // El campo de cupo solo aplica a `credit_card` (no-go de la pitch:
+    // no se generaliza a `loan`/etc). Al salir de ese tipo se limpia el
+    // texto para que un valor tecleado y luego abandonado no se cuele
+    // en el guardado de una cuenta de otro tipo — mismo criterio que ya
+    // aplica esta funcion al signo del saldo.
+    if (kind !== 'credit_card') {
+      clearErrorFor('creditLimit');
+      setCreditLimitText('');
+    }
     // Al pasar a un tipo que no admite deuda, el signo vuelve a
     // positivo: dejarlo en negativo guardaria un saldo negativo en una
     // cuenta de efectivo por un control que ya no esta a la vista.
     if (!isDebtAccountKind(kind)) {
       setBalanceSign('positive');
+      return;
+    }
+    // Causa raiz del bug real (ver
+    // docs/product/pitches/saldo-inicial-correcto-en-tarjetas-de-credito.md):
+    // este default nacia en 'positive' incluso para un tipo de deuda, y
+    // el usuario tenia que darse cuenta de que debia tocar un control
+    // que la mayoria no toca. Solo en modo ALTA — en edicion,
+    // `loadAccount` ya fijo `balanceSign` a partir del signo REAL del
+    // `initialBalance` guardado, y reescribirlo aqui borraria esa
+    // lectura la primera vez que alguien abre para editar una de las
+    // cuentas ya mal cargadas (ids 6, 7, 8 del dueno) y toca el
+    // selector de tipo sin querer cambiar nada mas.
+    if (mode === 'create') {
+      setBalanceSign('negative');
     }
   };
 
@@ -157,9 +197,18 @@ export const useAccountForm = (accountId?: number) => {
   /** Si este tipo de cuenta ofrece elegir el signo del saldo. */
   const allowsNegativeBalance = isDebtAccountKind(selectedKind);
 
+  /** Si el campo de cupo de credito (S2) debe mostrarse — solo
+   * `credit_card`, ver el no-go de la pitch. */
+  const showsCreditLimitField = selectedKind === 'credit_card';
+
   const onChangeInitialBalanceText = (text: string) => {
     clearErrorFor('amount');
     setInitialBalanceText(text);
+  };
+
+  const onChangeCreditLimitText = (text: string) => {
+    clearErrorFor('creditLimit');
+    setCreditLimitText(text);
   };
 
   const handlePressItem = (id: number, icon: string) => {
@@ -201,6 +250,26 @@ export const useAccountForm = (accountId?: number) => {
       setFormError({field: 'amount', message: t('accounts.form.invalidInitialBalance')});
       return false;
     }
+    // El cupo solo se envia para `credit_card` — para cualquier otro
+    // tipo siempre viaja `null`, aunque el campo tuviera texto de un
+    // tipo anterior (defensa en profundidad; `onChangeSelectedKind` ya
+    // lo limpia al cambiar de tipo). Vacio tambien es `null`: un cupo no
+    // capturado nunca es 0 (ver el doc comment de `creditLimitText`).
+    const creditLimitTrimmed = creditLimitText.trim();
+    let creditLimit: number | null = null;
+    if (showsCreditLimitField && creditLimitTrimmed !== '') {
+      const parsedCreditLimit = parseInitialBalanceToCents(creditLimitTrimmed, {
+        allowNegative: false,
+      });
+      if (parsedCreditLimit === null) {
+        setFormError({
+          field: 'creditLimit',
+          message: t('accounts.creditLimitInvalid'),
+        });
+        return false;
+      }
+      creditLimit = parsedCreditLimit;
+    }
     setIsSaving(true);
     try {
       const db = await getDbConnection();
@@ -210,6 +279,7 @@ export const useAccountForm = (accountId?: number) => {
           icon: selectedIcon.icon,
           kind: selectedKind,
           initialBalance,
+          creditLimit,
         });
         setFormError(null);
         showNotice('info', t('common.success'), t('accounts.form.updated'));
@@ -220,6 +290,7 @@ export const useAccountForm = (accountId?: number) => {
         icon: selectedIcon.icon,
         kind: selectedKind,
         initialBalance,
+        creditLimit,
       });
       setFormError(null);
       setInputText('');
@@ -227,6 +298,7 @@ export const useAccountForm = (accountId?: number) => {
       setSelectedKind(DEFAULT_ACCOUNT_KIND);
       setInitialBalanceText('');
       setBalanceSign('positive');
+      setCreditLimitText('');
       showNotice('info', t('common.success'), t('accounts.form.created'));
       return true;
     } catch (e: any) {
@@ -250,8 +322,12 @@ export const useAccountForm = (accountId?: number) => {
     onChangeBalanceSign,
     allowsNegativeBalance,
     onChangeInitialBalanceText,
+    creditLimitText,
+    onChangeCreditLimitText,
+    showsCreditLimitField,
     nameError: formError?.field === 'name' ? formError.message : '',
     amountError: formError?.field === 'amount' ? formError.message : '',
+    creditLimitError: formError?.field === 'creditLimit' ? formError.message : '',
     formError: formError?.field === 'form' ? formError.message : '',
     isSaving,
     canSave,

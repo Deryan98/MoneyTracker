@@ -23,6 +23,16 @@ interface FragmentSectionProps extends CatalogList {
   financesStatus: FinancesStatus;
   financesErrorMessage?: string;
   onRetryFinances: () => void;
+  /**
+   * Texto del vacio. Opcional: sin el se usa el generico de siempre.
+   *
+   * Lo calcula el llamador porque el mensaje honesto depende de dos
+   * cosas que este componente no tiene: el periodo que se esta viendo y
+   * si la cuenta tiene movimientos FUERA de el. Decir "aun no hay
+   * transacciones para esta cuenta" cuando si las hay, solo que en otro
+   * mes, es sencillamente falso.
+   */
+  emptyMessage?: string;
   isLoadingMoreFinances?: boolean;
   onEndReachedFinances?: () => void;
   refreshingFinances?: boolean;
@@ -42,6 +52,7 @@ const FragmentSection: FC<FragmentSectionProps> = ({
   financesStatus,
   financesErrorMessage,
   onRetryFinances,
+  emptyMessage,
   isLoadingMoreFinances,
   onEndReachedFinances,
   refreshingFinances,
@@ -93,7 +104,7 @@ const FragmentSection: FC<FragmentSectionProps> = ({
             headingSize="H6"
             color={colors[gray][0]}
             containerStyle={styles.message}>
-            {t('accounts.noTransactionsYet')}
+            {emptyMessage ?? t('accounts.noTransactionsYet')}
           </Headings>
         </View>
       )}

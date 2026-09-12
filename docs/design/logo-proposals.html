@@ -1,0 +1,932 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<title>MoneyTracker — Propuestas de logo / icono</title>
+<style>
+  :root {
+    --indigo: #010062;   /* primary[0] */
+    --lavender: #9C9AC8; /* primary[1] */
+    --lime-0: #C7FF70;   /* accent[0] */
+    --lime-1: #8CC63F;   /* accent[1] */
+    --lime-2: #5CA41B;   /* accent[2] */
+    --lime-3: #2E4A0C;   /* accent[3] */
+    --surface: #FAFAFA;  /* surface[0] */
+    --gray-dark: #333333;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, Helvetica, Arial, sans-serif;
+    background: #EFEFF4;
+    color: var(--gray-dark);
+    margin: 0;
+    padding: 32px 24px 96px;
+  }
+  h1 { font-size: 22px; margin-bottom: 4px; }
+  h2.section-title { font-size: 19px; margin: 48px 0 4px; }
+  .intro { max-width: 820px; color: #555; font-size: 14px; line-height: 1.5; margin-bottom: 24px; }
+  .intro code { background: #e2e2ea; padding: 1px 5px; border-radius: 4px; }
+  .direction {
+    background: white;
+    border-radius: 12px;
+    padding: 24px 28px 28px;
+    margin-bottom: 28px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  }
+  .direction h2 { margin: 0 0 2px; font-size: 18px; }
+  .direction .tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--lime-3);
+    background: var(--lime-0);
+    padding: 2px 8px;
+    border-radius: 999px;
+    margin-bottom: 10px;
+  }
+  .direction .tag.warn { color: white; background: #8a2f00; }
+  .direction p.concept { font-size: 15px; font-weight: 600; margin: 6px 0 4px; }
+  .direction p.why { font-size: 13.5px; color: #444; line-height: 1.5; max-width: 760px; margin: 0 0 4px; }
+  .direction p.at48 { font-size: 13px; color: #666; line-height: 1.5; max-width: 760px; margin: 0 0 14px; }
+  .row { display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start; margin-bottom: 18px; }
+  .swatch { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+  .swatch .cap { font-size: 11px; color: #777; text-align: center; max-width: 130px; }
+  .box {
+    width: 96px; height: 96px;
+    display: flex; align-items: center; justify-content: center;
+    border: 1px solid #ddd;
+  }
+  .box.dark { background: var(--indigo); }
+  .box.light { background: var(--surface); }
+  .mask-circle { border-radius: 50%; }
+  .mask-squircle { border-radius: 30px; }
+  .mask-square { border-radius: 21px; }
+  .safezone { position: relative; }
+  .safezone::after {
+    content: '';
+    position: absolute;
+    inset: 16.3%; /* 66% central safe zone */
+    border: 1px dashed rgba(255,255,255,0.45);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+  .lockup-box {
+    background: var(--indigo);
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-radius: 10px;
+  }
+  .wordmark { font-size: 18px; font-weight: 700; color: white; white-space: nowrap; }
+  .wordmark .tracker { color: var(--lime-0); }
+
+  /* size ladder */
+  .ladder {
+    display: flex;
+    align-items: flex-end;
+    gap: 22px;
+    background: var(--indigo);
+    padding: 20px 22px 16px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+  }
+  .ladder .cell { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+  .ladder .cell .px-label { font-size: 11px; color: var(--lavender); font-weight: 600; }
+  .ladder .cell .sizebox { display: flex; align-items: center; justify-content: center; }
+
+  .fidelity-table { width: 100%; max-width: 760px; border-collapse: collapse; font-size: 12.5px; margin: 14px 0 4px; }
+  .fidelity-table th, .fidelity-table td { border: 1px solid #ddd; padding: 5px 8px; text-align: left; }
+  .fidelity-table th { background: #f3f3f8; }
+
+  .legend { margin-top: 40px; background: white; border-radius: 12px; padding: 20px 28px; font-size: 13px; }
+  .legend h2 { font-size: 16px; }
+  .legend table { border-collapse: collapse; width: 100%; max-width: 640px; }
+  .legend td, .legend th { text-align: left; padding: 4px 10px 4px 0; }
+  .swab { display: inline-block; width: 14px; height: 14px; border-radius: 3px; vertical-align: middle; margin-right: 6px; border: 1px solid rgba(0,0,0,0.15); }
+
+  .recommend { background: #101036; color: white; border-radius: 12px; padding: 24px 28px; margin-top: 28px; }
+  .recommend h2 { color: var(--lime-0); margin-top: 0; }
+  .recommend p { font-size: 14px; line-height: 1.6; max-width: 800px; }
+  .recommend ul { font-size: 14px; line-height: 1.6; }
+
+  .historial-banner {
+    margin: 56px 0 20px;
+    padding: 14px 20px;
+    background: #fff4e0;
+    border: 1px solid #e8c98a;
+    border-radius: 10px;
+    font-size: 13.5px;
+    max-width: 820px;
+    line-height: 1.5;
+  }
+</style>
+</head>
+<body>
+
+<!-- shared symbol defs, reused by <use> across the whole doc -->
+<svg style="position:absolute;width:0;height:0" aria-hidden="true">
+  <defs>
+    <!-- FINAL elegida por el dueno: sobre + 3 billetes + sello. Sin cinta,
+         sin flecha, sin barras. Bajada 3 unidades: el contenido ocupaba
+         y 4-38 en un lienzo de 48 y quedaba alto en el marco. -->
+    <g id="sym-final">
+      <g transform="translate(0,3)">
+        <rect x="12" y="6" width="15" height="14" rx="2" fill="var(--lime-1)" transform="rotate(-14 19.5 13)"/>
+        <rect x="15" y="8" width="16" height="14" rx="2" fill="var(--lime-2)" transform="rotate(-5 23 15)"/>
+        <rect x="18" y="11" width="16" height="13" rx="2" fill="var(--lime-0)" transform="rotate(6 26 17.5)"/>
+        <circle cx="26" cy="17" r="3.2" fill="var(--indigo)"/>
+        <rect x="7" y="19" width="34" height="19" rx="3" fill="var(--lavender)"/>
+        <path d="M7,19 L24,30 L41,19 Z" fill="var(--indigo)"/>
+      </g>
+    </g>
+
+    <!-- Salidas tras quitar cola oscura y punta de flecha (peticion del dueno) -->
+    <g id="sym-cut-a">
+      <rect x="12" y="6" width="15" height="14" rx="2" fill="var(--lime-1)" transform="rotate(-14 19.5 13)"/>
+      <rect x="15" y="8" width="16" height="14" rx="2" fill="var(--lime-2)" transform="rotate(-5 23 15)"/>
+      <rect x="18" y="11" width="16" height="13" rx="2" fill="var(--lime-0)" transform="rotate(6 26 17.5)"/>
+      <circle cx="26" cy="17" r="3.2" fill="var(--indigo)"/>
+      <rect x="7" y="19" width="34" height="19" rx="3" fill="var(--lavender)"/>
+      <path d="M7,19 L24,30 L41,19 Z" fill="var(--indigo)"/>
+      <path d="M8,36 C16,34 26,26 34,18" stroke="var(--lime-2)" stroke-width="6" stroke-linecap="round" fill="none"/>
+      <path d="M9,34 C17,32 26,25 33,19" stroke="var(--lime-0)" stroke-width="2.2" stroke-linecap="round" fill="none"/>
+      <rect x="30" y="30" width="2.5" height="5" fill="var(--lime-1)"/>
+      <rect x="34" y="27" width="2.5" height="8" fill="var(--lime-0)"/>
+      <rect x="38" y="24" width="2.5" height="11" fill="var(--lime-3)"/>
+    </g>
+    <g id="sym-cut-b">
+      <rect x="12" y="6" width="15" height="14" rx="2" fill="var(--lime-1)" transform="rotate(-14 19.5 13)"/>
+      <rect x="15" y="8" width="16" height="14" rx="2" fill="var(--lime-2)" transform="rotate(-5 23 15)"/>
+      <rect x="18" y="11" width="16" height="13" rx="2" fill="var(--lime-0)" transform="rotate(6 26 17.5)"/>
+      <circle cx="26" cy="17" r="3.2" fill="var(--indigo)"/>
+      <rect x="7" y="19" width="34" height="19" rx="3" fill="var(--lavender)"/>
+      <path d="M7,19 L24,30 L41,19 Z" fill="var(--indigo)"/>
+      <rect x="30" y="30" width="2.5" height="5" fill="var(--lime-1)"/>
+      <rect x="34" y="27" width="2.5" height="8" fill="var(--lime-0)"/>
+      <rect x="38" y="24" width="2.5" height="11" fill="var(--lime-3)"/>
+    </g>
+    <g id="sym-cut-c">
+      <rect x="12" y="6" width="15" height="14" rx="2" fill="var(--lime-1)" transform="rotate(-14 19.5 13)"/>
+      <rect x="15" y="8" width="16" height="14" rx="2" fill="var(--lime-2)" transform="rotate(-5 23 15)"/>
+      <rect x="18" y="11" width="16" height="13" rx="2" fill="var(--lime-0)" transform="rotate(6 26 17.5)"/>
+      <circle cx="26" cy="17" r="3.2" fill="var(--indigo)"/>
+      <rect x="7" y="19" width="34" height="19" rx="3" fill="var(--lavender)"/>
+      <path d="M7,19 L24,30 L41,19 Z" fill="var(--indigo)"/>
+      <path d="M9,36 C15,35 21,32 26,28" stroke="var(--lime-2)" stroke-width="5" stroke-linecap="round" fill="none"/>
+      <rect x="30" y="30" width="2.5" height="5" fill="var(--lime-1)"/>
+      <rect x="34" y="27" width="2.5" height="8" fill="var(--lime-0)"/>
+      <rect x="38" y="24" width="2.5" height="11" fill="var(--lime-3)"/>
+    </g>
+
+    <!-- MÍNIMA: la dirección A original (envelope + flap, sin contenido) -->
+    <g id="sym-min">
+      <rect x="6" y="13" width="36" height="24" rx="4" fill="var(--lime-0)"/>
+      <path d="M10,13 L24,26 L38,13 Z" fill="var(--lime-3)"/>
+    </g>
+
+    <!-- INTERMEDIA: envelope + flap + 2 billetes asomando -->
+    <g id="sym-mid">
+      <rect x="13" y="7" width="17" height="15" rx="2" fill="var(--lime-1)" transform="rotate(-8 21.5 14.5)"/>
+      <rect x="17" y="10" width="17" height="14" rx="2" fill="var(--lime-0)" transform="rotate(6 25.5 17)"/>
+      <rect x="7" y="19" width="34" height="19" rx="3" fill="var(--lavender)"/>
+      <path d="M7,19 L24,30 L41,19 Z" fill="var(--indigo)"/>
+    </g>
+
+    <!-- MÁXIMA: intermedia + 3er billete + sello/valor + swoosh + flecha + mini-barras -->
+    <g id="sym-max">
+      <rect x="12" y="6" width="15" height="14" rx="2" fill="var(--lime-1)" transform="rotate(-14 19.5 13)"/>
+      <rect x="15" y="8" width="16" height="14" rx="2" fill="var(--lime-2)" transform="rotate(-5 23 15)"/>
+      <rect x="18" y="11" width="16" height="13" rx="2" fill="var(--lime-0)" transform="rotate(6 26 17.5)"/>
+      <circle cx="26" cy="17" r="3.2" fill="var(--indigo)"/>
+      <rect x="7" y="19" width="34" height="19" rx="3" fill="var(--lavender)"/>
+      <path d="M7,19 L24,30 L41,19 Z" fill="var(--indigo)"/>
+      <path d="M8,36 C16,34 26,26 34,18" stroke="var(--lime-2)" stroke-width="6" stroke-linecap="round" fill="none"/>
+      <path d="M9,34 C17,32 26,25 33,19" stroke="var(--lime-0)" stroke-width="2.2" stroke-linecap="round" fill="none"/>
+      <rect x="30" y="30" width="2.5" height="5" fill="var(--lime-1)"/>
+      <rect x="34" y="27" width="2.5" height="8" fill="var(--lime-0)"/>
+      <rect x="38" y="24" width="2.5" height="11" fill="var(--lime-3)"/>
+    </g>
+  </defs>
+</svg>
+
+<h1>MoneyTracker — Propuestas de logo / icono</h1>
+<h2 class="section-title">✅ FINAL — elegida por el dueño</h2>
+<div class="direction">
+  <span class="tag">Aprobada</span>
+  <h2>El Sobre con contenido</h2>
+  <p class="concept">Sobre + tres billetes escalonados + sello. Sin cinta, sin flecha, sin barras.</p>
+  <p class="why">Partiendo de <b>Máxima</b>, el dueño retiró la cola verde oscuro y la punta de
+  flecha; al quedar la cinta sin destino se retiró entera, y después también las mini-barras.
+  Lo que sobrevive es el objeto y su contenido: el sobre abierto con el dinero asomando, que es
+  la mecánica real de la app (<code>envelopes</code>) y la intuición original de la referencia.</p>
+  <p class="at48">Bajada 3 unidades respecto al primer corte: el contenido ocupaba de y≈4 a y=38
+  en un lienzo de 48 y quedaba alto en el marco, algo que se nota en el recorte circular. Seis
+  formas, cuatro tokens, cero degradados. Legible hasta 24px.</p>
+  <div class="ladder"><div class="cell"><div class="sizebox"><svg width="128" height="128" viewBox="0 0 48 48"><use href="#sym-final"/></svg></div><div class="px-label">128px</div></div><div class="cell"><div class="sizebox"><svg width="96" height="96" viewBox="0 0 48 48"><use href="#sym-final"/></svg></div><div class="px-label">96px</div></div><div class="cell"><div class="sizebox"><svg width="64" height="64" viewBox="0 0 48 48"><use href="#sym-final"/></svg></div><div class="px-label">64px</div></div><div class="cell"><div class="sizebox"><svg width="48" height="48" viewBox="0 0 48 48"><use href="#sym-final"/></svg></div><div class="px-label">48px</div></div><div class="cell"><div class="sizebox"><svg width="32" height="32" viewBox="0 0 48 48"><use href="#sym-final"/></svg></div><div class="px-label">32px</div></div><div class="cell"><div class="sizebox"><svg width="24" height="24" viewBox="0 0 48 48"><use href="#sym-final"/></svg></div><div class="px-label">24px</div></div></div>
+  <div class="row" style="margin-top:16px"><div class="swatch safezone"><div class="box dark mask-circle"><svg width="64" height="64" viewBox="0 0 48 48"><use href="#sym-final"/></svg></div><div class="cap">Launcher — circular</div></div><div class="swatch"><div class="box dark mask-squircle"><svg width="64" height="64" viewBox="0 0 48 48"><use href="#sym-final"/></svg></div><div class="cap">Launcher — squircle</div></div><div class="swatch"><div class="box dark mask-square"><svg width="64" height="64" viewBox="0 0 48 48"><use href="#sym-final"/></svg></div><div class="cap">Launcher — cuadrado redondeado</div></div>
+    <div class="swatch"><div class="lockup-box">
+      <svg width="30" height="30" viewBox="0 0 48 48"><use href="#sym-final"/></svg>
+      <div class="wordmark">Money<span class="tracker">Tracker</span></div>
+    </div><div class="cap">Lockup — cabecera drawer</div></div>
+  </div>
+  <table class="fidelity-table">
+    <tr><th>Elemento</th><th>Token</th><th>Papel</th></tr>
+    <tr><td>Billete trasero</td><td><code>accent[1]</code> #8CC63F</td><td>profundidad, el más apagado</td></tr>
+    <tr><td>Billete medio</td><td><code>accent[2]</code> #5CA41B</td><td>escalón intermedio</td></tr>
+    <tr><td>Billete delantero</td><td><code>accent[0]</code> #C7FF70</td><td>el que lleva la atención</td></tr>
+    <tr><td>Cuerpo del sobre</td><td><code>primary[1]</code> #9C9AC8</td><td>único tono legible sobre el índigo</td></tr>
+    <tr><td>Pliegue y sello</td><td><em>color del fondo</em></td><td>son agujeros, NO un valor fijo</td></tr>
+  </table>
+</div>
+
+<h2 class="section-title">Cómo se llegó aquí — DECISIÓN PENDIENTE — Máxima sin la cola oscura ni la punta de flecha</h2>
+<div class="direction">
+  <span class="tag warn">Mirar antes de cerrar</span>
+  <p class="why">El dueño eligió <b>Máxima</b> y pidió quitar dos piezas: la cola verde oscuro
+  del swoosh y la punta de flecha. Hecho — pero quitar la punta deja a la cinta <b>sin final</b>:
+  termina en un cabezal redondo que se lee como un gancho, y por debajo de 32px pelea con los
+  billetes. La cinta existía para llevar la flecha. Tres salidas, mismas escaleras reales:</p>
+
+  <p class="concept">A — exactamente lo pedido: cinta sin punta</p>
+  <div class="ladder"><div class="cell"><div class="sizebox"><svg width="128" height="128" viewBox="0 0 48 48"><use href="#sym-cut-a"/></svg></div><div class="px-label">128px</div></div><div class="cell"><div class="sizebox"><svg width="96" height="96" viewBox="0 0 48 48"><use href="#sym-cut-a"/></svg></div><div class="px-label">96px</div></div><div class="cell"><div class="sizebox"><svg width="64" height="64" viewBox="0 0 48 48"><use href="#sym-cut-a"/></svg></div><div class="px-label">64px</div></div><div class="cell"><div class="sizebox"><svg width="48" height="48" viewBox="0 0 48 48"><use href="#sym-cut-a"/></svg></div><div class="px-label">48px</div></div><div class="cell"><div class="sizebox"><svg width="32" height="32" viewBox="0 0 48 48"><use href="#sym-cut-a"/></svg></div><div class="px-label">32px</div></div><div class="cell"><div class="sizebox"><svg width="24" height="24" viewBox="0 0 48 48"><use href="#sym-cut-a"/></svg></div><div class="px-label">24px</div></div></div>
+  <p class="at48">La cinta cruza el sobre y no resuelve. A 32 y 24px el conjunto se enreda.</p>
+
+  <p class="concept">B — sin cinta: sobre + billetes + barras <b>(recomendada)</b></p>
+  <div class="ladder"><div class="cell"><div class="sizebox"><svg width="128" height="128" viewBox="0 0 48 48"><use href="#sym-cut-b"/></svg></div><div class="px-label">128px</div></div><div class="cell"><div class="sizebox"><svg width="96" height="96" viewBox="0 0 48 48"><use href="#sym-cut-b"/></svg></div><div class="px-label">96px</div></div><div class="cell"><div class="sizebox"><svg width="64" height="64" viewBox="0 0 48 48"><use href="#sym-cut-b"/></svg></div><div class="px-label">64px</div></div><div class="cell"><div class="sizebox"><svg width="48" height="48" viewBox="0 0 48 48"><use href="#sym-cut-b"/></svg></div><div class="px-label">48px</div></div><div class="cell"><div class="sizebox"><svg width="32" height="32" viewBox="0 0 48 48"><use href="#sym-cut-b"/></svg></div><div class="px-label">32px</div></div><div class="cell"><div class="sizebox"><svg width="24" height="24" viewBox="0 0 48 48"><use href="#sym-cut-b"/></svg></div><div class="px-label">24px</div></div></div>
+  <p class="at48">Legible hasta 24px. Es literalmente lo que se pidió de origen: sobre abierto
+  con contenido asomando. Quitada la flecha, la cinta ya no tiene para qué estar.</p>
+
+  <p class="concept">C — cinta corta, como subrayado</p>
+  <div class="ladder"><div class="cell"><div class="sizebox"><svg width="128" height="128" viewBox="0 0 48 48"><use href="#sym-cut-c"/></svg></div><div class="px-label">128px</div></div><div class="cell"><div class="sizebox"><svg width="96" height="96" viewBox="0 0 48 48"><use href="#sym-cut-c"/></svg></div><div class="px-label">96px</div></div><div class="cell"><div class="sizebox"><svg width="64" height="64" viewBox="0 0 48 48"><use href="#sym-cut-c"/></svg></div><div class="px-label">64px</div></div><div class="cell"><div class="sizebox"><svg width="48" height="48" viewBox="0 0 48 48"><use href="#sym-cut-c"/></svg></div><div class="px-label">48px</div></div><div class="cell"><div class="sizebox"><svg width="32" height="32" viewBox="0 0 48 48"><use href="#sym-cut-c"/></svg></div><div class="px-label">32px</div></div><div class="cell"><div class="sizebox"><svg width="24" height="24" viewBox="0 0 48 48"><use href="#sym-cut-c"/></svg></div><div class="px-label">24px</div></div></div>
+  <p class="at48">Aporta poco y ensucia la base del sobre.</p>
+</div>
+
+
+<p class="intro">
+  El dueño eligió la dirección <b>A · El Sobre</b> pero pide acercarse más a su referencia
+  (<code>image-cache/…/4.png</code>, mismo archivo que <code>3.png</code>): sobre abierto con
+  contenido asomando, evaluando si el swoosh, la flecha y las mini-barras se pueden cargar sin
+  romper la lectura. Abajo hay <b>tres variantes reales</b> de la misma idea — Máxima,
+  Intermedia y Mínima (esta última es la dirección A tal cual se entregó antes) — cada una con
+  una <b>escalera de tamaños real</b> (96 / 64 / 48 / 32 / 24px, mismo SVG, sin retoque) para que
+  la decisión se tome mirando, no leyendo un argumento. Las cuatro direcciones originales
+  quedan más abajo, intactas, como referencia histórica.
+</p>
+
+<!-- ============================================================= -->
+<!-- VARIANTE MÁXIMA -->
+<!-- ============================================================= -->
+<div class="direction">
+  <span class="tag">Carga todo lo que trae la referencia</span>
+  <h2>Máxima — sobre + 3 billetes + sello + swoosh + flecha + mini-barras</h2>
+  <p class="concept">
+    Los seis elementos de la referencia, traducidos a la paleta real: cuerpo lavanda
+    (<code>primary[1]</code>), pliegue en índigo (agujero, no color nuevo), tres billetes en
+    tres tonos de lima (<code>accent[1]/[2]/[0]</code>), un punto índigo como marca de valor
+    (sustituto plano del "$" — un glifo de dólar real no sobrevive a esta escala, ver nota
+    abajo), una cinta de dos trazos (<code>accent[2]</code> base + <code>accent[0]</code>
+    brillo, sin degradado — dos tonos sólidos, no un blend), una punta de flecha
+    (<code>accent[0]</code>) y tres barritas ascendentes (<code>accent[1]/[0]/[3]</code>).
+  </p>
+  <p class="why">
+    Esto es literalmente la composición del dueño reconstruida con los tokens de la app. Es
+    también, honestamente, la que menos margen tiene: 13 formas independientes en un icono de
+    48px es mucho — la escalera de abajo lo muestra sin adornar el resultado.
+  </p>
+
+  <div class="ladder">
+    <div class="cell"><span class="px-label">96px</span><div class="sizebox"><svg width="96" height="96" viewBox="0 0 48 48"><use href="#sym-max"/></svg></div></div>
+    <div class="cell"><span class="px-label">64px</span><div class="sizebox"><svg width="64" height="64" viewBox="0 0 48 48"><use href="#sym-max"/></svg></div></div>
+    <div class="cell"><span class="px-label">48px</span><div class="sizebox"><svg width="48" height="48" viewBox="0 0 48 48"><use href="#sym-max"/></svg></div></div>
+    <div class="cell"><span class="px-label">32px</span><div class="sizebox"><svg width="32" height="32" viewBox="0 0 48 48"><use href="#sym-max"/></svg></div></div>
+    <div class="cell"><span class="px-label">24px</span><div class="sizebox"><svg width="24" height="24" viewBox="0 0 48 48"><use href="#sym-max"/></svg></div></div>
+  </div>
+
+  <div class="row">
+    <div class="swatch safezone">
+      <div class="box dark mask-circle"><svg width="72" height="72" viewBox="0 0 48 48"><use href="#sym-max"/></svg></div>
+      <div class="cap">Launcher — circular (zona segura 66% marcada — la cola de la cinta y la punta de la flecha caen fuera y se recortan)</div>
+    </div>
+    <div class="swatch">
+      <div class="box dark mask-squircle"><svg width="72" height="72" viewBox="0 0 48 48"><use href="#sym-max"/></svg></div>
+      <div class="cap">Launcher — squircle</div>
+    </div>
+    <div class="swatch">
+      <div class="box dark mask-square"><svg width="72" height="72" viewBox="0 0 48 48"><use href="#sym-max"/></svg></div>
+      <div class="cap">Launcher — cuadrado redondeado</div>
+    </div>
+    <div class="swatch">
+      <div class="lockup-box">
+        <svg width="32" height="32" viewBox="0 0 48 48"><use href="#sym-max"/></svg>
+        <div class="wordmark">Money<span class="tracker">Tracker</span></div>
+      </div>
+      <div class="cap">Lockup — cabecera drawer</div>
+    </div>
+  </div>
+
+  <table class="fidelity-table">
+    <tr><th>Elemento</th><th>Grosor/tamaño en viewBox 48</th><th>Px reales a 48</th><th>Px reales a 24</th><th>Lectura</th></tr>
+    <tr><td>Trazo brillo de la cinta</td><td>2.2</td><td>2.2px</td><td>1.1px</td><td>Desaparece — por debajo del hairline práctico</td></tr>
+    <tr><td>Mini-barras</td><td>2.5 ancho</td><td>2.5px</td><td>1.25px</td><td>Se funden en una mancha</td></tr>
+    <tr><td>Punto de valor (sustituto del "$")</td><td>r=3.2 (⌀6.4)</td><td>6.4px</td><td>3.2px</td><td>Sobrevive como punto, no como "$"</td></tr>
+    <tr><td>Billetes (3, rotados)</td><td>15–17 ancho</td><td>15–17px</td><td>7.5–8.5px</td><td>Se leen como manchas apiladas, ya no como billetes individuales</td></tr>
+  </table>
+  <p class="at48">
+    Conclusión medida, no supuesta: a 48px la composición general (sobre + algo asomando +
+    algo de movimiento a la derecha) todavía se reconoce. A 32px la cinta y las barritas ya
+    son ruido. A 24px la única lectura que sobrevive es "sobre con algo lima adentro" — el
+    swoosh, la flecha y las barras se pierden. Además, en el recorte circular/squircle del
+    launcher, la cola de la cinta y la punta de la flecha caen fuera del 66% seguro y se
+    cortan — visible arriba, no es una advertencia en abstracto.
+  </p>
+</div>
+
+<!-- ============================================================= -->
+<!-- VARIANTE INTERMEDIA -->
+<!-- ============================================================= -->
+<div class="direction">
+  <span class="tag">El punto exacto que pidió el dueño</span>
+  <h2>Intermedia — sobre + 2 billetes asomando, sin cinta ni flecha</h2>
+  <p class="concept">
+    El sobre abierto con el contenido asomando — el pedido explícito — sin las capas de
+    movimiento (cinta/flecha/barras) que son las que más sufren a tamaño pequeño.
+  </p>
+  <p class="why">
+    Cuerpo lavanda (<code>primary[1]</code>, el único tono ya documentado como legible sobre
+    índigo), pliegue como agujero índigo, dos billetes en dos limas (<code>accent[1]</code>
+    detrás, <code>accent[0]</code> delante) ligeramente rotados como en la referencia. Es la
+    versión que resuelve la queja real ("le quitó demasiado") sin acumular las piezas que la
+    tabla de arriba ya muestra que colapsan.
+  </p>
+
+  <div class="ladder">
+    <div class="cell"><span class="px-label">96px</span><div class="sizebox"><svg width="96" height="96" viewBox="0 0 48 48"><use href="#sym-mid"/></svg></div></div>
+    <div class="cell"><span class="px-label">64px</span><div class="sizebox"><svg width="64" height="64" viewBox="0 0 48 48"><use href="#sym-mid"/></svg></div></div>
+    <div class="cell"><span class="px-label">48px</span><div class="sizebox"><svg width="48" height="48" viewBox="0 0 48 48"><use href="#sym-mid"/></svg></div></div>
+    <div class="cell"><span class="px-label">32px</span><div class="sizebox"><svg width="32" height="32" viewBox="0 0 48 48"><use href="#sym-mid"/></svg></div></div>
+    <div class="cell"><span class="px-label">24px</span><div class="sizebox"><svg width="24" height="24" viewBox="0 0 48 48"><use href="#sym-mid"/></svg></div></div>
+  </div>
+
+  <div class="row">
+    <div class="swatch safezone">
+      <div class="box dark mask-circle"><svg width="72" height="72" viewBox="0 0 48 48"><use href="#sym-mid"/></svg></div>
+      <div class="cap">Launcher — circular (la esquina superior del billete trasero roza el borde de la zona segura, recorte mínimo)</div>
+    </div>
+    <div class="swatch">
+      <div class="box dark mask-squircle"><svg width="72" height="72" viewBox="0 0 48 48"><use href="#sym-mid"/></svg></div>
+      <div class="cap">Launcher — squircle</div>
+    </div>
+    <div class="swatch">
+      <div class="box dark mask-square"><svg width="72" height="72" viewBox="0 0 48 48"><use href="#sym-mid"/></svg></div>
+      <div class="cap">Launcher — cuadrado redondeado</div>
+    </div>
+    <div class="swatch">
+      <div class="lockup-box">
+        <svg width="32" height="32" viewBox="0 0 48 48"><use href="#sym-mid"/></svg>
+        <div class="wordmark">Money<span class="tracker">Tracker</span></div>
+      </div>
+      <div class="cap">Lockup — cabecera drawer</div>
+    </div>
+  </div>
+
+  <table class="fidelity-table">
+    <tr><th>Elemento</th><th>Tamaño en viewBox 48</th><th>Px reales a 24</th><th>Lectura</th></tr>
+    <tr><td>Billete trasero</td><td>17 × 15</td><td>8.5 × 7.5px</td><td>Bloque lima diferenciado, se sostiene</td></tr>
+    <tr><td>Billete delantero</td><td>17 × 14</td><td>8.5 × 7px</td><td>Bloque lima diferenciado, se sostiene</td></tr>
+    <tr><td>Pliegue del sobre</td><td>forma grande, sin trazos finos</td><td>—</td><td>Sin riesgo, es una forma sólida</td></tr>
+  </table>
+  <p class="at48">
+    A 24px sigue leyéndose como "sobre con algo adentro asomando" — el mismo mensaje que a
+    96px, solo que sin el detalle de que sean dos billetes distintos (se funden en una sola
+    mancha lima de dos tonos). No hay ningún trazo por debajo de 7px en ningún tamaño de la
+    escalera.
+  </p>
+</div>
+
+<!-- ============================================================= -->
+<!-- VARIANTE MÍNIMA -->
+<!-- ============================================================= -->
+<div class="direction">
+  <span class="tag">La dirección A original, sin cambios</span>
+  <h2>Mínima — sobre + solapa, sin contenido</h2>
+  <p class="concept">La que ya se entregó y el dueño consideró que "quita demasiado".</p>
+  <p class="why">
+    Se deja en la escalera para que el contraste con Intermedia y Máxima sea literal, no
+    recordado. El sello circular decorativo se omite aquí para no repetir el problema de
+    color de punto 6 (ver corrección más abajo, en la sección de HANDOFF) — un detalle que
+    a este nivel de simplicidad no hace falta para que el sobre se lea.
+  </p>
+
+  <div class="ladder">
+    <div class="cell"><span class="px-label">96px</span><div class="sizebox"><svg width="96" height="96" viewBox="0 0 48 48"><use href="#sym-min"/></svg></div></div>
+    <div class="cell"><span class="px-label">64px</span><div class="sizebox"><svg width="64" height="64" viewBox="0 0 48 48"><use href="#sym-min"/></svg></div></div>
+    <div class="cell"><span class="px-label">48px</span><div class="sizebox"><svg width="48" height="48" viewBox="0 0 48 48"><use href="#sym-min"/></svg></div></div>
+    <div class="cell"><span class="px-label">32px</span><div class="sizebox"><svg width="32" height="32" viewBox="0 0 48 48"><use href="#sym-min"/></svg></div></div>
+    <div class="cell"><span class="px-label">24px</span><div class="sizebox"><svg width="24" height="24" viewBox="0 0 48 48"><use href="#sym-min"/></svg></div></div>
+  </div>
+
+  <div class="row">
+    <div class="swatch safezone">
+      <div class="box dark mask-circle"><svg width="72" height="72" viewBox="0 0 48 48"><use href="#sym-min"/></svg></div>
+      <div class="cap">Launcher — circular</div>
+    </div>
+    <div class="swatch">
+      <div class="box dark mask-squircle"><svg width="72" height="72" viewBox="0 0 48 48"><use href="#sym-min"/></svg></div>
+      <div class="cap">Launcher — squircle</div>
+    </div>
+    <div class="swatch">
+      <div class="box dark mask-square"><svg width="72" height="72" viewBox="0 0 48 48"><use href="#sym-min"/></svg></div>
+      <div class="cap">Launcher — cuadrado redondeado</div>
+    </div>
+    <div class="swatch">
+      <div class="lockup-box">
+        <svg width="32" height="32" viewBox="0 0 48 48"><use href="#sym-min"/></svg>
+        <div class="wordmark">Money<span class="tracker">Tracker</span></div>
+      </div>
+      <div class="cap">Lockup — cabecera drawer</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================= -->
+<!-- RECOMENDACIÓN v2 -->
+<!-- ============================================================= -->
+<div class="recommend">
+  <h2>Recomendación: Intermedia — y una salida honesta para no perder la Máxima</h2>
+  <p>
+    Con la escalera ya dibujada y medida arriba, mi recomendación es <b>Intermedia</b> para el
+    <b>icono del sistema</b> (launcher, favicon, cualquier contexto ≤48px): entrega
+    exactamente lo que el dueño señaló como faltante — el sobre abierto con contenido
+    asomando — y no acumula ningún elemento que la propia tabla de arriba demuestre que
+    colapsa. La Mínima se queda corta frente al pedido explícito; la Máxima es visualmente la
+    más parecida a la referencia pero dos de sus seis elementos (cinta, barritas) dejan de
+    aportar información antes de llegar a 32px, y dos más (billetes individuales, marca de
+    valor) se degradan de "objeto reconocible" a "mancha de color" — siguen leyéndose bien
+    como composición, pero ya no como las piezas que las componen.
+  </p>
+  <p>
+    Esto no tiene que ser una decisión de todo o nada: es razonable (y common practice en
+    ambas tiendas) usar composiciones de distinta densidad según el contexto — un patrón real,
+    no una excusa para evitar la pregunta.
+    <b>Máxima</b> puede vivir en la ficha de Play/App Store, en la pantalla de splash y en
+    cualquier lugar ≥64px, donde la riqueza de la referencia sí se aprecia completa; el
+    <b>launcher real del dispositivo</b> usa Intermedia. Si el dueño prefiere que una sola
+    pieza de arte sirva para todo — una razón de consistencia de marca perfectamente válida —
+    entonces Intermedia sola, en todos los contextos, es la recomendación sin matices.
+  </p>
+  <ul>
+    <li>Intermedia — colores: cuerpo <code>primary[1] #9C9AC8</code>, pliegue
+      <code>primary[0] #010062</code> (agujero, no tinta nueva), billete trasero
+      <code>accent[1] #8CC63F</code>, billete delantero <code>accent[0] #C7FF70</code>.</li>
+    <li>Máxima añade: billete medio <code>accent[2] #5CA41B</code>, marca de valor
+      <code>primary[0]</code>, cinta <code>accent[2]</code>/<code>accent[0]</code>/<code>accent[3]</code>,
+      flecha <code>accent[0]</code>, barras <code>accent[1]/accent[0]/accent[3]</code>.</li>
+    <li><b>Paleta:</b> no recomiendo tocarla. La referencia usa azul royal y verde esmeralda
+      porque ese generador no conocía la marca; la lavanda + lima ya resuelven la misma
+      relación "sobre frío / contenido cálido" sin salir de un token existente. Si en algún
+      momento se quisiera un tono de "papel" más neutro que la lavanda (que es un lila, no un
+      gris), eso sí sería una decisión de paleta nueva — la dejo señalada, no la ejecuto aquí,
+      por la misma razón que ya se me pidió: es más grande que el logo.</li>
+  </ul>
+</div>
+
+<div class="historial-banner">
+  <b>A partir de aquí: material histórico.</b> Son las cuatro direcciones originales que
+  llevaron al dueño a elegir "A · El Sobre". Se dejan intactas — el nuevo trabajo de arriba
+  es un refinamiento de esa elección, no un reemplazo de la comparación que la originó.
+</div>
+
+<h2 class="section-title">Historial — las cuatro direcciones originales</h2>
+
+<!-- ================= A: EL SOBRE ================= -->
+<div class="direction">
+  <span class="tag">Explora el sobre en serio</span>
+  <h2>A · El Sobre (elegida por el dueño)</h2>
+  <p class="concept">Concepto: un sobre plano de dos formas — el cuerpo y la solapa — nada más.</p>
+  <p class="why">
+    Por qué encaja con ESTA app y no con cualquiera: "sobre" no es una metáfora genérica de
+    finanzas, es el nombre real de la mecánica distintiva de MoneyTracker — la tabla
+    <code>envelopes</code>, la pantalla <code>[budgets]</code>, el flujo de apartar dinero
+    hacia una meta. Ninguna de las ocho apps "Money Tracker" de Play usa esta metáfora como
+    marca. A diferencia de la referencia del dueño, aquí el sobre ES el icono completo: no hay
+    billetes, ni swoosh, ni flecha compitiendo por la atención — un solo objeto, dos formas,
+    dos colores.
+  </p>
+  <p class="at48">
+    A 48px: el cuerpo es un rectángulo redondeado sólido (lima <code>accent[0]</code>) y la
+    solapa es un triángulo (lima oscuro <code>accent[3]</code>) — dos manchas de color con un
+    quiebre diagonal limpio, sin líneas finas que colapsen. El "sello" circular es decorativo
+    (agujero del color de fondo, no un tercer tono) y se pierde con gusto por debajo de 32px sin
+    que el sobre deje de leerse como sobre.
+  </p>
+
+  <div class="row">
+    <div class="swatch">
+      <svg width="96" height="96" viewBox="0 0 48 48">
+        <rect x="6" y="13" width="36" height="24" rx="4" fill="var(--lime-0)"/>
+        <path d="M10,13 L24,26 L38,13 Z" fill="var(--lime-3)"/>
+        <circle cx="24" cy="17" r="2.6" fill="var(--surface)"/>
+      </svg>
+      <div class="cap">Marca sola — sobre claro</div>
+    </div>
+    <div class="swatch">
+      <svg width="96" height="96" viewBox="0 0 48 48" style="background:var(--indigo);border-radius:8px">
+        <rect x="6" y="13" width="36" height="24" rx="4" fill="var(--lime-0)"/>
+        <path d="M10,13 L24,26 L38,13 Z" fill="var(--lime-3)"/>
+        <circle cx="24" cy="17" r="2.6" fill="var(--indigo)"/>
+      </svg>
+      <div class="cap">Marca sola — sobre índigo (drawer)</div>
+    </div>
+
+    <div class="swatch safezone">
+      <div class="box dark mask-circle">
+        <svg width="64" height="64" viewBox="0 0 48 48">
+          <rect x="6" y="13" width="36" height="24" rx="4" fill="var(--lime-0)"/>
+          <path d="M10,13 L24,26 L38,13 Z" fill="var(--lime-3)"/>
+          <circle cx="24" cy="17" r="2.6" fill="var(--indigo)"/>
+        </svg>
+      </div>
+      <div class="cap">Launcher — recorte circular</div>
+    </div>
+    <div class="swatch">
+      <div class="box dark mask-squircle">
+        <svg width="64" height="64" viewBox="0 0 48 48">
+          <rect x="6" y="13" width="36" height="24" rx="4" fill="var(--lime-0)"/>
+          <path d="M10,13 L24,26 L38,13 Z" fill="var(--lime-3)"/>
+          <circle cx="24" cy="17" r="2.6" fill="var(--indigo)"/>
+        </svg>
+      </div>
+      <div class="cap">Launcher — squircle</div>
+    </div>
+    <div class="swatch">
+      <div class="box dark mask-square">
+        <svg width="64" height="64" viewBox="0 0 48 48">
+          <rect x="6" y="13" width="36" height="24" rx="4" fill="var(--lime-0)"/>
+          <path d="M10,13 L24,26 L38,13 Z" fill="var(--lime-3)"/>
+          <circle cx="24" cy="17" r="2.6" fill="var(--indigo)"/>
+        </svg>
+      </div>
+      <div class="cap">Launcher — cuadrado redondeado</div>
+    </div>
+
+    <div class="swatch">
+      <div class="lockup-box">
+        <svg width="30" height="30" viewBox="0 0 48 48">
+          <rect x="6" y="13" width="36" height="24" rx="4" fill="var(--lime-0)"/>
+          <path d="M10,13 L24,26 L38,13 Z" fill="var(--lime-3)"/>
+          <circle cx="24" cy="17" r="2.6" fill="var(--indigo)"/>
+        </svg>
+        <div class="wordmark">Money<span class="tracker">Tracker</span></div>
+      </div>
+      <div class="cap">Lockup — cabecera drawer</div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="swatch">
+      <div class="box dark mask-square" style="width:48px;height:48px;padding:0">
+        <svg width="48" height="48" viewBox="0 0 48 48">
+          <rect x="6" y="13" width="36" height="24" rx="4" fill="var(--lime-0)"/>
+          <path d="M10,13 L24,26 L38,13 Z" fill="var(--lime-3)"/>
+        </svg>
+      </div>
+      <div class="cap">Prueba real 48px</div>
+    </div>
+    <div class="swatch">
+      <div class="box dark mask-square" style="width:24px;height:24px;padding:0">
+        <svg width="24" height="24" viewBox="0 0 48 48">
+          <rect x="6" y="13" width="36" height="24" rx="4" fill="var(--lime-0)"/>
+          <path d="M10,13 L24,26 L38,13 Z" fill="var(--lime-3)"/>
+        </svg>
+      </div>
+      <div class="cap">Prueba real 24px</div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= B: BARRAS ASCENDENTES ================= -->
+<div class="direction">
+  <span class="tag">Refina el placeholder actual</span>
+  <h2>B · Barras Ascendentes</h2>
+  <p class="concept">Concepto: tres barras que suben, del tono más apagado al más vivo.</p>
+  <p class="why">
+    Por qué encaja: es literalmente el mismo patrón visual que ya usan las barras de progreso
+    de sobres y presupuestos en la app hoy — no es un ícono de "crecimiento" genérico prestado
+    de un banco de stock, es la reutilización de un elemento que el usuario ya reconoce dentro
+    de MoneyTracker. Es también la evolución directa del placeholder de
+    <code>Logo.tsx</code> (mismo criterio ascendente: <code>primary[1]</code> →
+    <code>accent[1]</code> → <code>accent[0]</code>), así que no se tira trabajo, se
+    depura.
+  </p>
+  <p class="at48">
+    A 48px: son tres rectángulos sólidos con puntas redondeadas, sin detalle interno — el tipo
+    de forma que sobrevive a cualquier tamaño porque no depende de ningún trazo fino. Es la
+    dirección más "a prueba de balas" de las cuatro para el ícono del launcher, pero la menos
+    distintiva: cualquier app de analítica podría usar barras ascendentes.
+  </p>
+
+  <div class="row">
+    <div class="swatch">
+      <svg width="96" height="96" viewBox="0 0 48 48">
+        <rect x="9" y="26" width="8" height="12" rx="4" fill="var(--lavender)"/>
+        <rect x="20" y="18" width="8" height="20" rx="4" fill="var(--lime-1)"/>
+        <rect x="31" y="10" width="8" height="28" rx="4" fill="var(--lime-0)"/>
+      </svg>
+      <div class="cap">Marca sola — sobre claro</div>
+    </div>
+    <div class="swatch">
+      <svg width="96" height="96" viewBox="0 0 48 48" style="background:var(--indigo);border-radius:8px">
+        <rect x="9" y="26" width="8" height="12" rx="4" fill="var(--lavender)"/>
+        <rect x="20" y="18" width="8" height="20" rx="4" fill="var(--lime-1)"/>
+        <rect x="31" y="10" width="8" height="28" rx="4" fill="var(--lime-0)"/>
+      </svg>
+      <div class="cap">Marca sola — sobre índigo</div>
+    </div>
+
+    <div class="swatch safezone">
+      <div class="box dark mask-circle">
+        <svg width="64" height="64" viewBox="0 0 48 48">
+          <rect x="9" y="26" width="8" height="12" rx="4" fill="var(--lavender)"/>
+          <rect x="20" y="18" width="8" height="20" rx="4" fill="var(--lime-1)"/>
+          <rect x="31" y="10" width="8" height="28" rx="4" fill="var(--lime-0)"/>
+        </svg>
+      </div>
+      <div class="cap">Launcher — circular</div>
+    </div>
+    <div class="swatch">
+      <div class="box dark mask-squircle">
+        <svg width="64" height="64" viewBox="0 0 48 48">
+          <rect x="9" y="26" width="8" height="12" rx="4" fill="var(--lavender)"/>
+          <rect x="20" y="18" width="8" height="20" rx="4" fill="var(--lime-1)"/>
+          <rect x="31" y="10" width="8" height="28" rx="4" fill="var(--lime-0)"/>
+        </svg>
+      </div>
+      <div class="cap">Launcher — squircle</div>
+    </div>
+    <div class="swatch">
+      <div class="box dark mask-square">
+        <svg width="64" height="64" viewBox="0 0 48 48">
+          <rect x="9" y="26" width="8" height="12" rx="4" fill="var(--lavender)"/>
+          <rect x="20" y="18" width="8" height="20" rx="4" fill="var(--lime-1)"/>
+          <rect x="31" y="10" width="8" height="28" rx="4" fill="var(--lime-0)"/>
+        </svg>
+      </div>
+      <div class="cap">Launcher — cuadrado redondeado</div>
+    </div>
+
+    <div class="swatch">
+      <div class="lockup-box">
+        <svg width="30" height="30" viewBox="0 0 48 48">
+          <rect x="9" y="26" width="8" height="12" rx="4" fill="var(--lavender)"/>
+          <rect x="20" y="18" width="8" height="20" rx="4" fill="var(--lime-1)"/>
+          <rect x="31" y="10" width="8" height="28" rx="4" fill="var(--lime-0)"/>
+        </svg>
+        <div class="wordmark">Money<span class="tracker">Tracker</span></div>
+      </div>
+      <div class="cap">Lockup — cabecera drawer</div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="swatch">
+      <div class="box dark mask-square" style="width:48px;height:48px;padding:0">
+        <svg width="48" height="48" viewBox="0 0 48 48">
+          <rect x="9" y="26" width="8" height="12" rx="4" fill="var(--lavender)"/>
+          <rect x="20" y="18" width="8" height="20" rx="4" fill="var(--lime-1)"/>
+          <rect x="31" y="10" width="8" height="28" rx="4" fill="var(--lime-0)"/>
+        </svg>
+      </div>
+      <div class="cap">Prueba real 48px</div>
+    </div>
+    <div class="swatch">
+      <div class="box dark mask-square" style="width:24px;height:24px;padding:0">
+        <svg width="24" height="24" viewBox="0 0 48 48">
+          <rect x="9" y="26" width="8" height="12" rx="4" fill="var(--lavender)"/>
+          <rect x="20" y="18" width="8" height="20" rx="4" fill="var(--lime-1)"/>
+          <rect x="31" y="10" width="8" height="28" rx="4" fill="var(--lime-0)"/>
+        </svg>
+      </div>
+      <div class="cap">Prueba real 24px</div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= C: MONOGRAMA M ================= -->
+<div class="direction">
+  <span class="tag">Marca propia, no metáfora</span>
+  <h2>C · Monograma "M"</h2>
+  <p class="concept">Concepto: una M geométrica sólida dentro de una moneda, cuyos picos leen doblemente como una tendencia ascendente.</p>
+  <p class="why">
+    Por qué encaja: en vez de competir por la mejor metáfora de "dinero" (billete, alcancía,
+    sobre, gráfico — las cuatro ya gastadas por la competencia), esta dirección es una
+    letra propia. Es registrable como marca, no depende de que el usuario interprete un
+    símbolo, y una M bien dibujada dobla como picos de un gráfico ascendente sin necesitar un
+    cuarto elemento. Es la apuesta "atemporal": no envejece con la moda 3D como la referencia,
+    ni se puede confundir con un ícono de sistema.
+  </p>
+  <p class="at48">
+    A 48px: es una sola forma sólida (relleno, no trazo) dentro de un círculo — de las cuatro,
+    la que mejor sobrevive un recorte agresivo porque el glifo ya nace pensado para una moneda.
+    A 24px sigue leyéndose como "M", aunque a partir de ahí ya no se distingue el doble sentido
+    de picos de gráfico — sigue siendo, sin más, una M, que es un resultado aceptable.
+  </p>
+
+  <div class="row">
+    <div class="swatch">
+      <svg width="96" height="96" viewBox="0 0 48 48">
+        <circle cx="24" cy="24" r="19" fill="var(--indigo)"/>
+        <path d="M14,34 L14,14 L19,14 L24,24 L29,14 L34,14 L34,34 L29,34 L29,22 L24,30 L19,22 L19,34 Z" fill="var(--lime-0)"/>
+      </svg>
+      <div class="cap">Marca sola — sobre claro</div>
+    </div>
+    <div class="swatch">
+      <svg width="96" height="96" viewBox="0 0 48 48">
+        <circle cx="24" cy="24" r="19" fill="var(--lime-0)"/>
+        <path d="M14,34 L14,14 L19,14 L24,24 L29,14 L34,14 L34,34 L29,34 L29,22 L24,30 L19,22 L19,34 Z" fill="var(--indigo)"/>
+      </svg>
+      <div class="cap">Marca sola — invertida (moneda lima)</div>
+    </div>
+
+    <div class="swatch safezone">
+      <div class="box dark mask-circle">
+        <svg width="64" height="64" viewBox="0 0 48 48">
+          <path d="M14,34 L14,14 L19,14 L24,24 L29,14 L34,14 L34,34 L29,34 L29,22 L24,30 L19,22 L19,34 Z" fill="var(--lime-0)"/>
+        </svg>
+      </div>
+      <div class="cap">Launcher — circular</div>
+    </div>
+    <div class="swatch">
+      <div class="box dark mask-squircle">
+        <svg width="64" height="64" viewBox="0 0 48 48">
+          <path d="M14,34 L14,14 L19,14 L24,24 L29,14 L34,14 L34,34 L29,34 L29,22 L24,30 L19,22 L19,34 Z" fill="var(--lime-0)"/>
+        </svg>
+      </div>
+      <div class="cap">Launcher — squircle</div>
+    </div>
+    <div class="swatch">
+      <div class="box dark mask-square">
+        <svg width="64" height="64" viewBox="0 0 48 48">
+          <path d="M14,34 L14,14 L19,14 L24,24 L29,14 L34,14 L34,34 L29,34 L29,22 L24,30 L19,22 L19,34 Z" fill="var(--lime-0)"/>
+        </svg>
+      </div>
+      <div class="cap">Launcher — cuadrado redondeado</div>
+    </div>
+
+    <div class="swatch">
+      <div class="lockup-box">
+        <svg width="30" height="30" viewBox="0 0 48 48">
+          <circle cx="24" cy="24" r="19" fill="var(--lime-0)"/>
+          <path d="M14,34 L14,14 L19,14 L24,24 L29,14 L34,14 L34,34 L29,34 L29,22 L24,30 L19,22 L19,34 Z" fill="var(--indigo)"/>
+        </svg>
+        <div class="wordmark">Money<span class="tracker">Tracker</span></div>
+      </div>
+      <div class="cap">Lockup — cabecera drawer</div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="swatch">
+      <div class="box dark mask-square" style="width:48px;height:48px;padding:0">
+        <svg width="48" height="48" viewBox="0 0 48 48">
+          <path d="M14,34 L14,14 L19,14 L24,24 L29,14 L34,14 L34,34 L29,34 L29,22 L24,30 L19,22 L19,34 Z" fill="var(--lime-0)"/>
+        </svg>
+      </div>
+      <div class="cap">Prueba real 48px</div>
+    </div>
+    <div class="swatch">
+      <div class="box dark mask-square" style="width:24px;height:24px;padding:0">
+        <svg width="24" height="24" viewBox="0 0 48 48">
+          <path d="M14,34 L14,14 L19,14 L24,24 L29,14 L34,14 L34,34 L29,34 L29,22 L24,30 L19,22 L19,34 Z" fill="var(--lime-0)"/>
+        </svg>
+      </div>
+      <div class="cap">Prueba real 24px</div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= D: LA HOJA ================= -->
+<div class="direction">
+  <span class="tag">Ruptura deliberada del cliché</span>
+  <h2>D · La Hoja</h2>
+  <p class="concept">Concepto: una hoja/brote — el dinero apartado en sobres "crece" como una planta.</p>
+  <p class="why">
+    Por qué encaja: es la única dirección de las cuatro que no dibuja dinero literal — nada de
+    billetes, monedas ni gráficos. La lima de la paleta ya es, por casualidad de marca, un color
+    de crecimiento; esta dirección lo aprovecha en vez de pelearlo contra un fondo índigo
+    "corporativo". Es la más arriesgada: en un mercado (El Salvador / LatAm) donde el usuario
+    espera ver un símbolo de dinero reconocible de un vistazo, una hoja exige una fracción de
+    segundo más de lectura la primera vez. A cambio, es la que menos se parece a cualquier
+    competidor, con o sin nombre "Money Tracker".
+  </p>
+  <p class="at48">
+    A 48px: una sola silueta rellena, sin líneas finas obligatorias — la vena central es
+    decorativa y se cae con gusto por debajo de 32px. El riesgo real no es de legibilidad, es de
+    reconocimiento inmediato del rubro (finanzas) sin el apoyo del nombre al lado.
+  </p>
+
+  <div class="row">
+    <div class="swatch">
+      <svg width="96" height="96" viewBox="0 0 48 48">
+        <path d="M24,9 C33,14 34,27 24,39 C14,27 15,14 24,9 Z" fill="var(--lime-0)" transform="rotate(18 24 24)"/>
+        <path d="M24,12 C22,20 22,30 24,36" fill="none" stroke="var(--lime-3)" stroke-width="1.6" transform="rotate(18 24 24)"/>
+      </svg>
+      <div class="cap">Marca sola — sobre claro</div>
+    </div>
+    <div class="swatch">
+      <svg width="96" height="96" viewBox="0 0 48 48" style="background:var(--indigo);border-radius:8px">
+        <path d="M24,9 C33,14 34,27 24,39 C14,27 15,14 24,9 Z" fill="var(--lime-0)" transform="rotate(18 24 24)"/>
+        <path d="M24,12 C22,20 22,30 24,36" fill="none" stroke="var(--lime-3)" stroke-width="1.6" transform="rotate(18 24 24)"/>
+      </svg>
+      <div class="cap">Marca sola — sobre índigo</div>
+    </div>
+
+    <div class="swatch safezone">
+      <div class="box dark mask-circle">
+        <svg width="64" height="64" viewBox="0 0 48 48">
+          <path d="M24,9 C33,14 34,27 24,39 C14,27 15,14 24,9 Z" fill="var(--lime-0)" transform="rotate(18 24 24)"/>
+          <path d="M24,12 C22,20 22,30 24,36" fill="none" stroke="var(--lime-3)" stroke-width="1.6" transform="rotate(18 24 24)"/>
+        </svg>
+      </div>
+      <div class="cap">Launcher — circular</div>
+    </div>
+    <div class="swatch">
+      <div class="box dark mask-squircle">
+        <svg width="64" height="64" viewBox="0 0 48 48">
+          <path d="M24,9 C33,14 34,27 24,39 C14,27 15,14 24,9 Z" fill="var(--lime-0)" transform="rotate(18 24 24)"/>
+          <path d="M24,12 C22,20 22,30 24,36" fill="none" stroke="var(--lime-3)" stroke-width="1.6" transform="rotate(18 24 24)"/>
+        </svg>
+      </div>
+      <div class="cap">Launcher — squircle</div>
+    </div>
+    <div class="swatch">
+      <div class="box dark mask-square">
+        <svg width="64" height="64" viewBox="0 0 48 48">
+          <path d="M24,9 C33,14 34,27 24,39 C14,27 15,14 24,9 Z" fill="var(--lime-0)" transform="rotate(18 24 24)"/>
+          <path d="M24,12 C22,20 22,30 24,36" fill="none" stroke="var(--lime-3)" stroke-width="1.6" transform="rotate(18 24 24)"/>
+        </svg>
+      </div>
+      <div class="cap">Launcher — cuadrado redondeado</div>
+    </div>
+
+    <div class="swatch">
+      <div class="lockup-box">
+        <svg width="30" height="30" viewBox="0 0 48 48">
+          <path d="M24,9 C33,14 34,27 24,39 C14,27 15,14 24,9 Z" fill="var(--lime-0)" transform="rotate(18 24 24)"/>
+          <path d="M24,12 C22,20 22,30 24,36" fill="none" stroke="var(--lime-3)" stroke-width="1.6" transform="rotate(18 24 24)"/>
+        </svg>
+        <div class="wordmark">Money<span class="tracker">Tracker</span></div>
+      </div>
+      <div class="cap">Lockup — cabecera drawer</div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="swatch">
+      <div class="box dark mask-square" style="width:48px;height:48px;padding:0">
+        <svg width="48" height="48" viewBox="0 0 48 48">
+          <path d="M24,9 C33,14 34,27 24,39 C14,27 15,14 24,9 Z" fill="var(--lime-0)" transform="rotate(18 24 24)"/>
+        </svg>
+      </div>
+      <div class="cap">Prueba real 48px</div>
+    </div>
+    <div class="swatch">
+      <div class="box dark mask-square" style="width:24px;height:24px;padding:0">
+        <svg width="24" height="24" viewBox="0 0 48 48">
+          <path d="M24,9 C33,14 34,27 24,39 C14,27 15,14 24,9 Z" fill="var(--lime-0)" transform="rotate(18 24 24)"/>
+        </svg>
+      </div>
+      <div class="cap">Prueba real 24px</div>
+    </div>
+  </div>
+</div>
+
+<div class="direction" style="background:#f6f6fb;box-shadow:none;">
+  <h2 style="font-size:15px;">Recomendación original (superada por la de arriba)</h2>
+  <p class="why">
+    Se conserva el texto original para que quede registro de cómo se llegó a elegir A:
+    representaba la mecánica de producto real (<code>envelopes</code>), validaba la intuición
+    del dueño sin heredar los problemas 3D/multi-elemento de la referencia, y era simétrica y
+    robusta bajo recorte. Esa elección de FORMA sigue en pie — lo que cambió es cuánto
+    contenido debe llevar dentro, que es exactamente lo que resuelven las tres variantes de
+    arriba.
+  </p>
+</div>
+
+<div class="legend">
+  <h2>Tokens usados (todas las direcciones)</h2>
+  <table>
+    <tr><th></th><th>Token</th><th>Hex</th><th>Uso</th></tr>
+    <tr><td><span class="swab" style="background:var(--indigo)"></span></td><td><code>primary[0]</code></td><td>#010062</td><td>Fondo del icono / drawer / pliegue del sobre (agujero)</td></tr>
+    <tr><td><span class="swab" style="background:var(--lavender)"></span></td><td><code>primary[1]</code></td><td>#9C9AC8</td><td>Cuerpo del sobre (Intermedia/Máxima), barra corta (B)</td></tr>
+    <tr><td><span class="swab" style="background:var(--lime-0)"></span></td><td><code>accent[0]</code></td><td>#C7FF70</td><td>Color principal de marca sobre índigo</td></tr>
+    <tr><td><span class="swab" style="background:var(--lime-1)"></span></td><td><code>accent[1]</code></td><td>#8CC63F</td><td>Billete trasero, barra media (B)</td></tr>
+    <tr><td><span class="swab" style="background:var(--lime-2)"></span></td><td><code>accent[2]</code></td><td>#5CA41B</td><td>Billete medio (Máxima), base de la cinta (Máxima) — solo como forma, nunca como texto</td></tr>
+    <tr><td><span class="swab" style="background:var(--lime-3)"></span></td><td><code>accent[3]</code></td><td>#2E4A0C</td><td>Detalle/solapa/vena/cola de cinta sobre fondo lima</td></tr>
+  </table>
+</div>
+
+</body>
+</html>

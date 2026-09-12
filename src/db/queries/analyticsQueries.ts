@@ -1,5 +1,6 @@
 import {SQLiteDatabase} from 'react-native-sqlite-storage';
 import {getLocalTimeModifier, isValidPeriod, periodToRange} from './period';
+import {resolveSeedName} from './seedName';
 
 /**
  * Dashboard / Analítica aggregations. Every function here does its
@@ -291,6 +292,7 @@ export const getSpendingByCategory = async (
         c.category AS categoryName,
         c.icon AS categoryIcon,
         c.type AS categoryType,
+        c.seedKey AS categorySeedKey,
         -SUM(f.amount) AS spent
       FROM finances f
       JOIN categories c ON c.id = f.idCategory
@@ -305,7 +307,13 @@ export const getSpendingByCategory = async (
   for (let index = 0; index < resultSet.rows.length; index++) {
     const row = resultSet.rows.item(index);
     items.push({
-      category: {id: row.categoryId, name: row.categoryName, icon: row.categoryIcon, type: row.categoryType},
+      category: {
+        id: row.categoryId,
+        name: resolveSeedName(row.categoryName, row.categorySeedKey ?? null, 'defaultCategories'),
+        icon: row.categoryIcon,
+        type: row.categoryType,
+        seedKey: row.categorySeedKey ?? null,
+      },
       spent: row.spent,
     });
   }
@@ -382,6 +390,7 @@ export const getIncomeByCategory = async (
         c.category AS categoryName,
         c.icon AS categoryIcon,
         c.type AS categoryType,
+        c.seedKey AS categorySeedKey,
         SUM(f.amount) AS income
       FROM finances f
       JOIN categories c ON c.id = f.idCategory
@@ -396,7 +405,13 @@ export const getIncomeByCategory = async (
   for (let index = 0; index < resultSet.rows.length; index++) {
     const row = resultSet.rows.item(index);
     items.push({
-      category: {id: row.categoryId, name: row.categoryName, icon: row.categoryIcon, type: row.categoryType},
+      category: {
+        id: row.categoryId,
+        name: resolveSeedName(row.categoryName, row.categorySeedKey ?? null, 'defaultCategories'),
+        icon: row.categoryIcon,
+        type: row.categoryType,
+        seedKey: row.categorySeedKey ?? null,
+      },
       income: row.income,
     });
   }
@@ -439,6 +454,7 @@ export const getMonthlySpendingByCategory = async (
         c.category AS categoryName,
         c.icon AS categoryIcon,
         c.type AS categoryType,
+        c.seedKey AS categorySeedKey,
         -SUM(f.amount) AS spent
       FROM finances f
       JOIN categories c ON c.id = f.idCategory
@@ -456,9 +472,10 @@ export const getMonthlySpendingByCategory = async (
       period: row.period,
       category: {
         id: row.categoryId,
-        name: row.categoryName,
+        name: resolveSeedName(row.categoryName, row.categorySeedKey ?? null, 'defaultCategories'),
         icon: row.categoryIcon,
         type: row.categoryType,
+        seedKey: row.categorySeedKey ?? null,
       },
       spent: row.spent,
     });

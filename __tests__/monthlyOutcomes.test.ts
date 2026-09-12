@@ -16,6 +16,7 @@ const cat = (id: number, name: string): ICategory => ({
   name,
   icon: 'tag',
   type: 'expense',
+  seedKey: null,
 });
 
 const budget = (period: string, id: number, name: string, limit: number, spent: number) => ({

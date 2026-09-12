@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<title>MoneyTracker — Feature Graphic 1024x500</title>
+<style>
+  /* Lienzo EXACTO 1024x500 — Chrome headless se lanza con
+     --window-size=1024,500, así que el body debe llenar ese viewport
+     sin scrollbars ni desbordes que corran el recorte. */
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    width: 1024px;
+    height: 500px;
+    overflow: hidden;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  }
+
+  .canvas {
+    position: relative;
+    width: 1024px;
+    height: 500px;
+    background:
+      radial-gradient(ellipse 620px 420px at 51% 60%, rgba(156,154,200,0.30), rgba(156,154,200,0) 65%),
+      linear-gradient(160deg, #050080 0%, #010062 45%, #00004A 100%);
+    overflow: hidden;
+  }
+
+  /* ---------- Bloque de mensaje — centrado arriba, dentro del área
+     segura (>= 50px de margen vertical, y bien lejos de la franja
+     izquierda/centro-baja donde Play superpone el nombre) ---------- */
+  .message {
+    position: absolute;
+    top: 46px;
+    left: 0;
+    width: 1024px;
+    text-align: center;
+    z-index: 50;
+  }
+
+  .brandrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    margin-bottom: 10px;
+  }
+  .brandrow svg { display: block; }
+  .brandrow .word {
+    font-size: 16px;
+    font-weight: 800;
+    letter-spacing: -0.2px;
+    color: #FFFFFF;
+  }
+  .brandrow .word span { color: #C7FF70; }
+
+  .headline {
+    margin: 0;
+    font-size: 33px;
+    font-weight: 800;
+    line-height: 1.12;
+    letter-spacing: -0.4px;
+  }
+  .headline .l1 { color: #FFFFFF; }
+  .headline .l2 { color: #C7FF70; }
+
+  .tagline {
+    display: inline-flex;
+    margin-top: 14px;
+    padding: 8px 22px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(199,255,112,0.45);
+    color: #F3F3FA;
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: 0.1px;
+  }
+  .tagline b { color: #C7FF70; font-weight: 700; }
+
+  /* ---------- Abanico de capturas ---------- */
+  .shots { position: absolute; inset: 0; }
+
+  .shot {
+    position: absolute;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 3px solid rgba(250,250,250,0.92);
+    box-shadow: 0 20px 34px rgba(0,0,4,0.5), 0 2px 6px rgba(0,0,4,0.35);
+    background: #FAFAFA;
+    transform-origin: 50% 100%;
+  }
+  .shot img {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    object-position: top center;
+  }
+  /* las dos capturas exteriores van "atrás" en el abanico: un velo
+     índigo tenue las hunde en profundidad frente a las dos centrales.
+     Presupuestos parte de un fondo casi blanco, así que el mismo
+     0.20 se lee mucho más oscuro que sobre Nuevo movimiento (que ya
+     trae su propia tarjeta índigo) — cada una lleva su propia dosis. */
+  .shot.back::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+  #s-presupuestos::after { background: rgba(1,0,98,0.09); }
+  #s-nuevo::after { background: rgba(1,0,98,0.20); }
+
+  /* Desvanecido a blanco en la base de CADA tarjeta — el recorte de la
+     mitad superior de la captura siempre termina a mitad de un renglón
+     (barras del gráfico, fila de iconos de categoría sin su etiqueta).
+     En vez de perseguir un punto de corte "limpio" en las cuatro
+     imágenes, se disuelve el último 22% a blanco: lo que se corta
+     queda ilegible por diseño, no por accidente, y no choca contra el
+     borde del lienzo. Va DESPUÉS del velo en el DOM para pintar encima. */
+  .fade {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 22%;
+    background: linear-gradient(to bottom, rgba(250,250,250,0) 0%, rgba(250,250,250,0.35) 62%, #FAFAFA 100%);
+    pointer-events: none;
+  }
+
+  /* Abanico recentrado con más aire lateral (~17% de margen a cada
+     lado, antes ~13%) y las cuatro tarjetas más cortas y más arriba
+     para que ninguna toque el borde inferior del lienzo. */
+  #s-presupuestos { left: 177px; top: 238px; width: 168px; height: 202px; transform: rotate(-9deg); z-index: 1; }
+  #s-balance      { left: 307px; top: 196px; width: 217px; height: 290px; transform: rotate(-3deg); z-index: 2; }
+  #s-analisis     { left: 486px; top: 196px; width: 217px; height: 290px; transform: rotate(3deg);  z-index: 3; }
+  #s-nuevo        { left: 665px; top: 228px; width: 182px; height: 194px; transform: rotate(9deg);  z-index: 4; }
+</style>
+</head>
+<body>
+  <div class="canvas">
+
+    <div class="message">
+      <div class="brandrow">
+        <svg width="24" height="24" viewBox="0 0 48 48">
+          <g transform="translate(0,3)">
+            <rect x="12" y="6" width="15" height="14" rx="2" fill="#8CC63F" transform="rotate(-14 19.5 13)"/>
+            <rect x="15" y="8" width="16" height="14" rx="2" fill="#5CA41B" transform="rotate(-5 23 15)"/>
+            <rect x="18" y="11" width="16" height="13" rx="2" fill="#C7FF70" transform="rotate(6 26 17.5)"/>
+            <circle cx="26" cy="17" r="3.2" fill="#010062"/>
+            <rect x="7" y="19" width="34" height="19" rx="3" fill="#9C9AC8"/>
+            <path d="M7,19 L24,30 L41,19 Z" fill="#010062"/>
+          </g>
+        </svg>
+        <div class="word">Money<span>Tracker</span></div>
+      </div>
+
+      <p class="headline">
+        <span class="l1">Controla tus gastos.</span><br/>
+        <span class="l2">Cumple tus metas.</span>
+      </p>
+
+      <div class="tagline"><b>Sin cuenta</b>&nbsp;·&nbsp;<b>sin internet</b>&nbsp;·&nbsp;<b>sin anuncios</b></div>
+    </div>
+
+    <div class="shots">
+      <div class="shot back" id="s-presupuestos">
+        <img src="/Users/didiercruz/Development/Personal/MoneyTracker/docs/store/capturas/04-presupuestos.png" alt="" />
+        <div class="fade"></div>
+      </div>
+      <div class="shot" id="s-balance">
+        <img src="/Users/didiercruz/Development/Personal/MoneyTracker/docs/store/capturas/01-balance.png" alt="" />
+        <div class="fade"></div>
+      </div>
+      <div class="shot" id="s-analisis">
+        <img src="/Users/didiercruz/Development/Personal/MoneyTracker/docs/store/capturas/05-analisis.png" alt="" />
+        <div class="fade"></div>
+      </div>
+      <div class="shot back" id="s-nuevo">
+        <img src="/Users/didiercruz/Development/Personal/MoneyTracker/docs/store/capturas/03-nuevo-movimiento.png" alt="" />
+        <div class="fade"></div>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>

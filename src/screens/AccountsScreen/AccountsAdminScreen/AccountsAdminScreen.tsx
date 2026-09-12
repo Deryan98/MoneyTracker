@@ -24,8 +24,10 @@ import {ConfirmDialog} from '@components/organisms/feedback';
 import {useNoticeDialog} from '@hooks/useNoticeDialog';
 import {getDbConnection} from '@db/db';
 import {archiveAccount, getAccounts, IAccountWithBalance} from '@db/queries';
+import {formatCentsToCurrency} from '@utils/currency';
 import {accent, colors, gray, inactive, primary, secondary, white} from '@constants/colors/colors';
 import {getKindLabel} from '../CreateAccount/partials/KindField/KindField';
+import {computeCreditUsage} from '../mappers';
 import {AccountsAdminNavigationProp} from '@navigation/[accounts]/AccountsAdminNavigator/types';
 
 type Status = 'loading' | 'success' | 'error';
@@ -235,6 +237,11 @@ export const AccountsAdminScreen = () => {
           }
           renderItem={({item}) => {
             const isExpanded = expandedId === item.id;
+            // Puramente informativo (S2/T9) — `computeCreditUsage` ya
+            // filtra los casos en que no hay nada que mostrar. Calculado
+            // ANTES del JSX (no como una funcion definida durante el
+            // render) para no disparar `react/no-unstable-nested-components`.
+            const usedPercent = computeCreditUsage(item.balance, item.creditLimit);
             return (
               <>
             <TouchableOpacity
@@ -259,6 +266,18 @@ export const AccountsAdminScreen = () => {
                     {<Money cents={item.balance} fontSize={12} />}
                   </Text>
                 </Text>
+                {/* Indicador de % de cupo usado (S2/T9) — puramente
+                    informativo, sin color de alerta ni umbral (no-go de
+                    la pitch). `computeCreditUsage` ya filtra los casos
+                    en que no hay nada que mostrar. */}
+                {usedPercent !== null && (
+                  <Text size={12} color={colors[gray][0]}>
+                    {t('accounts.creditLimitUsedLabel', {
+                      percent: usedPercent,
+                      limit: formatCentsToCurrency(item.creditLimit ?? 0),
+                    })}
+                  </Text>
+                )}
               </View>
               <VectorIcon
                 name={isExpanded ? 'chevron-up' : 'chevron-down'}

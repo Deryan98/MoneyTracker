@@ -55,6 +55,8 @@
     "retryLoadingTransactions": "Reintentar carga de transacciones",
     "loadingMoreTransactions": "Cargando más transacciones",
     "noTransactionsYet": "Aún no hay transacciones para esta cuenta.",
+    "noMovementsInPeriod": "No hay movimientos en {{period}}.",
+    "balanceFromOtherPeriods": "El saldo que ves viene de movimientos de otros periodos.",
     "archive": "Archivar",
     "archiveTitle": "¿Archivar esta cuenta?",
     "archiveMessage": "\"{{name}}\" dejará de aparecer en tu lista de cuentas. No se elimina nada — su historial de transacciones se conserva, y puedes revisarlo en \"Cuentas archivadas\".",
@@ -108,6 +110,11 @@
     "balanceSignOwed": "Lo debo",
     "balanceSignPositive": "A favor",
     "debtBalanceHint": "En una tarjeta o un préstamo, lo que debes se guarda como saldo negativo: así resta de tu patrimonio neto.",
+    "creditLimitLabel": "Límite de crédito",
+    "creditLimitPlaceholder": "Límite de crédito (opcional, ej. 2000.00)",
+    "creditLimitAccessibilityLabel": "Límite de crédito",
+    "creditLimitInvalid": "Ingresa un límite de crédito válido (o déjalo vacío si no lo conoces)",
+    "creditLimitUsedLabel": "{{percent}}% usado de {{limit}}",
     "tabLabel": "Cuentas",
     "adminTitle": "Administrar cuentas",
     "adminMessage": "Crea, edita o archiva tus cuentas. Para ver los movimientos de una, entra en Movimientos › Cuentas.",
@@ -122,7 +129,21 @@
     "archiveAccountTitle": "¿Archivar la cuenta?",
     "archiveAccountMessage": "«{{name}}» dejará de aparecer en tus listas y de sumar al patrimonio neto. Sus movimientos NO se borran: siguen en el historial con su importe y su fecha. Puedes recuperarla cuando quieras desde «Cuentas archivadas».",
     "archiveAccountErrorMessage": "No se pudo archivar la cuenta. Inténtalo de nuevo.",
-    "archivedAccountsAccessibilityLabel": "Ver las cuentas archivadas"
+    "archivedAccountsAccessibilityLabel": "Ver las cuentas archivadas",
+    "reviewBannerTitle": "Revisa el saldo de {{count}} cuentas",
+    "reviewBannerAction": "Revisar cuentas con saldo pendiente de confirmar",
+    "reviewScreenTitle": "Revisión de saldos",
+    "reviewScreenMessage": "Estas cuentas tienen un saldo positivo sin confirmar. Si tecleaste el cupo de tu tarjeta en vez de lo que debes, corrígelo aquí; si de verdad tienes saldo a favor, confírmalo.",
+    "reviewLoading": "Cargando cuentas por revisar",
+    "reviewLoadError": "No se pudieron cargar las cuentas por revisar: {{message}}",
+    "reviewEmptyState": "No tienes cuentas pendientes de revisión.",
+    "reviewWasLimitAction": "Esto era mi límite de crédito",
+    "reviewConfirmCorrectAction": "Este saldo a favor es correcto",
+    "reviewConfirmAmountAction": "Confirmar",
+    "reviewAmountOwedLabel": "¿Cuánto debes hoy realmente?",
+    "reviewAmountOwedRequired": "Ingresa cuánto debes realmente (no puede quedar vacío ni en 0)",
+    "netWorthChangedTitle": "Tu patrimonio neto cambió",
+    "netWorthChangedMessage": "Pasó de {{before}} a {{after}}. El cambio viene de corregir el saldo de una o más tarjetas que tenían el cupo cargado como si fuera dinero a favor, en vez de la deuda real."
   },
   "budgets": {
     "title": "Presupuestos",
@@ -145,7 +166,7 @@
     "setNewLimit": "Establecer un nuevo límite mensual",
     "setLimit": "Establecer un límite",
     "limitRowAccessibilityHint": "Abre el límite de esta categoría para editarlo",
-    "assignMoney": "Apartar dinero",
+    "assignMoney": "Abonar dinero",
     "withdrawMoney": "Retirar dinero",
     "archive": "Archivar",
     "archiveEnvelopeTitle": "¿Archivar este sobre?",
@@ -154,8 +175,7 @@
     "assignErrorMessage": "No se pudo apartar este monto. Inténtalo de nuevo.",
     "withdrawErrorMessage": "No se pudo retirar este monto. Inténtalo de nuevo.",
     "headsUp": "Aviso",
-    "overAllocatedMessage": "Ahora has apartado más de lo que tienes disponible. Disponible para apartar: {{amount}}.",
-    "envelopeOverdrawnMessage": "El saldo de este sobre ahora es negativo: {{amount}}. Retiraste más de lo que tenías apartado.",
+    "overAllocatedMessage": "Has comprometido en metas más dinero del que tienes en efectivo y banco. Te has pasado por {{amount}}.",
     "limitSaveErrorMessage": "No se pudo guardar este límite. Inténtalo de nuevo.",
     "chooseCategory": "Elige una categoría",
     "invalidLimit": "Ingresa un límite válido mayor a $0.00",
@@ -164,7 +184,7 @@
     "everyCategoryHasLimit": "Todas las categorías de gasto ya tienen un límite establecido este mes.",
     "monthlyLimitPlaceholder": "Límite mensual, ej. 300.00",
     "monthlyLimitAccessibilityLabel": "Límite mensual",
-    "assignToTitle": "Apartar a {{name}}",
+    "assignToTitle": "Abonar a {{name}}",
     "withdrawFromTitle": "Retirar de {{name}}",
     "availableToAssignContext": "{{amount}} disponible para apartar",
     "currentBalanceContext": "Saldo actual: {{amount}}",
@@ -189,11 +209,9 @@
     "retryLoadingEnvelope": "Reintentar carga del sobre",
     "overBy": "Te pasaste por {{amount}}",
     "progress": {
-      "paidLeft": "{{pct}}% pagado · quedan {{amount}}",
-      "paidOff": "Pagado por completo",
-      "paidOffOverpaid": "Pagado por completo · {{amount}} de más",
       "savedNoGoal": "{{amount}} ahorrado · sin meta establecida",
-      "pctOfGoal": "{{pct}}% de {{amount}}"
+      "pctOfGoal": "{{pct}}% de {{amount}}",
+      "goalExceeded": "Meta superada por {{amount}}"
     },
     "envelopeForm": {
       "notFound": "No se encontró este sobre.",
@@ -245,7 +263,8 @@
     "rolloverApply": "Usar estos límites",
     "rolloverAdjust": "Aplicarlos y ajustarlos",
     "rolloverDismiss": "Cerrar la sugerencia de límites",
-    "rolloverErrorMessage": "No se pudieron crear los límites. Inténtalo de nuevo."
+    "rolloverErrorMessage": "No se pudieron crear los límites. Inténtalo de nuevo.",
+    "withdrawTooMuchMessage": "No puedes retirar más de lo que hay en la meta. Disponible: {{amount}}."
   },
   "achievements": {
     "title": "Logros",
@@ -358,32 +377,8 @@
     "adminHeaderSubtitle": "y sus movimientos"
   },
   "transfer": {
-    "title": "Transferir",
-    "back": "Volver",
-    "explainer": "Mover dinero entre tus cuentas no cambia tu patrimonio neto.",
-    "loadingAccounts": "Cargando cuentas",
-    "retryLoadingAccounts": "Reintentar carga de cuentas",
-    "loadAccountsError": "No se pudieron cargar las cuentas: {{message}}",
-    "needTwoAccounts": "Necesitas al menos dos cuentas activas para transferir dinero.",
-    "createAccount": "Crear cuenta",
     "from": "Desde",
-    "to": "Hacia",
-    "amountLabel": "Monto a transferir",
-    "invalidAmount": "Ingresa un monto válido mayor a $0.00.",
-    "previewTitle": "Después de transferir",
-    "previewAccessibilityLabel": "Después de transferir: {{fromName}} quedaría en {{fromBalance}}, {{toName}} quedaría en {{toBalance}}",
-    "confirmAccessibilityLabel": "Confirmar transferencia",
-    "transferring": "Transfiriendo…",
-    "transfer": "Transferir",
-    "doneTitle": "Listo",
-    "doneMessage": "Transferencia realizada.",
-    "submitError": "No se pudo completar la transferencia: {{message}}",
-    "noOtherAccount": "No hay otra cuenta disponible.",
-    "pickFromTitle": "Elige la cuenta de origen",
-    "pickToTitle": "Elige la cuenta de destino",
-    "pickerRowAccessibilityLabel": "{{name}}, saldo {{balance}}",
-    "selectorAccessibilityLabel": "{{label}}: {{name}}, saldo {{balance}}",
-    "selectorAccessibilityHint": "Toca para elegir otra cuenta"
+    "to": "Hacia"
   },
   "analysis": {
     "title": "Análisis",
@@ -507,7 +502,13 @@
     "deleteTransferMessage": "Se eliminará la transferencia completa de {{amount}} entre {{from}} y {{to}}. Se borran LAS DOS partes: media transferencia dejaría dinero descontado que nadie recibió.",
     "deleteTransactionError": "No se pudo eliminar el movimiento. Inténtalo de nuevo.",
     "transferNotEditableTitle": "Las transferencias no se editan",
-    "transferNotEditable": "Una transferencia son dos movimientos espejo, y cambiar solo uno inventaría dinero. Elimínala y vuelve a crearla desde Transferir."
+    "transferNotEditable": "Una transferencia son dos movimientos espejo, y cambiar solo uno inventaría dinero. Elimínala y vuelve a crearla desde Transferir.",
+    "segmentTransfer": "Transferencia",
+    "transferDestinationLabel": "Hacia la cuenta",
+    "chooseDestinationAccountFirst": "Elige la cuenta que recibe el dinero.",
+    "needsSecondAccountForTransfer": "Para transferir necesitas al menos dos cuentas. Crea otra y vuelve aquí.",
+    "destinationAccountAccessibilityLabel": "Transferir hacia {{name}}, {{kind}}",
+    "transferNeedsNoCategory": "Este movimiento se queda entre tus cuentas, así que no necesita categoría."
   },
   "icons": {
     "pickerTitle": "Elige un ícono",
@@ -587,7 +588,14 @@
     "freelance": "Trabajo independiente",
     "rentalIncome": "Alquileres",
     "investments": "Intereses e inversiones",
-    "refunds": "Reembolsos"
+    "refunds": "Reembolsos",
+    "bills": "Facturas",
+    "children": "Hijos",
+    "pantry": "Despensa",
+    "business": "Negocio"
+  },
+  "defaultAccounts": {
+    "cash": "Efectivo"
   },
   "entityPicker": {
     "categoriesTitle": "Listado de Categorías y sus Movimientos",

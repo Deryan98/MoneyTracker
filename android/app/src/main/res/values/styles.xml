@@ -4,6 +4,14 @@
     <style name="AppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="android:editTextBackground">@drawable/rn_edit_text_material</item>
+
+        <!-- Con targetSdk 35 Android 15+ fuerza edge-to-edge: el sistema
+             deja de pintar su propio fondo tras la barra de estado y se ve
+             el de la app, que es gris claro. Los iconos claros por defecto
+             quedaban ilegibles encima. Esto los pone oscuros. Se hace en el
+             tema y no con <StatusBar> de RN para que aplique desde el primer
+             frame, sin parpadeo al arrancar. -->
+        <item name="android:windowLightStatusBar">true</item>
     </style>
 
 </resources>

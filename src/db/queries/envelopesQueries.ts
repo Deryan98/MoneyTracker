@@ -1,6 +1,6 @@
 import {ResultSet, SQLiteDatabase, Transaction} from 'react-native-sqlite-storage';
 import {isFiniteInteger} from './numberGuards';
-import {getNetWorth} from './accountsQueries';
+import {getLiquidBalance} from './accountsQueries';
 
 /**
  * Sobres — Fondos (ahorro, emergencia, seguridad, vacaciones) y Deudas
@@ -79,6 +79,19 @@ import {getNetWorth} from './accountsQueries';
  * recuperar el id recien insertado dentro de la misma transaccion.
  */
 const ENVELOPE_CLOSING_NOTE = 'Meta cumplida';
+
+/**
+ * Se intento retirar mas de lo apartado. Clase propia y no un `Error`
+ * con un mensaje: la pantalla necesita el saldo disponible para
+ * decirselo al usuario, y sacarlo de una cadena de texto seria fragil y
+ * ademas se rompe al traducirla.
+ */
+export class EnvelopeOverdrawError extends Error {
+  constructor(public readonly available: number) {
+    super(`Cannot withdraw more than the envelope holds (available: ${available})`);
+    this.name = 'EnvelopeOverdrawError';
+  }
+}
 
 export type EnvelopeKind = 'fund' | 'debt';
 
@@ -403,20 +416,19 @@ export interface ICompleteEnvelopeResult {
  * separado, el boton podria ofrecerse justo cuando la escritura lo va a
  * rechazar.
  *
- * - Deuda: `paidAmount >= targetAmount`. Pagar una deuda es RETIRAR del
- *   sobre (ver `withdrawFromEnvelope`), asi que lo que cuenta es lo
- *   retirado, no lo apartado.
- * - Fondo CON meta: `balance >= targetAmount`.
- * - Fondo SIN meta: cumplible en cuanto tenga saldo. El esquema permite
- *   `targetAmount NULL` solo en los fondos, y un fondo sin meta nunca
- *   llegaria al 100% de nada — pero cerrarlo sigue siendo un logro
- *   legitimo ("ahorre $3,200 y me lo gaste en lo que queria"), asi que
- *   el unico requisito ahi es que haya algo que celebrar.
+ * UNA sola regla, para fondos y para deudas. Antes habia dos y eran
+ * opuestas —una deuda progresaba con lo RETIRADO (`paidAmount`)— lo que
+ * permitia pasar del 100% sin tope y dejar el restante en negativo.
+ * Decision del dueno (2026-09-05): las deudas usan la logica de los
+ * fondos, se abona y la barra sube, se retira y baja.
+ *
+ * - CON meta: `balance >= targetAmount`.
+ * - SIN meta: cumplible en cuanto tenga saldo. Un sobre sin meta nunca
+ *   llegaria al 100% de nada, pero cerrarlo sigue siendo un logro
+ *   legitimo ("junte $3,200 y me lo gaste en lo que queria"), asi que el
+ *   unico requisito ahi es que haya algo que celebrar.
  */
 export const hasReachedGoal = (envelope: IEnvelopeWithBalance): boolean => {
-  if (envelope.kind === 'debt') {
-    return envelope.targetAmount !== null && (envelope.paidAmount ?? 0) >= envelope.targetAmount;
-  }
   if (envelope.targetAmount === null) {
     return envelope.balance > 0;
   }
@@ -712,17 +724,24 @@ export const getTotalRemainingDebt = async (
 };
 
 /**
- * `netWorth - totalApartado` (all active envelopes, every kind) — "money
- * not yet claimed by any envelope". Negative means more has been
- * assigned across envelopes in total than currently exists across active
- * accounts (see this file's top-of-file doc on why that is ALLOWED, not
- * rejected). Cents. Exported directly (not just used internally by
- * `assignToEnvelope`) so a "create/edit assignment" form can show
- * "$X disponible para asignar" before the user even submits.
+ * `liquidBalance - totalApartado` — el dinero que TIENES y que todavia
+ * no has comprometido en ninguna meta. Cents; negativo significa que
+ * entre todas las metas has apartado mas de lo que hay en efectivo y
+ * banco (permitido, no rechazado — ver el doc de cabecera de este
+ * archivo).
+ *
+ * Antes restaba del PATRIMONIO NETO, que incluye los prestamos en
+ * negativo: con una deuda grande el resultado era negativo antes de
+ * apartar nada y el aviso saltaba en cada asignacion. Ver
+ * `getLiquidBalance` para el caso real que lo destapo.
+ *
+ * Exportada (no solo usada por `assignToEnvelope`) para que un
+ * formulario de asignacion pueda mostrar "$X disponible para apartar"
+ * antes incluso de enviar.
  */
 export const getAvailableToAssign = async (db: SQLiteDatabase): Promise<number> => {
-  const [netWorth, totalApartado] = await Promise.all([getNetWorth(db), getEnvelopesTotal(db)]);
-  return netWorth - totalApartado;
+  const [liquid, totalApartado] = await Promise.all([getLiquidBalance(db), getEnvelopesTotal(db)]);
+  return liquid - totalApartado;
 };
 
 export interface IEnvelopeMovement {
@@ -814,6 +833,9 @@ export interface IWithdrawFromEnvelopeResult {
   /** `balance < 0` — this withdrawal consumed more than the envelope
    * currently held apartado. Never blocks the withdrawal, same policy as
    * `overAllocated` above — see this file's top-of-file doc. */
+  /** Ya no puede ser `true`: retirar de mas se bloquea antes de
+   * escribir (`EnvelopeOverdrawError`). Se conserva el campo para no
+   * romper llamadores, siempre `false`. */
   envelopeOverdrawn: boolean;
 }
 
@@ -832,9 +854,27 @@ export const withdrawFromEnvelope = async (
   if (!isFiniteInteger(amount) || amount <= 0) {
     throw new Error('amount must be a positive integer number of cents');
   }
-  const [envelopeResult] = await db.executeSql('SELECT id FROM envelopes WHERE id = ?', [idEnvelope]);
-  if (envelopeResult.rows.length === 0) {
+  const existing = await getEnvelopeById(db, idEnvelope);
+  if (existing === null) {
     throw new Error(`Envelope ${idEnvelope} does not exist`);
+  }
+
+  /**
+   * No se puede retirar mas de lo que hay. Es la unica de las dos
+   * politicas de este archivo que BLOQUEA en vez de avisar, y la
+   * asimetria es deliberada:
+   *
+   * - Apartar de mas SI se permite (avisa y sigue). El dinero existe de
+   *   verdad, solo esta sobrecomprometido entre metas — es una decision
+   *   del usuario, no un imposible.
+   * - Retirar de mas NO. Un saldo apartado negativo no significa nada:
+   *   no puedes tener reservado menos que cero. Antes solo se devolvia
+   *   `envelopeOverdrawn: true` y se dejaba pasar, y eso convertia el
+   *   porcentaje en negativo en cuanto el progreso paso a medirse por
+   *   saldo.
+   */
+  if (amount > existing.balance) {
+    throw new EnvelopeOverdrawError(existing.balance);
   }
 
   const resolvedDateCreated = dateCreated ?? new Date().toISOString();
@@ -849,7 +889,7 @@ export const withdrawFromEnvelope = async (
   // runs). Guards the type (`getEnvelopeById` returns `| null`) rather
   // than asserting.
   const balance = envelope?.balance ?? -amount;
-  return {id: result.insertId, balance, envelopeOverdrawn: balance < 0};
+  return {id: result.insertId, balance, envelopeOverdrawn: false};
 };
 
 /** Keyset cursor: the last row's `(dateCreated, id)` from the previous page. */

@@ -10,11 +10,11 @@ export type AccountsNavParams = {
    */
   MovementsHome: undefined;
   CreateAccount: undefined;
-  /** Move money between two of the user's own accounts — see
-   * `src/screens/AccountsScreen/Transfer/Transfer.tsx`'s doc comment for
-   * why it lives in this navigator (no entry for it in the approved
-   * "New movement" prototype). */
-  Transfer: undefined;
+  /** S3/T11 — revision guiada de las cuentas de deuda que nacieron con
+   * el cupo cargado como saldo positivo. Empujada desde el banner de
+   * `AccountsScreen`, la pestana ("Cuentas") de este stack — ver
+   * `docs/product/slices/S3-revision-guiada-de-tarjetas-mal-cargadas.md`. */
+  BalanceReview: undefined;
   /** Crear/editar categoria empujadas desde la pestana de categorias
    * — ver el comentario del navegador. */
   CreateCategory: undefined;
@@ -31,7 +31,4 @@ export type CreateAccountNavigationProp = NativeStackNavigationProp<
   'CreateAccount'
 >;
 
-export type TransferNavigationProp = NativeStackNavigationProp<
-  AccountsNavParams,
-  'Transfer'
->;
+

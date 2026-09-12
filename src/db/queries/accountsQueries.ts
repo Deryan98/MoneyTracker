@@ -1,5 +1,6 @@
 import {SQLiteDatabase} from 'react-native-sqlite-storage';
 import {isFiniteInteger} from './numberGuards';
+import {resolveSeedName} from './seedName';
 
 /**
  * `accounts` columns are `id` / `name` / `icon` / `kind` /
@@ -46,6 +47,18 @@ export const DEBT_ACCOUNT_KINDS: readonly AccountKind[] = [
 export const isDebtAccountKind = (kind: AccountKind): boolean =>
   DEBT_ACCOUNT_KINDS.includes(kind);
 
+/**
+ * Los tipos que contienen dinero DISPONIBLE HOY.
+ *
+ * Deja fuera las deudas (`credit_card`, `loan`) por lo obvio, pero
+ * tambien `receivable`: lo que alguien te debe todavia no lo tienes, y
+ * no puedes apartar dinero que no ha llegado.
+ *
+ * Existe para `getLiquidBalance`, que es lo que decide cuanto se puede
+ * comprometer en metas — ver alli por que no vale el patrimonio neto.
+ */
+export const LIQUID_ACCOUNT_KINDS: readonly AccountKind[] = ['cash', 'bank'] as const;
+
 export const ACCOUNT_KINDS: readonly AccountKind[] = [
   'cash',
   'bank',
@@ -65,6 +78,10 @@ const isValidAccountKind = (kind: string): kind is AccountKind =>
  */
 export interface IAccount {
   id: number;
+  /** Already resolved for display — see `resolveSeedName` and ADR 0004
+   * (`docs/architecture/adr/0004-seedkey-y-traduccion-en-vivo-de-la-siembra.md`).
+   * `seedKey` below tells you WHY it may differ from the raw
+   * `accounts.name` column, but you never need to re-derive it. */
   name: string;
   icon: string;
   kind: AccountKind;
@@ -75,6 +92,21 @@ export interface IAccount {
   archivedAt: string | null;
   createdAt: string;
   updatedAt: string;
+  /** Clave bajo `defaultAccounts.` en los JSON de i18n si esta fila es
+   * la sembrada por la migracion 004 ("Efectivo"); `null` si el usuario
+   * la creo o la renombro — ver `updateAccount`. */
+  seedKey: string | null;
+  /** Cents. El CUPO de una tarjeta de credito — dato informativo, nunca
+   * usado para calcular el saldo. `null` = no capturado. Semanticamente
+   * solo tiene sentido para `kind === 'credit_card'`, pero el esquema no
+   * lo obliga (ver `011_creditLimit.ts`). */
+  creditLimit: number | null;
+  /** ISO-8601, o `null` si esta cuenta de deuda con `initialBalance`
+   * positivo todavia no fue revisada por el dueno (ver
+   * `getAccountsPendingBalanceReview` y `012_accountBalanceReview.ts`).
+   * Sin significado para una cuenta que nunca tuvo `initialBalance`
+   * positivo. */
+  initialBalanceConfirmedAt: string | null;
 }
 
 /**
@@ -94,6 +126,9 @@ export interface IInsertAccountInput {
   kind: AccountKind;
   /** Cents. Defaults to 0. */
   initialBalance?: number;
+  /** Cents. `null`/omitted = sin cupo capturado. Solo tiene sentido
+   * semantico para `kind === 'credit_card'`, ver `IAccount.creditLimit`. */
+  creditLimit?: number | null;
   /** ISO-8601. Defaults to `new Date().toISOString()` if omitted. */
   createdAt?: string;
   /** ISO-8601. Defaults to `new Date().toISOString()` if omitted. */
@@ -109,6 +144,10 @@ export interface IUpdateAccountInput {
    * account with the wrong opening balance"), not a hidden side channel
    * for recording a transaction; movements still belong in `finances`. */
   initialBalance?: number;
+  /** Cents, or `null` to clear a previously-captured cupo.
+   * `undefined` (the default, not passed) leaves it untouched — same
+   * partial-update convention as every other field here. */
+  creditLimit?: number | null;
 }
 
 export interface IGetAccountsOptions {
@@ -118,13 +157,16 @@ export interface IGetAccountsOptions {
 
 const mapRowToAccountWithBalance = (row: any): IAccountWithBalance => ({
   id: row.id,
-  name: row.name,
+  name: resolveSeedName(row.name, row.seedKey ?? null, 'defaultAccounts'),
   icon: row.icon,
   kind: row.kind,
   initialBalance: row.initialBalance,
   archivedAt: row.archivedAt ?? null,
   createdAt: row.createdAt,
   updatedAt: row.updatedAt,
+  seedKey: row.seedKey ?? null,
+  creditLimit: row.creditLimit ?? null,
+  initialBalanceConfirmedAt: row.initialBalanceConfirmedAt ?? null,
   balance: row.balance,
 });
 
@@ -148,6 +190,9 @@ const ACCOUNTS_WITH_BALANCE_SELECT = `
     a.archivedAt AS archivedAt,
     a.createdAt AS createdAt,
     a.updatedAt AS updatedAt,
+    a.seedKey AS seedKey,
+    a.creditLimit AS creditLimit,
+    a.initialBalanceConfirmedAt AS initialBalanceConfirmedAt,
     a.initialBalance + COALESCE(f.total, 0) AS balance
   FROM accounts a
   LEFT JOIN (
@@ -165,6 +210,11 @@ const ACCOUNTS_WITH_BALANCE_SELECT = `
  *   `CHECK` is safe here, unlike `categories.type`).
  * - `Error('initialBalance must be an integer number of cents')` if
  *   `initialBalance` is passed and is not a safe integer.
+ * - `Error('creditLimit must be an integer number of cents')` if
+ *   `creditLimit` is passed as something other than `null`/`undefined`
+ *   and is not a safe integer — same guard as `initialBalance`, applied
+ *   only when a value is actually supplied (`null` always passes: it
+ *   means "no cupo captured", not zero).
  *
  * Returns the new row's `id` (from `insertId`), not the full row.
  */
@@ -179,14 +229,26 @@ export const insertAccount = async (
   if (!isFiniteInteger(initialBalance)) {
     throw new Error('initialBalance must be an integer number of cents');
   }
+  const creditLimit = input.creditLimit ?? null;
+  if (creditLimit !== null && !isFiniteInteger(creditLimit)) {
+    throw new Error('creditLimit must be an integer number of cents');
+  }
   const now = new Date().toISOString();
   const createdAt = input.createdAt ?? now;
   const updatedAt = input.updatedAt ?? now;
 
   const [result] = await db.executeSql(
-    `INSERT INTO accounts (name, icon, kind, initialBalance, createdAt, updatedAt)
-      VALUES (?, ?, ?, ?, ?, ?)`,
-    [input.name, input.icon, input.kind, initialBalance, createdAt, updatedAt],
+    `INSERT INTO accounts (name, icon, kind, initialBalance, creditLimit, createdAt, updatedAt)
+      VALUES (?, ?, ?, ?, ?, ?, ?)`,
+    [
+      input.name,
+      input.icon,
+      input.kind,
+      initialBalance,
+      creditLimit,
+      createdAt,
+      updatedAt,
+    ],
   );
   return {id: result.insertId};
 };
@@ -201,6 +263,15 @@ export const insertAccount = async (
  * names, never from caller input — only the VALUES are parameterized —
  * so this cannot become a SQL-injection vector despite being "dynamic".
  *
+ * --- `seedKey` se borra SOLO si `name` cambia DE VERDAD ---
+ *
+ * Misma logica, mismo motivo, que `updateCategory` documenta en detalle
+ * — ver ADR 0004. Si `input.name` no se pasa, `seedKey` ni se toca (el
+ * usuario no edito el nombre). Si se pasa, se compara contra el nombre
+ * YA RESUELTO de la fila actual (`resolveSeedName`, el mismo valor que
+ * el formulario mostro al cargar) — nunca contra la columna cruda,
+ * porque esta puede estar en un idioma distinto al activo ahora mismo.
+ *
  * Throws the same `kind`/`initialBalance` validation errors as
  * `insertAccount` if those fields are passed and invalid.
  */
@@ -210,9 +281,24 @@ export const updateAccount = async (
   input: IUpdateAccountInput,
 ): Promise<void> => {
   const sets: string[] = [];
-  const params: (string | number)[] = [];
+  const params: (string | number | null)[] = [];
 
   if (input.name !== undefined) {
+    const [current] = await db.executeSql(
+      'SELECT name, seedKey FROM accounts WHERE id = ?',
+      [id],
+    );
+    if (current.rows.length > 0) {
+      const currentRow = current.rows.item(0);
+      const currentDisplayName = resolveSeedName(
+        currentRow.name,
+        currentRow.seedKey ?? null,
+        'defaultAccounts',
+      );
+      const isEffectiveRename = input.name !== currentDisplayName;
+      sets.push('seedKey = CASE WHEN ? THEN NULL ELSE seedKey END');
+      params.push(isEffectiveRename ? 1 : 0);
+    }
     sets.push('name = ?');
     params.push(input.name);
   }
@@ -233,6 +319,13 @@ export const updateAccount = async (
     }
     sets.push('initialBalance = ?');
     params.push(input.initialBalance);
+  }
+  if (input.creditLimit !== undefined) {
+    if (input.creditLimit !== null && !isFiniteInteger(input.creditLimit)) {
+      throw new Error('creditLimit must be an integer number of cents');
+    }
+    sets.push('creditLimit = ?');
+    params.push(input.creditLimit);
   }
 
   if (sets.length === 0) {
@@ -357,6 +450,53 @@ export const getAccountById = async (
  * covering-index-backed aggregate `getAccounts` uses) instead of
  * fetching every account row into JS just to add them up.
  */
+/**
+ * El dinero que de verdad tienes hoy: la suma de los saldos de las
+ * cuentas liquidas activas (efectivo y banco). Cents; puede ser
+ * negativo si un banco esta en descubierto.
+ *
+ * ## Por que esto y no `getNetWorth`
+ *
+ * `getAvailableToAssign` restaba lo apartado del PATRIMONIO NETO, y el
+ * patrimonio neto incluye los prestamos con signo negativo. Con un
+ * prestamo de $30,000 el resultado era negativo antes de apartar un
+ * solo dolar, asi que el aviso de "has apartado mas de lo disponible"
+ * saltaba en CADA asignacion, con cualquier importe, para siempre.
+ * Reportado por el dueno con captura: el dialogo decia
+ * "Disponible para apartar: -$29,910.00" al apartar $6,000.
+ *
+ * Un aviso que sale siempre no avisa de nada — ensena a aceptarlo sin
+ * leer, y entonces tampoco se lee el dia que dice algo cierto.
+ *
+ * Y el error no era solo de calibracion sino conceptual: apartar dinero
+ * es repartir lo que TIENES, no lo que VALES. Se puede reservar $900 de
+ * la cuenta de ahorro debiendo $30,000 de un prestamo a diez anos; las
+ * dos cosas son ciertas a la vez y restarlas mezcla dos preguntas
+ * distintas.
+ *
+ * `getNetWorth` sigue existiendo sin cambios: es la cifra correcta para
+ * "cuanto valgo", que es lo que muestra la tarjeta de Balance. Lo que
+ * cambia es quien la usa para decidir cuanto se puede comprometer.
+ *
+ * La lista de tipos se interpola desde `LIQUID_ACCOUNT_KINDS`, no se
+ * escribe a mano: es la unica interpolacion que este proyecto permite
+ * en SQL —valores de una constante del propio codigo, nunca entrada del
+ * usuario— y evita que la constante y la consulta se separen.
+ */
+export const getLiquidBalance = async (db: SQLiteDatabase): Promise<number> => {
+  const placeholders = LIQUID_ACCOUNT_KINDS.map(() => '?').join(', ');
+  const [resultSet] = await db.executeSql(
+    `SELECT COALESCE(SUM(a.initialBalance + COALESCE(f.total, 0)), 0) AS liquid
+      FROM accounts a
+      LEFT JOIN (
+        SELECT idAccount, SUM(amount) AS total FROM finances GROUP BY idAccount
+      ) f ON f.idAccount = a.id
+      WHERE a.archivedAt IS NULL AND a.kind IN (${placeholders});`,
+    [...LIQUID_ACCOUNT_KINDS],
+  );
+  return resultSet.rows.item(0).liquid;
+};
+
 export const getNetWorth = async (db: SQLiteDatabase): Promise<number> => {
   const [resultSet] = await db.executeSql(
     `SELECT COALESCE(SUM(a.initialBalance + COALESCE(f.total, 0)), 0) AS netWorth
@@ -367,4 +507,77 @@ export const getNetWorth = async (db: SQLiteDatabase): Promise<number> => {
       WHERE a.archivedAt IS NULL;`,
   );
   return resultSet.rows.item(0).netWorth;
+};
+
+/**
+ * Cuentas de deuda (`credit_card`/`loan`) cuyo `initialBalance` sigue
+ * siendo POSITIVO y que el dueno nunca confirmo — el patron exacto del
+ * bug real: el cupo de la tarjeta tecleado en el campo del saldo, en
+ * vez de la deuda en negativo. Ver
+ * `docs/product/pitches/saldo-inicial-correcto-en-tarjetas-de-credito.md`
+ * (S3/T10) y la ADR 0001.
+ *
+ * Los tres filtros, y por que ninguno sobra:
+ * - `kind IN ('credit_card', 'loan')` (via `DEBT_ACCOUNT_KINDS`) — el
+ *   selector de signo, y por tanto este bug, solo existe para cuentas de
+ *   deuda. Una cuenta `cash`/`bank`/`receivable` con saldo positivo es
+ *   su estado NORMAL, no una senal de nada.
+ * - `archivedAt IS NULL` — una cuenta archivada ya no se administra
+ *   activamente; no tiene sentido pedirle al dueno que revise algo que
+ *   el mismo dejo de usar.
+ * - `initialBalanceConfirmedAt IS NULL` — una vez que el dueno responde
+ *   (por cualquiera de las dos acciones de la pantalla de revision) esta
+ *   fila deja de aparecer para siempre, aunque su `initialBalance` siga
+ *   siendo positivo (el caso "saldo a favor real, ya confirmado").
+ *
+ * Contra la base real del dueno (`user_version` 8 mas estas dos
+ * migraciones) esto devuelve EXACTAMENTE las cuentas 6, 7 y 8 — no la 3
+ * (ya negativa), no la 2/4 (`loan` ya negativo), ninguna `cash`/`bank`.
+ */
+export const getAccountsPendingBalanceReview = async (
+  db: SQLiteDatabase,
+): Promise<IAccountWithBalance[]> => {
+  const placeholders = DEBT_ACCOUNT_KINDS.map(() => '?').join(', ');
+  const [resultSet] = await db.executeSql(
+    `${ACCOUNTS_WITH_BALANCE_SELECT}
+      WHERE a.kind IN (${placeholders})
+        AND a.archivedAt IS NULL
+        AND a.initialBalance > 0
+        AND a.initialBalanceConfirmedAt IS NULL
+      ORDER BY a.name ASC;`,
+    [...DEBT_ACCOUNT_KINDS],
+  );
+
+  const accounts: IAccountWithBalance[] = [];
+  for (let index = 0; index < resultSet.rows.length; index++) {
+    accounts.push(mapRowToAccountWithBalance(resultSet.rows.item(index)));
+  }
+  return accounts;
+};
+
+/**
+ * Confirma que el `initialBalance` positivo de una cuenta de deuda es
+ * correcto de verdad (el caso raro: una devolucion en una tarjeta), sin
+ * tocar ningun monto — estampa `initialBalanceConfirmedAt` y nada mas.
+ *
+ * Idempotente por el mismo motivo que `archiveAccount`/`unarchiveAccount`:
+ * la guarda `WHERE initialBalanceConfirmedAt IS NULL` hace que una
+ * segunda llamada sea un no-op (cero filas afectadas), no un error, y
+ * evita pisar la fecha de una confirmacion ya hecha.
+ *
+ * No es una rama de `updateAccount` porque no comparte su forma:
+ * `updateAccount` es un SET generico de campos EDITABLES por el
+ * formulario; esto es una transicion de estado con su propia guarda,
+ * igual que `archiveAccount` tiene la suya en vez de vivir dentro de
+ * `IUpdateAccountInput`.
+ */
+export const confirmAccountBalanceCorrect = async (
+  db: SQLiteDatabase,
+  id: number,
+): Promise<void> => {
+  const now = new Date().toISOString();
+  await db.executeSql(
+    'UPDATE accounts SET initialBalanceConfirmedAt = ?, updatedAt = ? WHERE id = ? AND initialBalanceConfirmedAt IS NULL',
+    [now, now, id],
+  );
 };

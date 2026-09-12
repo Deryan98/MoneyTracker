@@ -24,20 +24,22 @@ import {useTranslation} from 'react-i18next';
 import AmountCard from './partials/AmountCard';
 import CategoryGrid from './partials/CategoryGrid';
 import TypeSegment from './partials/TypeSegment';
+import {DestinationAccountField} from './partials/DestinationAccountField';
 
 /**
  * Misma union de `RouteProp` que `CreateAccount`/`CreateCategory` —
- * esta pantalla sirve la ruta `Form` (crear) y `EditTransaction`
- * (editar).
+ * esta pantalla sirve tres rutas: `Form` (crear), `EditTransaction`
+ * (editar) y `NewTransfer` (crear, ya en modo transferencia).
  */
 type FormScreenProps = {
   navigation: StackScreenProps<
     StackNavParams,
-    'Form' | 'EditTransaction'
+    'Form' | 'EditTransaction' | 'NewTransfer'
   >['navigation'];
   route:
     | RouteProp<StackNavParams, 'Form'>
-    | RouteProp<StackNavParams, 'EditTransaction'>;
+    | RouteProp<StackNavParams, 'EditTransaction'>
+    | RouteProp<StackNavParams, 'NewTransfer'>;
 };
 
 // Same one-off ink hex as `TypeSegment`/`CategoryGrid` — the
@@ -85,11 +87,14 @@ export const FormScreen = ({navigation, route}: FormScreenProps) => {
     accountsStatus,
     accountsErrorMessage,
     selectedAccount,
+    destinationAccount,
+    destinationAccounts,
+    selectDestinationAccount,
     selectAccount,
     amountError,
     isSaving,
     saveTransaction,
-  } = useFormScreen(financeId);
+  } = useFormScreen(financeId, route.name === 'NewTransfer' ? 'transfer' : undefined);
 
   /**
    * Tras guardar, lleva al usuario a Balance en vez de mostrar un dialogo:
@@ -112,13 +117,34 @@ export const FormScreen = ({navigation, route}: FormScreenProps) => {
     navigation.getParent()?.navigate('Resumen' as never);
   };
 
+  /**
+   * Volver desde el formulario: SIEMPRE a Balance.
+   *
+   * NO se usa `navigation.canGoBack()` ni el indice de la pila, y las dos
+   * cosas estan medidas en el emulador:
+   *
+   * - `canGoBack()` consulta tambien al navegador PADRE, y este
+   *   formulario es una PESTANA, no una pantalla empujada. Con la pila en
+   *   `["Form"]` —nada que desapilar— devolvia `true` igualmente, el
+   *   `goBack()` subia al navegador de pestanas y este saltaba a su
+   *   primera ruta. El resultado no era solo un destino raro: la pantalla
+   *   se quedaba pintando "Movimientos" mientras la barra inferior
+   *   marcaba "Balance" como activa. Ese era el glitch reportado.
+   * - Mirar el indice de la pila y desapilar cuando se puede TAMPOCO
+   *   sirve: esa pila acumula rutas segun por donde se haya entrado
+   *   (`["Form"]`, `["NewTransfer"]`, `["NewTransfer","EditTransaction"]`
+   *   — las tres medidas), asi que el mismo gesto acababa en sitios
+   *   distintos. Con eso puesto, volver desde una edicion aterrizaba en
+   *   un formulario en blanco en vez de en Balance.
+   *
+   * Por eso el destino es fijo y no derivado: salir del formulario
+   * termina siempre en Balance, igual que guardar. `CreateCategory` no
+   * se ve afectada — se empuja desde aqui pero tiene su propio boton de
+   * volver, que no pasa por esta funcion.
+   */
   const handleBack = () => {
-    if (navigation.canGoBack()) {
-      navigation.goBack();
-    }
-  };
-
-  if (isEditMode && financeStatus === 'loading') {
+    navigation.getParent()?.navigate('Resumen' as never);
+  };  if (isEditMode && financeStatus === 'loading') {
     return (
       <KeyboardContainer>
         <ScreenContainer>
@@ -208,7 +234,36 @@ export const FormScreen = ({navigation, route}: FormScreenProps) => {
 
           <Spacer space={18} />
 
-          {categoriesStatus === 'loading' && (
+          {/* En transferencia, el selector de cuenta destino SUSTITUYE a
+              todo el bloque de categorias — carga, error, vacio y
+              rejilla. Ver `DestinationAccountField` para por que
+              sustituye en vez de acompanar. */}
+          {selectedType === 'transfer' && (
+            <>
+              <DestinationAccountField
+                accounts={destinationAccounts}
+                selected={destinationAccount}
+                onSelect={selectDestinationAccount}
+              />
+
+              {/* Dice POR QUE no hay categoria, en vez de dejar un hueco.
+                  Un ingreso lleva categoria y una transferencia no, y esa
+                  asimetria no es evidente: sin explicarla, el usuario se
+                  queda buscando una categoria que no debe existir — que
+                  es exactamente el habito que esta funcion viene a
+                  romper. Mismo tratamiento tipografico que
+                  `form.noCategoriesHint`, no un patron nuevo. */}
+              <Spacer space={12} />
+              <Headings
+                headingSize="H6"
+                color={colors[gray][0]}
+                containerStyle={stateStyles.message}>
+                {t('form.transferNeedsNoCategory')}
+              </Headings>
+            </>
+          )}
+
+          {selectedType !== 'transfer' && categoriesStatus === 'loading' && (
             <View style={stateStyles.centered}>
               <ActivityIndicator
                 size="large"
@@ -218,7 +273,7 @@ export const FormScreen = ({navigation, route}: FormScreenProps) => {
             </View>
           )}
 
-          {categoriesStatus === 'error' && (
+          {selectedType !== 'transfer' && categoriesStatus === 'error' && (
             <View style={stateStyles.centered}>
               <Headings
                 headingSize="H5"
@@ -238,7 +293,7 @@ export const FormScreen = ({navigation, route}: FormScreenProps) => {
             </View>
           )}
 
-          {categoriesStatus === 'success' && categories.length === 0 && (
+          {selectedType !== 'transfer' && categoriesStatus === 'success' && categories.length === 0 && (
             <View style={stateStyles.centered}>
               <Headings
                 headingSize="H4"
@@ -255,7 +310,7 @@ export const FormScreen = ({navigation, route}: FormScreenProps) => {
             </View>
           )}
 
-          {categoriesStatus === 'success' && categories.length > 0 && (
+          {selectedType !== 'transfer' && categoriesStatus === 'success' && categories.length > 0 && (
             <CategoryGrid
               title={t('form.categoryHeading')}
               countLabel={categoryCountLabel}
